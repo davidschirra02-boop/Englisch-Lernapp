@@ -1,0 +1,63 @@
+/* Einstellungen: Stimme fürs Hörverständnis wählen, Fortschritt zurücksetzen. */
+
+Render.settings = function (root) {
+  Speech.refreshVoices();
+  const s = Store.get();
+  const voices = Speech.listVoices();
+  const currentVoiceURI = s.voiceURI || Speech.resolveVoice()?.voiceURI || '';
+  const sorted = [...voices].sort((a, b) => (Speech.isHighQuality(b.name) ? 1 : 0) - (Speech.isHighQuality(a.name) ? 1 : 0));
+
+  root.innerHTML = `
+    <div class="card">
+      <h3>Einstellungen</h3>
+      <p class="muted">Aktueller Tag: ${Math.min(s.currentDay, 90)} von 90 · Streak: ${s.streak} Tage · ${Object.keys(s.srs).length} Wörter im Trainer</p>
+    </div>
+
+    <div class="card">
+      <h3>Stimme fürs Hörverständnis</h3>
+      <p class="muted">Manche Systeme bieten deutlich natürlichere Stimmen als andere. <strong>Microsoft Edge</strong> stellt kostenlose "Online (Natural)"-Stimmen bereit, die sehr menschlich klingen — mit ⭐ markiert, falls verfügbar. Klingt deine aktuelle Stimme abgehackt, probiere Edge und wähle unten eine ⭐-Stimme.</p>
+      ${sorted.length === 0
+        ? `<p class="muted">Keine Stimmen gefunden.</p><button class="btn ghost" id="reload-voices">Stimmen neu laden</button>`
+        : `<select id="voice-select" class="field">
+            ${sorted.map(v => `<option value="${v.uri}" ${v.uri === currentVoiceURI ? 'selected' : ''}>${Speech.isHighQuality(v.name) ? '⭐ ' : ''}${v.name} (${v.lang})</option>`).join('')}
+          </select>`
+      }
+      <div style="display:flex; align-items:center; gap:14px; margin:16px 0;">
+        <label class="muted" style="font-size:0.85rem; white-space:nowrap;">Sprechtempo</label>
+        <input type="range" id="rate-slider" min="0.75" max="1.15" step="0.05" value="${s.speechRate}" style="flex:1;" />
+      </div>
+      <button class="btn" id="test-voice">🔊 Stimme testen</button>
+    </div>
+
+    <div class="card">
+      <h4>Fortschritt zurücksetzen</h4>
+      <p class="muted">Setzt Streak, abgeschlossene Tage und Vokabel-Fortschritt vollständig zurück. Das kann nicht rückgängig gemacht werden.</p>
+      <button class="btn amber" id="reset-btn">Fortschritt zurücksetzen</button>
+    </div>
+  `;
+
+  root.querySelector('#voice-select')?.addEventListener('change', (e) => {
+    Store.update(st => { st.voiceURI = e.target.value; });
+  });
+
+  root.querySelector('#rate-slider')?.addEventListener('input', (e) => {
+    Store.update(st => { st.speechRate = Number(e.target.value); });
+  });
+
+  root.querySelector('#reload-voices')?.addEventListener('click', () => {
+    Speech.refreshVoices();
+    router();
+  });
+
+  root.querySelector('#test-voice')?.addEventListener('click', () => {
+    Speech.speak('Hello! This is what your listening exercises will sound like from now on.');
+  });
+
+  root.querySelector('#reset-btn').addEventListener('click', () => {
+    if (confirm('Wirklich den gesamten Fortschritt zurücksetzen?')) {
+      Store.reset();
+      window.location.hash = '#/dashboard';
+      router();
+    }
+  });
+};

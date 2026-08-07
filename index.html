@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wegweiser · Dein Weg zu C1</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div id="app-root">
+    <div class="topbar">
+      <div class="brand">
+        <span class="mark">Wegweiser</span>
+        <span class="tag">Dein Weg zu C1</span>
+      </div>
+      <nav class="tabs">
+        <a href="#/dashboard" data-route="dashboard">Dashboard</a>
+        <a href="#/vocab" data-route="vocab">Vokabeltrainer</a>
+        <a href="#/settings" data-route="settings">Einstellungen</a>
+      </nav>
+    </div>
+    <div id="app-root-content"></div>
+  </div>
+
+  <script src="data/curriculum.js"></script>
+  <script src="data/weeks-index.js"></script>
+  <script src="data/weeks/week01.js"></script>
+
+  <script src="js/storage.js"></script>
+  <script src="js/srs.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/quizEngine.js"></script>
+  <script src="js/flashcard.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/render/conversation.js"></script>
+  <script src="js/render/dashboard.js"></script>
+  <script src="js/render/lesson.js"></script>
+  <script src="js/render/vocab.js"></script>
+  <script src="js/render/settings.js"></script>
+</body>
+</html>
