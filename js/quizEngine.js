@@ -8,8 +8,23 @@ const QuizEngine = {
     const total = items.length;
     const state = items.map(() => ({ answered: false, correct: null, chosenIndex: null, chosenText: null }));
     let idx = 0;
+    let enterHandler = null;
 
     function scoreCount() { return state.filter(s => s.correct).length; }
+
+    function clearEnterHandler() {
+      if (enterHandler) { document.removeEventListener('keydown', enterHandler); enterHandler = null; }
+    }
+
+    function armEnterAdvance() {
+      clearEnterHandler();
+      enterHandler = (e) => {
+        if (e.key !== 'Enter') return;
+        const btn = container.querySelector('.next-btn');
+        if (btn) { e.preventDefault(); btn.click(); }
+      };
+      document.addEventListener('keydown', enterHandler);
+    }
 
     function correctText(item) {
       return Array.isArray(item.answer) ? item.answer[0] : (item.answer ?? item.options?.[item.answerIndex]);
@@ -30,12 +45,18 @@ const QuizEngine = {
 
     function bindNext(isLast) {
       container.querySelector('.next-btn').addEventListener('click', () => {
-        if (isLast) opts.onComplete?.(scoreCount(), total);
+        clearEnterHandler();
+        if (isLast) {
+          const wrong = items.filter((it, i) => state[i].correct === false);
+          opts.onComplete?.(scoreCount(), total, wrong);
+        }
         else { idx++; renderItem(); }
       });
+      armEnterAdvance();
     }
 
     function renderItem() {
+      clearEnterHandler();
       const item = items[idx];
       const st = state[idx];
       st.answered ? renderReviewed(item, st) : renderFresh(item);

@@ -35,7 +35,13 @@ WEEKS.weekNN = {
 { type: 'choice', prompt: '...', options: ['a','b','c'], answerIndex: 0 }
 { type: 'gap',    prompt: '... ___ ...', answer: 'text' }          // oder answer: ['text','alt']
 ```
-`QuizEngine` bietet automatisch eine "← Zurück"-Navigation zu bereits beantworteten Fragen (Review-Ansicht) — dafür ist in den Daten nichts weiter nötig.
+`QuizEngine` bietet automatisch eine "← Zurück"-Navigation zu bereits beantworteten Fragen (Review-Ansicht) sowie Enter-Taste zum Bestätigen/Weiterspringen — dafür ist in den Daten nichts weiter nötig.
+
+### Eindeutigkeit von Prompts (wichtig!)
+
+- **Klammer-Hinweise bei Modalverb-/Wahlmöglichkeiten-Lücken müssen ALLE Optionen zeigen, nie nur die richtige.** Falsch: `'The plane ___ (must/land) already.'` (verrät sofort "must"). Richtig: `"The plane ___ (must/might/can't – land) already."` — der Nutzer muss selbst herausfinden, welches Modalverb passt, das Verb in Klammern dient nur als Infinitiv-Hinweis.
+- **Prompts müssen eindeutig sein, welcher Referent gemeint ist.** Beispiel für einen Fehler: "The seats are empty. The passengers ___ already boarded." — unklar, ob "seats" sich auf Flugzeugsitze oder Wartebereich-Sitze bezieht. Immer genug Kontext liefern, damit nur eine Lesart plausibel ist (z. B. Ort/Situation explizit nennen: "You are standing at the empty departure gate...").
+- **Gap-Prompts, die eine feste Redewendung abfragen, sollten nicht auf ein thematisch naheliegendes, aber falsches Wort hinlenken.** Beispiel: `'I almost ___ ___ ___ because the taxi arrived late.'` an einem Tag mit Fokus auf "connecting flight" führt dazu, dass Nutzer "missed my connecting flight" statt der erwarteten Antwort "missed my flight" eingeben. Kontext so gestalten, dass die Zielredewendung eindeutig die einzig plausible Antwort ist (z. B. explizit erwähnen, dass es kein Anschlussflug ist).
 
 ## Tag 7 (Review)
 

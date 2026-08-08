@@ -118,11 +118,11 @@ WEEKS.week01 = {
           { en: "He can't have left already – his bag is still here.", de: 'Er kann nicht schon gegangen sein – seine Tasche ist noch hier.' }
         ],
         exercises: [
-          { type: 'gap', prompt: 'The plane ___ (must/land) already – I can see it at the gate.', answer: 'must have landed' },
-          { type: 'gap', prompt: 'Her suitcase is missing. She ___ (must/leave) it on the plane.', answer: 'must have left' },
+          { type: 'gap', prompt: "The plane ___ (must/might/can't – land) already – I can see it at the gate.", answer: 'must have landed' },
+          { type: 'gap', prompt: "Her suitcase is missing. She ___ (must/might/can't – leave) it on the plane.", answer: 'must have left' },
           { type: 'choice', prompt: 'He answered the phone immediately, so he ___ have been asleep.', options: ["can't", 'must'], answerIndex: 0 },
-          { type: 'choice', prompt: 'The seats are empty. The passengers ___ already boarded.', options: ['must have', "can't have"], answerIndex: 0 },
-          { type: 'gap', prompt: "She's not answering her phone. She ___ (might/lose) signal in the tunnel.", answer: 'might have lost' },
+          { type: 'choice', prompt: 'You are standing at the empty departure gate — the screen says "Boarding complete." The passengers ___ already boarded the plane.', options: ['must have', "can't have"], answerIndex: 0 },
+          { type: 'gap', prompt: "She's not answering her phone. She ___ (must/might/can't – lose) signal in the tunnel.", answer: 'might have lost' },
           { type: 'choice', prompt: "He can't have missed the flight —", options: ["he's calling from the gate right now", 'the gate closed five minutes ago', 'nobody has seen him today'], answerIndex: 0 }
         ]
       },
@@ -142,7 +142,7 @@ WEEKS.week01 = {
         { type: 'choice', prompt: 'A short stop between two flights is called a...', options: ['layover', 'delay', 'connection fee'], answerIndex: 0 },
         { type: 'gap', prompt: 'Our flight was ___ by two hours because of the storm.', answer: 'delayed' },
         { type: 'choice', prompt: 'What do you do at customs?', options: ['Buy duty-free perfume', 'Declare goods when entering a country', 'Check in your luggage'], answerIndex: 1 },
-        { type: 'gap', prompt: 'I almost ___ ___ ___ because the taxi arrived late.', answer: ['missed my flight', 'missed the flight'] }
+        { type: 'gap', prompt: "I was already through security, but I almost ___ ___ ___ because the taxi arrived late and I had to run to the gate.", answer: ['missed my flight', 'missed the flight'] }
       ],
       listening: {
         title: "Tom's Delayed Flight",
@@ -194,12 +194,12 @@ WEEKS.week01 = {
         }
       },
       quiz: [
-        { type: 'gap', prompt: 'The lights are off. They ___ (must/leave) already.', answer: 'must have left' },
+        { type: 'gap', prompt: "The lights are off. They ___ (must/might/can't – leave) already.", answer: 'must have left' },
         { type: 'choice', prompt: '"Layover" means...', options: ['a type of luggage', 'a stop between flights', 'a delayed flight'], answerIndex: 1 },
         { type: 'choice', prompt: 'He can\'t have missed the flight because...', options: ['he is calling from the gate right now', 'he left home late', 'his bag is heavy'], answerIndex: 0 },
         { type: 'choice', prompt: 'Where do you collect your suitcase?', options: ['Customs', 'Boarding gate', 'Luggage claim'], answerIndex: 2 },
         { type: 'choice', prompt: 'She ___ forgotten her passport – she\'s calling the airline in a panic.', options: ['must have', "can't have"], answerIndex: 0 },
-        { type: 'gap', prompt: 'They ___ (must/board) already — the gate is empty.', answer: 'must have boarded' },
+        { type: 'gap', prompt: "They ___ (must/might/can't – board) already — the gate is empty.", answer: 'must have boarded' },
         { type: 'choice', prompt: '"To check in" means...', options: ['to register for your flight', 'to collect your luggage', 'to go through security'], answerIndex: 0 },
         { type: 'choice', prompt: '"Connecting flight" means...', options: ['your first flight of the day', 'a flight that continues your journey after a layover', 'a cancelled flight'], answerIndex: 1 }
       ]

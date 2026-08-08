@@ -264,6 +264,8 @@ nav.tabs a:not(.active):hover {
 
 .day-chip.done { background: var(--good); color: #fff; }
 .day-chip.today { background: var(--amber); color: #fff; box-shadow: 0 0 0 4px var(--amber-tint); }
+.day-chip.clickable { cursor: pointer; transition: transform 0.15s ease; }
+.day-chip.clickable:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
 
 /* ---------------- Buttons ---------------- */
 
@@ -494,6 +496,8 @@ nav.tabs a:not(.active):hover {
 }
 
 .story-line:last-child { border-bottom: none; }
+.story-line.focused { background: var(--teal-tint); border-radius: var(--radius-s); padding-left: 8px; margin-left: -8px; }
+#story-lines { outline: none; }
 
 .speak-btn {
   flex-shrink: 0;

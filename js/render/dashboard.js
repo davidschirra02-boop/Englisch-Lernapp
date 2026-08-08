@@ -13,8 +13,9 @@ Render.dashboard = function (root) {
   let chips = '';
   for (let i = 0; i < 7 && weekStartDay + i <= 90; i++) {
     const dn = weekStartDay + i;
+    const accessible = dn <= day;
     const cls = Store.isDayComplete(dn) ? 'done' : (dn === day ? 'today' : '');
-    chips += `<div class="day-chip ${cls}">${dn}</div>`;
+    chips += `<div class="day-chip ${cls} ${accessible ? 'clickable' : ''}" data-day="${dn}">${dn}</div>`;
   }
 
   root.innerHTML = `
@@ -49,4 +50,7 @@ Render.dashboard = function (root) {
   `;
 
   root.querySelector('#start-lesson')?.addEventListener('click', () => goto(`#/day/${day}`));
+  root.querySelectorAll('.day-chip.clickable').forEach(chip => {
+    chip.addEventListener('click', () => goto(`#/day/${chip.dataset.day}`));
+  });
 };
