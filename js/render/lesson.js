@@ -1,12 +1,11 @@
 /* Tagesansicht: führt sequenziell durch Grammatik → Vokabeln → Hören →
-   Konversation → Quiz (bzw. Review → Quiz an Tag 7 jeder Woche). */
+   Quiz (bzw. Review → Quiz an Tag 7 jeder Woche). */
 
 const STEP_LABELS = {
   grammar: 'Grammatik',
   vocab: 'Wortschatz',
   vocabPractice: 'Wortschatz-Vertiefung',
   listening: 'Hörverständnis',
-  conversation: 'Konversation',
   quiz: 'Quiz',
   review: 'Wochen-Review'
 };
@@ -32,7 +31,7 @@ Render.lesson = function (root, day) {
 
   const { content } = dc;
   const isReview = !!content.review;
-  const stepNames = isReview ? ['review', 'quiz'] : ['grammar', 'vocab', 'vocabPractice', 'listening', 'conversation', 'quiz'];
+  const stepNames = isReview ? ['review', 'quiz'] : ['grammar', 'vocab', 'vocabPractice', 'listening', 'quiz'];
   let stepIdx = Math.min(Store.getLessonStep(day), stepNames.length - 1);
   let quizScore = 0, quizTotal = 0;
   let missedItems = [];
@@ -60,7 +59,6 @@ Render.lesson = function (root, day) {
     else if (step === 'vocab') renderVocabIntro();
     else if (step === 'vocabPractice') renderVocabPractice();
     else if (step === 'listening') renderListening();
-    else if (step === 'conversation') renderConversationStep();
     else if (step === 'review') renderReview();
     else renderQuiz();
   }
@@ -88,7 +86,7 @@ Render.lesson = function (root, day) {
           <span class="muted" style="font-size:0.8rem;">Karte ${idx + 1} / ${words.length}</span>
           <button class="btn ghost small vocab-back-btn" ${idx === 0 ? 'disabled' : ''}>← Zurück</button>
         </div>
-        <h2>Neue Wörter</h2><p class="muted">Karte antippen zum Umdrehen</p><div id="flash-slot"></div>`);
+        <h2>Neue Wörter</h2><p class="muted">Karte antippen oder Enter drücken zum Umdrehen</p><div id="flash-slot"></div>`);
       const backBtn = root.querySelector('.vocab-back-btn');
       if (backBtn && idx > 0) backBtn.addEventListener('click', () => { idx--; showWord(); });
       Flashcard.render(root.querySelector('#flash-slot'), words[idx], {
@@ -110,51 +108,48 @@ Render.lesson = function (root, day) {
     const l = content.listening;
     shell(`
       <h2>${l.title}</h2>
-      <p class="muted">Klicke auf 🔊, oder nutze ↓/↑ zum Wechseln und Enter zum Abspielen.</p>
+      <p class="muted">Der Text wird automatisch vorgelesen. Klicke auf 🔊, um einen Satz erneut zu hören, oder navigiere mit ↓/↑ und Enter.</p>
       <div id="story-lines"></div>
       <div id="listen-quiz-slot" style="margin-top:18px;"><button class="btn ghost" id="to-quiz">Weiter zu den Verständnisfragen →</button></div>
     `);
     const linesEl = root.querySelector('#story-lines');
     linesEl.innerHTML = l.sentences.map((s, i) => `<div class="story-line" data-i="${i}"><button class="speak-btn" data-i="${i}">🔊</button><span>${s}</span></div>`).join('');
 
-    let focusIdx = 0;
-    function highlight() {
-      linesEl.querySelectorAll('.story-line').forEach(el => el.classList.toggle('focused', Number(el.dataset.i) === focusIdx));
+    let playToken = 0;
+    function showSpeaking(i) {
+      linesEl.querySelectorAll('.speak-btn').forEach(b => b.classList.toggle('speaking', Number(b.dataset.i) === i));
     }
     function speakLine(i) {
-      linesEl.querySelectorAll('.speak-btn').forEach(b => b.classList.remove('speaking'));
-      const btn = linesEl.querySelector(`.speak-btn[data-i="${i}"]`);
-      btn.classList.add('speaking');
-      Speech.speak(l.sentences[i], { onEnd: () => btn.classList.remove('speaking') });
+      playToken++;
+      showSpeaking(i);
+      Speech.speak(l.sentences[i], { onEnd: () => showSpeaking(-1) });
+    }
+    function playAll() {
+      const myToken = ++playToken;
+      (function playFrom(i) {
+        if (myToken !== playToken || i >= l.sentences.length) { if (myToken === playToken) showSpeaking(-1); return; }
+        showSpeaking(i);
+        Speech.speak(l.sentences[i], { onEnd: () => playFrom(i + 1) });
+      })(0);
     }
     linesEl.querySelectorAll('.speak-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        focusIdx = Number(btn.dataset.i);
-        highlight();
-        speakLine(focusIdx);
-      });
+      const line = btn.closest('.story-line');
+      btn.addEventListener('focus', () => line.classList.add('focused'));
+      btn.addEventListener('blur', () => line.classList.remove('focused'));
+      btn.addEventListener('click', () => speakLine(Number(btn.dataset.i)));
     });
-    linesEl.tabIndex = 0;
-    linesEl.addEventListener('keydown', e => {
-      if (e.key === 'ArrowDown') { e.preventDefault(); focusIdx = Math.min(focusIdx + 1, l.sentences.length - 1); highlight(); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); focusIdx = Math.max(focusIdx - 1, 0); highlight(); }
-      else if (e.key === 'Enter') { e.preventDefault(); speakLine(focusIdx); }
-    });
-    highlight();
-    linesEl.focus();
+    KeyNav.focusSoon(linesEl.querySelector('.speak-btn'));
+    playAll();
 
     root.querySelector('#to-quiz').addEventListener('click', () => {
+      playToken++;
+      window.speechSynthesis?.cancel();
       const slot = root.querySelector('#listen-quiz-slot');
       slot.innerHTML = '';
       QuizEngine.run(slot, l.questions, {
         onComplete: (score, total, wrong) => { missedItems.push(...wrong); next(); }
       });
     });
-  }
-
-  function renderConversationStep() {
-    shell(`<h2>Konversationstrainer</h2><div id="conv-slot"></div>`);
-    RenderConversation.run(root.querySelector('#conv-slot'), content.conversation, next);
   }
 
   function renderReview() {

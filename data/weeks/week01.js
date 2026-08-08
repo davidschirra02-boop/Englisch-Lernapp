@@ -1,8 +1,8 @@
 /* Woche 1 — Ankommen & Small Talk.
    Schema: siehe CONTENT_GUIDE.md. Jeder Tag (1-6) hat grammar, vocabulary,
-   vocabPractice, listening, conversation, quiz. Tag 7 ist ein reiner Review-Tag.
-   Konversationsknoten haben 3 Antworten (1 richtig, 2 subtile Fehler) und
-   werden vom Renderer bei jeder Anzeige neu gemischt. */
+   vocabPractice, listening, quiz. Tag 7 ist ein reiner Review-Tag.
+   Ab Tag 2 wiederholen vocabPractice und quiz gezielt Wortschatz/Grammatik
+   früherer Tage (kumulatives Interleaving statt reinem Neustoff). */
 
 WEEKS.week01 = {
   key: 'week01',
@@ -24,8 +24,20 @@ WEEKS.week01 = {
           { type: 'choice', prompt: 'Look! Someone ___ the window.', options: ['has broken', 'has been breaking'], answerIndex: 0 },
           { type: 'gap', prompt: 'How long ___ you ___ (learn) English?', answer: 'have you been learning' },
           { type: 'choice', prompt: 'She ___ the report, so she can leave now.', options: ['has finished', 'has been finishing'], answerIndex: 0 },
-          { type: 'gap', prompt: "They ___ (build) that bridge for over a year now — it's still not done.", answer: 'have been building' },
-          { type: 'choice', prompt: 'I ___ three cups of coffee already this morning!', options: ['have had', 'have been having'], answerIndex: 0 }
+          { type: 'gap', prompt: "They ___ (build) that bridge for over a year now — it's still not finished.", answer: 'have been building' },
+          { type: 'choice', prompt: 'I ___ three cups of coffee already this morning!', options: ['have had', 'have been having'], answerIndex: 0 },
+          { type: 'gap', prompt: 'My hands are covered in paint because I ___ (paint) the fence all afternoon.', answer: 'have been painting' },
+          { type: 'choice', prompt: "He can't find his keys — he ___ them somewhere.", options: ['has lost', 'has been losing'], answerIndex: 0 },
+          { type: 'gap', prompt: "I'm exhausted — I ___ (run) since six o'clock this morning.", answer: 'have been running' },
+          { type: 'gap', prompt: '___ you ever ___ (be) to Japan?', answer: 'Have you ever been' },
+          { type: 'choice', prompt: "I ___ her for ten years — she's one of my closest friends.", options: ['have known', 'have been knowing'], answerIndex: 0 },
+          { type: 'gap', prompt: "She ___ (write) emails all morning, but she still hasn't finished.", answer: 'has been writing' },
+          { type: 'choice', prompt: "I've lived in this city ___ 2015.", options: ['for', 'since'], answerIndex: 1 },
+          { type: 'gap', prompt: 'We ___ (already/finish) the project, so we have some free time now.', answer: 'have already finished' },
+          { type: 'choice', prompt: "I ___ this book — it was amazing!", options: ['have read', 'have been reading'], answerIndex: 0 },
+          { type: 'gap', prompt: "___ (you/see) my glasses anywhere? I can't find them.", answer: 'Have you seen' },
+          { type: 'gap', prompt: 'How long ___ (you/cook) this soup? It smells incredible.', answer: 'have you been cooking' },
+          { type: 'choice', prompt: "I ___ your emails, but I haven't answered them yet.", options: ['have read', 'have been reading'], answerIndex: 1 }
         ]
       },
       vocabulary: [
@@ -44,7 +56,19 @@ WEEKS.week01 = {
         { type: 'choice', prompt: 'A person you know only slightly is called a/an ___.', options: ['acquaintance', 'icebreaker', 'colleague'], answerIndex: 0 },
         { type: 'gap', prompt: "Let's ___ ___ ___ after the conference.", answer: 'get in touch' },
         { type: 'choice', prompt: "What is 'small talk'?", options: ['a serious business negotiation', 'a light, casual conversation', 'a formal presentation'], answerIndex: 1 },
-        { type: 'gap', prompt: 'At the start of the meeting, she used a fun ___ to relax everyone.', answer: 'icebreaker' }
+        { type: 'gap', prompt: 'At the start of the meeting, she used a fun ___ to relax everyone.', answer: 'icebreaker' },
+        { type: 'gap', prompt: "Übersetze: 'sich selbst vorstellen' → to ___ ___", answer: 'introduce oneself' },
+        { type: 'choice', prompt: 'A large event designed to help you meet professional contacts is called a...', options: ['networking event', 'small talk', 'acquaintance'], answerIndex: 0 },
+        { type: 'gap', prompt: 'As soon as he told the joke, everyone relaxed — it really helped to ___ ___ ___.', answer: 'break the ice' },
+        { type: 'choice', prompt: 'Which of these is NOT related to meeting new people at an event?', options: ['acquaintance', 'icebreaker', 'rain'], answerIndex: 2 },
+        { type: 'gap', prompt: "We only met once at a conference — she's just an ___, not a close friend.", answer: 'acquaintance' },
+        { type: 'choice', prompt: "'Networking event' is best translated as...", options: ['Netzwerkveranstaltung', 'Familienfeier', 'Vorstellungsgespräch'], answerIndex: 0 },
+        { type: 'gap', prompt: "Auf Deutsch 'Small Talk führen' heißt auf Englisch 'to make ___ ___.'", answer: 'small talk' },
+        { type: 'choice', prompt: 'Which phrase describes getting along well with someone immediately?', options: ['to hit it off', 'to break the ice', 'to get in touch'], answerIndex: 0 },
+        { type: 'gap', prompt: 'After the meeting, please ___ ___ ___ with our support team for further questions.', answer: 'get in touch' },
+        { type: 'choice', prompt: 'An icebreaker is typically used...', options: ['at the end of a meeting to say goodbye', 'at the start of an event to help people relax', 'during an argument to end it'], answerIndex: 1 },
+        { type: 'gap', prompt: "It's polite to ___ ___ before starting a business conversation with a stranger.", answer: ['introduce yourself', 'introduce oneself'] },
+        { type: 'choice', prompt: "What's the opposite of being a 'close friend'?", options: ['an acquaintance', 'a networking event', 'small talk'], answerIndex: 0 }
       ],
       listening: {
         title: 'Emma at the Conference',
@@ -52,58 +76,50 @@ WEEKS.week01 = {
           'Emma arrived at the conference a little nervous.',
           "She didn't know anyone in the room.",
           'A man near the coffee table smiled and said hello.',
+          'His name was Daniel, and he worked in marketing.',
           'They started with some small talk about the traffic.',
           'Within a few minutes, they had hit it off.',
+          'Daniel mentioned he had been to this conference twice before.',
           'He gave her his business card and suggested they get in touch next week.',
           'Emma left the event feeling proud of herself.'
         ],
         questions: [
           { prompt: 'Why was Emma nervous at first?', options: ["She didn't know anyone", 'She was late', 'She lost her ticket'], answerIndex: 0 },
+          { prompt: 'What was the name of the man who spoke to her?', options: ['Daniel', 'Marco', 'Tom'], answerIndex: 0 },
+          { prompt: "What was Daniel's job?", options: ['Marketing', 'Engineering', 'Teaching'], answerIndex: 0 },
           { prompt: 'What did they talk about first?', options: ['The weather', 'The traffic', 'Their jobs'], answerIndex: 1 },
-          { prompt: 'What did the man give Emma?', options: ['A coffee', 'His business card', 'A book'], answerIndex: 1 }
+          { prompt: 'How quickly did they get along?', options: ['Very quickly', 'After a long, awkward conversation', 'They never really did'], answerIndex: 0 },
+          { prompt: 'How many times had Daniel been to this conference before?', options: ['Once', 'Twice', 'Three times'], answerIndex: 1 },
+          { prompt: 'What did Daniel give Emma?', options: ['A coffee', 'His business card', 'A book'], answerIndex: 1 },
+          { prompt: 'What did Daniel suggest?', options: ['Getting in touch next week', 'Meeting again tomorrow', 'Never speaking again'], answerIndex: 0 },
+          { prompt: 'How did Emma feel when she left?', options: ['Embarrassed', 'Proud of herself', 'Bored'], answerIndex: 1 }
         ]
       },
-      conversation: {
-        situation: "You're at a networking event and someone new introduces themselves.",
-        start: 'n1',
-        nodes: {
-          n1: { them: "Hi there! I don't think we've met yet. I'm Daniel.", next: 'n2', choices: [
-            { text: "Hi Daniel, nice to meet you. I'm Alex.", correct: true },
-            { text: 'Good afternoon Daniel. It is a pleasure to make your acquaintance.', correct: false, feedback: 'Grammatisch korrekt, aber für ein lockeres Networking-Event zu förmlich/steif. Natürlicher: "Hi Daniel, nice to meet you. I\'m Alex."' },
-            { text: 'Hi, nice to meet you too!', correct: false, feedback: 'Fast richtig, aber du hast vergessen, deinen eigenen Namen zu nennen — das gehört bei einer Vorstellung dazu: "Hi Daniel, nice to meet you. I\'m Alex."' }
-          ]},
-          n2: { them: 'So, what brings you to this event?', next: 'n3', choices: [
-            { text: "I'm here to meet new people in the industry.", correct: true },
-            { text: 'I come here for networking.', correct: false, feedback: '"I come here" klingt nach einer Gewohnheit (Simple Present). Für diesen einmaligen Anlass passt: "I\'m here to meet new people in the industry."' },
-            { text: 'Just for the free food, to be honest.', correct: false, feedback: 'Ehrlich, aber in einem professionellen Erstgespräch wirkt das zu flapsig. Nenne besser eine berufliche Motivation.' }
-          ]},
-          n3: { them: 'That\'s great. Have you been to one of these events before?', next: 'n4', choices: [
-            { text: "Yes, I've been to a few. They're great for making contacts.", correct: true },
-            { text: 'Yes, I go to a few before.', correct: false, feedback: 'Falsche Zeitform — für eine Erfahrung bis jetzt braucht man Present Perfect: "I\'ve been to a few", nicht Simple Present + "before".' },
-            { text: 'No, this is my first time, and I hate it.', correct: false, feedback: 'Grammatisch fein, aber so negativ zu antworten wirkt unhöflich im Small Talk. Bleib positiv.' }
-          ]},
-          n4: { them: "What industry are you in, if you don't mind me asking?", next: 'n5', choices: [
-            { text: 'Not at all — I work in marketing, mostly for tech startups.', correct: true },
-            { text: "I don't like to talk about my job.", correct: false, feedback: 'Auf eine höfliche Frage wirkt das abweisend. Antworte offen und freundlich.' },
-            { text: 'I am working in marketing since three years.', correct: false, feedback: '"since three years" ist ein typischer deutscher Fehler — richtig: "for three years" (Dauer), und mit Present Perfect: "I\'ve been working in marketing for three years."' }
-          ]},
-          n5: { them: "Well, it was great chatting. Here's my card — let's get in touch.", next: 'end', choices: [
-            { text: "Thanks, Daniel! I'll drop you a message next week.", correct: true },
-            { text: 'Thanks, I will maybe write you sometime.', correct: false, feedback: 'Klingt unverbindlich ("maybe", "sometime"). Verbindlicher: "I\'ll drop you a message next week."' },
-            { text: 'Thank you, I give you my card too.', correct: false, feedback: 'Für eine spontane Zusage fehlt "will": besser "I\'ll give you my card too" — oder ein klarer Abschluss wie "I\'ll drop you a message next week."' }
-          ]},
-          end: { them: 'Great talking to you! Enjoy the rest of the event.', end: true }
-        }
-      },
       quiz: [
-        { type: 'choice', prompt: 'Choose the correct form: I ___ this book three times.', options: ['have read', 'have been reading'], answerIndex: 0 },
-        { type: 'choice', prompt: '"To break the ice" means...', options: ['to be very cold', 'to start a conversation comfortably', 'to end a friendship'], answerIndex: 1 },
-        { type: 'gap', prompt: 'How long ___ you ___ (work) here?', answer: 'have you been working' },
-        { type: 'choice', prompt: 'An "acquaintance" is...', options: ['a close friend', 'someone you know slightly', 'a family member'], answerIndex: 1 },
-        { type: 'choice', prompt: '"We hit it off" means...', options: ['we argued', 'we got along well immediately', 'we left early'], answerIndex: 1 },
+        { type: 'choice', prompt: "I ___ this article three times — it's really good.", options: ['have read', 'have been reading'], answerIndex: 0 },
         { type: 'gap', prompt: "She ___ (finish) all her work, so she's free now.", answer: 'has finished' },
-        { type: 'choice', prompt: '"Networking event" means...', options: ['a casual dinner with friends', 'a professional gathering to meet contacts', 'a job interview'], answerIndex: 1 },
-        { type: 'choice', prompt: '"To introduce oneself" means...', options: ['to say who you are to someone new', 'to leave a conversation', 'to argue with someone'], answerIndex: 0 }
+        { type: 'choice', prompt: 'How long ___ you ___ this car?', options: ['have you owned', 'have you been owning'], answerIndex: 0 },
+        { type: 'gap', prompt: 'I ___ (never/be) to South America.', answer: 'have never been' },
+        { type: 'choice', prompt: "We ___ dinner already, so we're not hungry.", options: ['have had', 'have been having'], answerIndex: 0 },
+        { type: 'gap', prompt: '___ (she/finish) her homework yet?', answer: 'Has she finished' },
+        { type: 'choice', prompt: 'I ___ him since we were children.', options: ['have known', 'have been knowing'], answerIndex: 0 },
+        { type: 'gap', prompt: "He ___ (work) on this painting for six months — it's almost done.", answer: 'has been working' },
+        { type: 'choice', prompt: "For or since — I haven't seen her ___ last Christmas.", options: ['for', 'since'], answerIndex: 1 },
+        { type: 'gap', prompt: 'My eyes hurt because I ___ (stare) at the screen all day.', answer: 'have been staring' },
+        { type: 'choice', prompt: "She's out of breath — she ___ up the stairs.", options: ['has run', 'has been running'], answerIndex: 1 },
+        { type: 'gap', prompt: 'We ___ (just/receive) your message — thank you!', answer: 'have just received' },
+        { type: 'choice', prompt: '"To break the ice" means...', options: ['to be very cold', 'to start a conversation comfortably', 'to end a friendship'], answerIndex: 1 },
+        { type: 'gap', prompt: "It's a good idea to ___ ___ ___ if the room feels awkwardly silent.", answer: 'break the ice' },
+        { type: 'choice', prompt: 'An "acquaintance" is...', options: ['a close friend', 'someone you know slightly', 'a family member'], answerIndex: 1 },
+        { type: 'gap', prompt: "We only exchanged a few words — we're just ___.", answer: 'acquaintances' },
+        { type: 'choice', prompt: '"Small talk" is usually about...', options: ['deep personal problems', 'light topics like the weather', 'business contracts'], answerIndex: 1 },
+        { type: 'gap', prompt: 'Before the meeting started, they made some ___ ___ about the weekend.', answer: 'small talk' },
+        { type: 'choice', prompt: '"Networking event" is best described as...', options: ['a casual dinner with friends', 'a professional gathering to meet contacts', 'a job interview'], answerIndex: 1 },
+        { type: 'gap', prompt: 'She attended a ___ ___ hoping to meet future business partners.', answer: 'networking event' },
+        { type: 'choice', prompt: '"To hit it off" means...', options: ['to fight', 'to get along well immediately', 'to leave suddenly'], answerIndex: 1 },
+        { type: 'gap', prompt: 'From the moment they met, they ___ ___ ___ and talked for hours.', answer: 'hit it off' },
+        { type: 'choice', prompt: '"Icebreaker" refers to...', options: ['a formal closing statement', 'a question or activity to help people relax', 'an argument starter'], answerIndex: 1 },
+        { type: 'gap', prompt: 'Before starting the interview, please ___ ___ briefly.', answer: ['introduce yourself', 'introduce oneself'] }
       ]
     },
 
@@ -123,7 +139,19 @@ WEEKS.week01 = {
           { type: 'choice', prompt: 'He answered the phone immediately, so he ___ have been asleep.', options: ["can't", 'must'], answerIndex: 0 },
           { type: 'choice', prompt: 'You are standing at the empty departure gate — the screen says "Boarding complete." The passengers ___ already boarded the plane.', options: ['must have', "can't have"], answerIndex: 0 },
           { type: 'gap', prompt: "She's not answering her phone. She ___ (must/might/can't – lose) signal in the tunnel.", answer: 'might have lost' },
-          { type: 'choice', prompt: "He can't have missed the flight —", options: ["he's calling from the gate right now", 'the gate closed five minutes ago', 'nobody has seen him today'], answerIndex: 0 }
+          { type: 'choice', prompt: "He can't have missed the flight —", options: ["he's calling from the gate right now", 'the gate closed five minutes ago', 'nobody has seen him today'], answerIndex: 0 },
+          { type: 'gap', prompt: 'The streets are wet, so it ___ (must/might/can\'t – rain) last night.', answer: 'must have rained' },
+          { type: 'choice', prompt: "I texted him an hour ago and he still hasn't replied. He ___ seen the message.", options: ["can't have", 'must have'], answerIndex: 0 },
+          { type: 'gap', prompt: "The dog is barking non-stop. Something ___ (must/might/can't – scare) it.", answer: 'must have scared' },
+          { type: 'choice', prompt: 'The trophy is missing from the shelf. Someone ___ have taken it.', options: ['might', "can't"], answerIndex: 0 },
+          { type: 'gap', prompt: "The cake looks perfect. She ___ (must/might/can't – practise) baking a lot.", answer: 'must have practised' },
+          { type: 'choice', prompt: "He's fluent in French but has never studied it. He ___ have lived there for years.", options: ["can't", 'must'], answerIndex: 1 },
+          { type: 'gap', prompt: "The room smells of smoke. Someone ___ (must/might/can't – smoke) in here.", answer: 'must have smoked' },
+          { type: 'choice', prompt: 'The shop is closed and the lights are off, but a car is still in the car park. The owner ___ have left yet.', options: ["can't", 'must'], answerIndex: 0 },
+          { type: 'gap', prompt: "I can't find my keys anywhere. I ___ (must/might/can't – drop) them on the way home.", answer: 'might have dropped' },
+          { type: 'choice', prompt: 'Look at these test results — you ___ have studied really hard!', options: ['must', "can't"], answerIndex: 0 },
+          { type: 'gap', prompt: "The email bounced back. She ___ (must/might/can't – type) the address wrong.", answer: 'must have typed' },
+          { type: 'choice', prompt: "It's impossible he stole the money — he ___ have been at work all day, dozens of people saw him.", options: ["can't", 'might'], answerIndex: 0 }
         ]
       },
       vocabulary: [
@@ -142,66 +170,70 @@ WEEKS.week01 = {
         { type: 'choice', prompt: 'A short stop between two flights is called a...', options: ['layover', 'delay', 'connection fee'], answerIndex: 0 },
         { type: 'gap', prompt: 'Our flight was ___ by two hours because of the storm.', answer: 'delayed' },
         { type: 'choice', prompt: 'What do you do at customs?', options: ['Buy duty-free perfume', 'Declare goods when entering a country', 'Check in your luggage'], answerIndex: 1 },
-        { type: 'gap', prompt: "I was already through security, but I almost ___ ___ ___ because the taxi arrived late and I had to run to the gate.", answer: ['missed my flight', 'missed the flight'] }
+        { type: 'gap', prompt: "I was already through security, but I almost ___ ___ ___ because the taxi arrived late and I had to run to the gate.", answer: ['missed my flight', 'missed the flight'] },
+        { type: 'choice', prompt: "'Connecting flight' means...", options: ['your first flight of the day', 'a flight that continues your journey after a layover', 'a cancelled flight'], answerIndex: 1 },
+        { type: 'gap', prompt: 'Please remember to ___ ___ at least two hours before an international flight.', answer: 'check in' },
+        { type: 'choice', prompt: "'To miss a flight' means...", options: ['to arrive too late to board', 'to enjoy a flight', 'to upgrade your seat'], answerIndex: 0 },
+        { type: 'gap', prompt: 'After a long ___ in Amsterdam, we finally boarded our connecting flight.', answer: 'layover' },
+        { type: 'choice', prompt: 'Which document do you show at the gate before boarding?', options: ['Receipt', 'Boarding pass', 'Warranty'], answerIndex: 1 },
+        { type: 'gap', prompt: 'We had to open our bags for the officer at ___.', answer: 'customs' },
+        { type: 'choice', prompt: "'Delayed' is the opposite of...", options: ['on time', 'cancelled', 'boarding'], answerIndex: 0 },
+        { type: 'gap', prompt: 'While waiting at the gate, we made some ___ ___ with the couple next to us.', answer: 'small talk' },
+        { type: 'choice', prompt: "You've just met someone once at a party — they are your...", options: ['acquaintance', 'colleague', 'sibling'], answerIndex: 0 },
+        { type: 'gap', prompt: "The stranger's joke really helped to ___ ___ ___ during the long delay.", answer: 'break the ice' },
+        { type: 'choice', prompt: "If two people 'hit it off', it means...", options: ['they argued', 'they got along instantly', 'they exchanged contact details'], answerIndex: 1 },
+        { type: 'gap', prompt: 'He gave me his number so we could ___ ___ ___ after the trip.', answer: 'get in touch' }
       ],
       listening: {
         title: "Tom's Delayed Flight",
         sentences: [
           "Tom's flight to New York was delayed by three hours.",
           'He decided to check in early anyway, just to be safe.',
+          'While waiting, he made some small talk with a woman sitting nearby.',
           'At the gate, an announcement said the connecting flight might also be affected.',
           'Tom started to worry about his layover in Amsterdam.',
           'Luckily, the airline rebooked him onto an earlier connection.',
           'After landing, he collected his suitcase at the luggage claim.',
+          'The customs officer asked him a few quick questions about his luggage.',
           'He was relieved to finally get through customs and start his trip.'
         ],
         questions: [
           { prompt: "How long was Tom's flight delayed?", options: ['One hour', 'Three hours', 'All day'], answerIndex: 1 },
+          { prompt: 'What did Tom do despite the delay?', options: ['Checked in early', 'Cancelled his ticket', 'Went home'], answerIndex: 0 },
+          { prompt: 'What did Tom do while waiting?', options: ['Fell asleep', 'Made small talk with a woman nearby', 'Called the airline'], answerIndex: 1 },
+          { prompt: 'What did the gate announcement warn about?', options: ['A gate change', 'The connecting flight might be affected', 'A weather delay'], answerIndex: 1 },
           { prompt: 'What was Tom worried about?', options: ['Missing his layover connection', 'Losing his passport', 'The weather'], answerIndex: 0 },
-          { prompt: 'What did Tom do first after landing?', options: ['Went straight to customs', 'Collected his luggage', 'Called a taxi'], answerIndex: 1 }
+          { prompt: 'What did the airline do?', options: ['Cancelled his ticket', 'Rebooked him onto an earlier connection', 'Upgraded his seat'], answerIndex: 1 },
+          { prompt: 'What did Tom do first after landing?', options: ['Went straight to customs', 'Collected his luggage', 'Called a taxi'], answerIndex: 1 },
+          { prompt: 'What did the customs officer do?', options: ['Confiscated his bag', 'Asked him a few questions about his luggage', 'Ignored him'], answerIndex: 1 },
+          { prompt: 'How did Tom feel at the end?', options: ['Relieved', 'Angry', 'Confused'], answerIndex: 0 }
         ]
-      },
-      conversation: {
-        situation: 'Your flight has been delayed and you speak to an airline staff member.',
-        start: 'n1',
-        nodes: {
-          n1: { them: 'Good afternoon, how can I help you today?', next: 'n2', choices: [
-            { text: 'Hi, I just found out my flight has been delayed. Could you tell me more?', correct: true },
-            { text: 'My flight is late, I need answers now.', correct: false, feedback: 'Klingt fordernd und dringlich statt höflich-fragend. Besser: "Could you tell me more about the delay, please?"' },
-            { text: 'Something about my flight, I think?', correct: false, feedback: 'Zu vage — sag konkret, worum es geht: "I just found out my flight has been delayed. Could you tell me more?"' }
-          ]},
-          n2: { them: 'I\'m sorry about that. Your flight to Amsterdam will now depart at 6 PM.', next: 'n3', choices: [
-            { text: 'I see. Will I still make my connecting flight?', correct: true },
-            { text: 'I see. Do I still catch my connecting flight?', correct: false, feedback: '"Do I catch" klingt nach einer Gewohnheit. Für eine konkrete Zukunftsfrage: "Will I still make my connecting flight?"' },
-            { text: 'This is a disaster, my whole trip is ruined!', correct: false, feedback: 'Verständliche Frustration, aber das hilft nicht weiter und wirkt unprofessionell. Frag konkret nach.' }
-          ]},
-          n3: { them: 'Let me check... Unfortunately, you might miss it. I can rebook you onto a later flight.', next: 'n4', choices: [
-            { text: 'That would be great, thank you very much.', correct: true },
-            { text: 'That would be great, thanks a lot for it.', correct: false, feedback: '"Thanks a lot for it" klingt unnatürlich holprig. Natürlicher: "That would be great, thank you very much."' },
-            { text: "Are you sure that's the best you can do?", correct: false, feedback: 'Das wirkt misstrauisch gegenüber einer hilfsbereiten Lösung. Freundlicher zustimmen.' }
-          ]},
-          n4: { them: 'Great, I\'ve rebooked you. Would you like a meal voucher for the wait?', next: 'n5', choices: [
-            { text: 'Yes, please, that would be very kind of you.', correct: true },
-            { text: "No, I don't need charity.", correct: false, feedback: '"Charity" ist unpassend — ein Gutschein bei Verspätung ist normaler Kundenservice. Höflich annehmen.' },
-            { text: 'Yes please, I am appreciating that.', correct: false, feedback: '"Appreciate" steht meist nicht im Continuous. Richtig: "I would appreciate that" bzw. "that would be very kind of you."' }
-          ]},
-          n5: { them: "Perfect, here's your new boarding pass. Your gate closes at 5:30.", next: 'end', choices: [
-            { text: 'Thank you so much for your help!', correct: true },
-            { text: 'Thanks, finally some good news.', correct: false, feedback: 'Klingt leicht sarkastisch gegenüber der Verspätung. Freundlich abschließen ohne Seitenhieb.' },
-            { text: 'Thank you for you help.', correct: false, feedback: 'Typischer Fehler: "you" statt "your". Richtig: "Thank you for your help!"' }
-          ]},
-          end: { them: 'You\'re welcome, have a safe flight!', end: true }
-        }
       },
       quiz: [
         { type: 'gap', prompt: "The lights are off. They ___ (must/might/can't – leave) already.", answer: 'must have left' },
-        { type: 'choice', prompt: '"Layover" means...', options: ['a type of luggage', 'a stop between flights', 'a delayed flight'], answerIndex: 1 },
         { type: 'choice', prompt: 'He can\'t have missed the flight because...', options: ['he is calling from the gate right now', 'he left home late', 'his bag is heavy'], answerIndex: 0 },
-        { type: 'choice', prompt: 'Where do you collect your suitcase?', options: ['Customs', 'Boarding gate', 'Luggage claim'], answerIndex: 2 },
-        { type: 'choice', prompt: 'She ___ forgotten her passport – she\'s calling the airline in a panic.', options: ['must have', "can't have"], answerIndex: 0 },
         { type: 'gap', prompt: "They ___ (must/might/can't – board) already — the gate is empty.", answer: 'must have boarded' },
+        { type: 'choice', prompt: 'She ___ forgotten her passport – she\'s calling the airline in a panic.', options: ['must have', "can't have"], answerIndex: 0 },
+        { type: 'gap', prompt: 'The suitcase looks brand new. She ___ (must/might/can\'t – buy) it recently.', answer: 'must have bought' },
+        { type: 'choice', prompt: "The plane is still at the gate, so passengers ___ boarded yet.", options: ["can't have", 'must have'], answerIndex: 0 },
+        { type: 'gap', prompt: "I can't reach him. He ___ (must/might/can't – lose) his phone.", answer: 'might have lost' },
+        { type: 'choice', prompt: "It's impossible she forgot the meeting — she ___ have written it in three different calendars.", options: ['must', "can't"], answerIndex: 0 },
+        { type: 'choice', prompt: '"Layover" means...', options: ['a type of luggage', 'a stop between flights', 'a delayed flight'], answerIndex: 1 },
+        { type: 'gap', prompt: 'You need your ___ ___ ready before boarding.', answer: 'boarding pass' },
+        { type: 'choice', prompt: 'Where do you collect your suitcase?', options: ['Customs', 'Boarding gate', 'Luggage claim'], answerIndex: 2 },
+        { type: 'gap', prompt: 'Our connecting flight was ___ by three hours.', answer: 'delayed' },
         { type: 'choice', prompt: '"To check in" means...', options: ['to register for your flight', 'to collect your luggage', 'to go through security'], answerIndex: 0 },
-        { type: 'choice', prompt: '"Connecting flight" means...', options: ['your first flight of the day', 'a flight that continues your journey after a layover', 'a cancelled flight'], answerIndex: 1 }
+        { type: 'gap', prompt: 'We had to declare our goods at ___ before leaving the airport.', answer: 'customs' },
+        { type: 'choice', prompt: 'I ___ three coffees already this morning!', options: ['have had', 'have been having'], answerIndex: 0 },
+        { type: 'gap', prompt: 'How long ___ (you/learn) English?', answer: 'have you been learning' },
+        { type: 'choice', prompt: 'She ___ this book — it was fantastic.', options: ['has read', 'has been reading'], answerIndex: 0 },
+        { type: 'gap', prompt: '___ (you/ever/be) to Australia?', answer: 'Have you ever been' },
+        { type: 'choice', prompt: 'I ___ her for years — we grew up together.', options: ['have known', 'have been knowing'], answerIndex: 0 },
+        { type: 'choice', prompt: '"To break the ice" means...', options: ['to be very cold', 'to start a conversation comfortably', 'to end a friendship'], answerIndex: 1 },
+        { type: 'gap', prompt: "We only met briefly — she's just an ___.", answer: 'acquaintance' },
+        { type: 'choice', prompt: "'Small talk' usually covers...", options: ['serious politics', 'light everyday topics', 'business contracts'], answerIndex: 1 },
+        { type: 'gap', prompt: 'They ___ ___ ___ right away and became good friends.', answer: 'hit it off' },
+        { type: 'choice', prompt: 'An icebreaker is used to...', options: ['end a conversation abruptly', 'help people relax at the start of an event', 'criticize someone'], answerIndex: 1 }
       ]
     },
 
@@ -221,7 +253,19 @@ WEEKS.week01 = {
           { type: 'gap', prompt: 'I ___ (charge) twice for the same order.', answer: 'was charged' },
           { type: 'choice', prompt: 'This laptop ___ repaired under warranty last month.', options: ['was', 'did'], answerIndex: 0 },
           { type: 'gap', prompt: 'The wrong item ___ (send) to my address.', answer: 'was sent' },
-          { type: 'choice', prompt: 'All complaints ___ within 48 hours.', options: ['are answered', 'answer'], answerIndex: 0 }
+          { type: 'choice', prompt: 'All complaints ___ within 48 hours.', options: ['are answered', 'answer'], answerIndex: 0 },
+          { type: 'gap', prompt: "This product ___ (not/design) to be used outdoors.", answer: "isn't designed" },
+          { type: 'choice', prompt: 'The parcel ___ delivered yesterday, but it never arrived.', options: ['was', 'has'], answerIndex: 0 },
+          { type: 'gap', prompt: 'My complaint about the faulty item ___ (ignore) for two weeks.', answer: 'was ignored' },
+          { type: 'choice', prompt: 'These shoes ___ made in Italy.', options: ['are', 'do'], answerIndex: 0 },
+          { type: 'gap', prompt: 'The faulty toaster ___ (replace) free of charge.', answer: 'was replaced' },
+          { type: 'choice', prompt: 'By the time I called, my order ___ already cancelled.', options: ['had been', 'was being'], answerIndex: 0 },
+          { type: 'gap', prompt: 'New safety regulations ___ (introduce) last year.', answer: 'were introduced' },
+          { type: 'choice', prompt: 'Customers ___ informed about the delay by email.', options: ['were', 'was'], answerIndex: 0 },
+          { type: 'gap', prompt: "This warranty ___ (not/extend) beyond two years.", answer: "isn't extended" },
+          { type: 'choice', prompt: 'The damaged goods ___ returned to the supplier tomorrow.', options: ['will be', 'will'], answerIndex: 0 },
+          { type: 'gap', prompt: 'All refunds ___ (process) within five working days.', answer: 'are processed' },
+          { type: 'choice', prompt: 'My card ___ overcharged by the cashier — I noticed immediately.', options: ['was', 'has'], answerIndex: 0 }
         ]
       },
       vocabulary: [
@@ -240,66 +284,70 @@ WEEKS.week01 = {
         { type: 'choice', prompt: 'If a shop charges you too much, they ___ you.', options: ['overcharge', 'exchange', 'refund'], answerIndex: 0 },
         { type: 'gap', prompt: 'This phone comes with a two-year ___.', answer: 'warranty' },
         { type: 'choice', prompt: "What does 'to exchange an item' mean?", options: ['to throw it away', 'to swap it for a different one', 'to pay for it twice'], answerIndex: 1 },
-        { type: 'gap', prompt: "___ ___ protect you when a product doesn't work as promised.", answer: 'consumer rights' }
+        { type: 'gap', prompt: "___ ___ protect you when a product doesn't work as promised.", answer: 'consumer rights' },
+        { type: 'choice', prompt: "'To return an item' means...", options: ['to keep it forever', 'to bring it back to the shop', 'to break it'], answerIndex: 1 },
+        { type: 'gap', prompt: 'The store gave me a full ___ after I complained.', answer: 'refund' },
+        { type: 'choice', prompt: 'Which word describes money given back to a customer?', options: ['warranty', 'refund', 'receipt'], answerIndex: 1 },
+        { type: 'gap', prompt: 'The blender stopped working after a week — it was clearly ___.', answer: 'faulty' },
+        { type: 'choice', prompt: 'A document proving you bought something is a...', options: ['warranty', 'receipt', 'refund'], answerIndex: 1 },
+        { type: 'gap', prompt: 'I want to ___ these trousers for a larger size.', answer: 'exchange' },
+        { type: 'choice', prompt: "'Consumer rights' exist mainly to protect...", options: ['shop owners', 'customers', 'delivery drivers'], answerIndex: 1 },
+        { type: 'gap', prompt: 'At the shop, the assistant used a friendly joke to ___ ___ ___.', answer: 'break the ice' },
+        { type: 'choice', prompt: "You've spoken to the shop assistant a few times now — they're becoming your...", options: ['acquaintance', 'warranty', 'receipt'], answerIndex: 0 },
+        { type: 'gap', prompt: 'I kept my ___ ___ from the flight as a souvenir.', answer: 'boarding pass' },
+        { type: 'choice', prompt: "'Layover' means...", options: ['a stop between flights', 'a type of refund', 'a faulty product'], answerIndex: 0 },
+        { type: 'gap', prompt: 'Our flight was ___, so we arrived late to return the item.', answer: 'delayed' }
       ],
       listening: {
         title: "Lisa's Faulty Jacket",
         sentences: [
           'Lisa ordered a jacket online, but it arrived faulty.',
+          'At first, she thought she might have ordered the wrong size.',
           'One of the zippers was completely broken.',
           'She contacted customer service and explained the problem.',
           'They asked her to send a photo of the damage.',
           'Luckily, the jacket was still covered by warranty.',
           'Lisa was offered a full refund or a free exchange.',
+          'She kept the receipt safely in case anything else went wrong.',
           'She chose the exchange and received a new jacket within a week.'
         ],
         questions: [
           { prompt: 'What was wrong with the jacket?', options: ['Wrong colour', 'Broken zipper', 'Wrong size'], answerIndex: 1 },
+          { prompt: 'What did Lisa think at first?', options: ["She'd ordered the wrong size", 'The jacket was stolen', 'The shop was closed'], answerIndex: 0 },
+          { prompt: 'Who did Lisa contact?', options: ['Customer service', 'The delivery driver', 'Her bank'], answerIndex: 0 },
           { prompt: 'What did customer service ask for?', options: ['A receipt', 'A photo', 'A phone call'], answerIndex: 1 },
-          { prompt: 'What did Lisa choose?', options: ['A refund', 'An exchange', 'Nothing'], answerIndex: 1 }
+          { prompt: 'Why could Lisa get help so easily?', options: ['It was expensive', 'The jacket was covered by warranty', 'She complained loudly'], answerIndex: 1 },
+          { prompt: 'What two options was Lisa offered?', options: ['A refund or an exchange', 'A discount or an apology', 'Nothing'], answerIndex: 0 },
+          { prompt: 'What did Lisa do with the receipt?', options: ['Threw it away', 'Kept it safely', 'Gave it to the shop'], answerIndex: 1 },
+          { prompt: 'What did Lisa choose?', options: ['A refund', 'An exchange', 'Neither'], answerIndex: 1 },
+          { prompt: 'How long did it take to receive the new jacket?', options: ['Within a week', 'The same day', 'A month'], answerIndex: 0 }
         ]
-      },
-      conversation: {
-        situation: 'You contact customer service about a faulty item you received.',
-        start: 'n1',
-        nodes: {
-          n1: { them: 'Hello, thank you for contacting us. How can I help?', next: 'n2', choices: [
-            { text: "Hi, I received a faulty item and I'd like to sort it out.", correct: true },
-            { text: 'Hi, your products are always breaking.', correct: false, feedback: 'Eine pauschale Beschwerde über "immer" hilft nicht und klingt unfair. Beschreibe den konkreten Fall.' },
-            { text: 'Hi, I have received a faulty item last week.', correct: false, feedback: 'Present Perfect passt nicht mit einer genauen Zeitangabe wie "last week" — dafür braucht man Simple Past: "I received a faulty item last week."' }
-          ]},
-          n2: { them: "I'm sorry to hear that. Could you tell me what's wrong with it?", next: 'n3', choices: [
-            { text: "Sure, the zipper is broken and it can't be closed.", correct: true },
-            { text: "It's broken, obviously.", correct: false, feedback: 'Das beantwortet die Frage nicht wirklich und klingt leicht genervt. Beschreibe das Problem konkret.' },
-            { text: "The zipper is breaked and can't close.", correct: false, feedback: '"Breaked" ist kein Wort — "break" ist unregelmäßig: broken. Richtig: "The zipper is broken and it can\'t be closed."' }
-          ]},
-          n3: { them: 'I see. Would you prefer a refund or an exchange?', next: 'n4', choices: [
-            { text: "I'd prefer an exchange, if that's possible.", correct: true },
-            { text: 'Whatever is easiest for you.', correct: false, feedback: 'Höflich gemeint, aber der Kundenservice braucht eine klare Entscheidung von dir.' },
-            { text: 'I prefer an exchange than a refund.', correct: false, feedback: 'Nach "prefer" folgt "to", nicht "than": "I prefer an exchange to a refund" — einfacher: "I\'d prefer an exchange, if that\'s possible."' }
-          ]},
-          n4: { them: 'No problem. Could you send us a photo of the damage first?', next: 'n5', choices: [
-            { text: "Of course, I'll take one right now and email it over.", correct: true },
-            { text: "Why, don't you believe me?", correct: false, feedback: 'Das wirkt misstrauisch — ein Foto anzufordern ist normale Praxis. Kooperativ antworten.' },
-            { text: 'Of course, I send it now.', correct: false, feedback: 'Für eine spontane Zusage in dem Moment braucht man "will": "I\'ll send it now."' }
-          ]},
-          n5: { them: "No problem, we'll send a new one right away. Anything else?", next: 'end', choices: [
-            { text: "No, that's everything. Thank you for your help!", correct: true },
-            { text: "No, that's it, bye.", correct: false, feedback: 'Sehr knapp/abrupt zum Abschluss. Ein Dankeschön wirkt freundlicher.' },
-            { text: "No, that's all, thanks for you help.", correct: false, feedback: 'Wieder der "you/your"-Fehler: richtig ist "thanks for your help."' }
-          ]},
-          end: { them: 'You\'re welcome! Have a great day.', end: true }
-        }
       },
       quiz: [
         { type: 'gap', prompt: 'My package ___ (deliver) to the wrong house.', answer: 'was delivered' },
         { type: 'choice', prompt: '"Faulty" means...', options: ['expensive', 'broken/defective', 'new'], answerIndex: 1 },
-        { type: 'choice', prompt: 'A document proving your purchase is called a...', options: ['warranty', 'receipt', 'refund'], answerIndex: 1 },
-        { type: 'choice', prompt: 'Choose correct passive: I ___ overcharged for my order.', options: ['was', 'did'], answerIndex: 0 },
-        { type: 'choice', prompt: '"To exchange an item" means...', options: ['to throw it away', 'to swap it for another one', 'to pay more for it'], answerIndex: 1 },
         { type: 'gap', prompt: 'The company ___ (contact) me about the refund yesterday.', answer: 'contacted' },
-        { type: 'choice', prompt: '"Warranty" means...', options: ['a discount code', 'a guarantee that covers repairs', 'a delivery fee'], answerIndex: 1 },
-        { type: 'choice', prompt: '"Consumer rights" protect you when...', options: ['you want a discount', 'a product is faulty or misdescribed', 'you are late for a delivery'], answerIndex: 1 }
+        { type: 'choice', prompt: 'Choose correct passive: I ___ overcharged for my order.', options: ['was', 'did'], answerIndex: 0 },
+        { type: 'gap', prompt: "This item ___ (not/cover) by the warranty.", answer: "isn't covered" },
+        { type: 'choice', prompt: 'The parcel ___ delivered before I even got home.', options: ['had been', 'was being'], answerIndex: 0 },
+        { type: 'gap', prompt: 'All faulty products ___ (replace) free of charge by this company.', answer: 'are replaced' },
+        { type: 'choice', prompt: 'My refund ___ processed within five working days, according to the website.', options: ['will be', 'will'], answerIndex: 0 },
+        { type: 'choice', prompt: 'A document proving your purchase is called a...', options: ['warranty', 'receipt', 'refund'], answerIndex: 1 },
+        { type: 'gap', prompt: 'This laptop comes with a two-year ___.', answer: 'warranty' },
+        { type: 'choice', prompt: '"To exchange an item" means...', options: ['to throw it away', 'to swap it for another one', 'to pay more for it'], answerIndex: 1 },
+        { type: 'gap', prompt: 'The shirt arrived torn — it was completely ___.', answer: 'faulty' },
+        { type: 'choice', prompt: '"Consumer rights" protect you when...', options: ['you want a discount', 'a product is faulty or misdescribed', 'you are late for a delivery'], answerIndex: 1 },
+        { type: 'gap', prompt: 'I was given a full ___ after the item broke.', answer: 'refund' },
+        { type: 'choice', prompt: '"To hit it off" means...', options: ['we argued', 'we got along well immediately', 'we left early'], answerIndex: 1 },
+        { type: 'gap', prompt: 'It is polite to ___ ___ before a business conversation.', answer: ['introduce yourself', 'introduce oneself'] },
+        { type: 'choice', prompt: "'Networking event' means...", options: ['a casual dinner with friends', 'a professional gathering to meet contacts', 'a job interview'], answerIndex: 1 },
+        { type: 'gap', prompt: "She's just an ___, not a close friend.", answer: 'acquaintance' },
+        { type: 'choice', prompt: 'An icebreaker is used to...', options: ['end a conversation', 'help people relax at the start of an event', 'criticize someone'], answerIndex: 1 },
+        { type: 'choice', prompt: '"Layover" means...', options: ['a stop between flights', 'a delayed flight', 'a type of ticket'], answerIndex: 0 },
+        { type: 'gap', prompt: 'You need your ___ ___ to board the plane.', answer: 'boarding pass' },
+        { type: 'choice', prompt: 'Where do you collect your suitcase?', options: ['Customs', 'Boarding gate', 'Luggage claim'], answerIndex: 2 },
+        { type: 'gap', prompt: 'Our flight was ___ by two hours.', answer: 'delayed' },
+        { type: 'choice', prompt: "'To check in' means...", options: ['to register for your flight', 'to collect your luggage', 'to go through security'], answerIndex: 0 }
       ]
     },
 
@@ -319,7 +367,19 @@ WEEKS.week01 = {
           { type: 'gap', prompt: 'The candidate ___ we interviewed yesterday seemed very confident.', answer: ['who', 'that'] },
           { type: 'choice', prompt: 'Choose the defining clause:', options: ['My colleague, who lives nearby, gave me a lift.', 'The colleague who lives nearby gave me a lift.'], answerIndex: 1 },
           { type: 'gap', prompt: 'The email ___ you sent me yesterday had the wrong attachment.', answer: ['which', 'that'] },
-          { type: 'choice', prompt: 'This is the office ___ I work.', options: ['where', 'who'], answerIndex: 0 }
+          { type: 'choice', prompt: 'This is the office ___ I work.', options: ['where', 'who'], answerIndex: 0 },
+          { type: 'gap', prompt: 'The manager ___ hired me left the company last year.', answer: ['who', 'that'] },
+          { type: 'choice', prompt: 'Sarah, ___ is our new team leader, starts on Monday.', options: ['who', 'which'], answerIndex: 0 },
+          { type: 'gap', prompt: 'This is the project ___ changed my career.', answer: ['that', 'which'] },
+          { type: 'choice', prompt: "Non-defining or defining: 'My assistant, who speaks four languages, is invaluable.'", options: ['Non-defining (extra info)', 'Defining (essential info)'], answerIndex: 0 },
+          { type: 'gap', prompt: 'The company ___ I used to work for has just gone bankrupt.', answer: ['that', 'which'] },
+          { type: 'choice', prompt: 'Choose the correctly punctuated sentence:', options: ['The employee, who was late, apologised.', 'The employee who was late, apologised.'], answerIndex: 0 },
+          { type: 'gap', prompt: 'This is the meeting room ___ we hold interviews.', answer: 'where' },
+          { type: 'choice', prompt: 'The client ___ complained yesterday just called back to apologise.', options: ['who', 'which'], answerIndex: 0 },
+          { type: 'gap', prompt: 'My contract, ___ I signed last year, ends in December.', answer: 'which' },
+          { type: 'choice', prompt: 'Choose the defining clause:', options: ['The report which I wrote won an award.', 'The report, which I wrote, won an award.'], answerIndex: 0 },
+          { type: 'gap', prompt: 'Is this the man ___ résumé impressed everyone?', answer: 'whose' },
+          { type: 'choice', prompt: 'The reason ___ she resigned is still unclear.', options: ['why', 'who'], answerIndex: 0 }
         ]
       },
       vocabulary: [
@@ -338,66 +398,70 @@ WEEKS.week01 = {
         { type: 'choice', prompt: "What does 'to negotiate' mean?", options: ['to refuse completely', 'to discuss and reach an agreement', 'to quit a job'], answerIndex: 1 },
         { type: 'gap', prompt: 'He handed in his ___ after finding a new job.', answer: 'resignation' },
         { type: 'choice', prompt: 'Your combination of professional abilities is your...', options: ['skillset', 'workload', 'deadline'], answerIndex: 0 },
-        { type: 'gap', prompt: 'I ___ ___ ___ ___ at three different companies this month.', answer: ['applied for a job', 'applied for jobs'] }
+        { type: 'gap', prompt: 'I ___ ___ ___ ___ at three different companies this month.', answer: ['applied for a job', 'applied for jobs'] },
+        { type: 'choice', prompt: 'A person you work with is your...', options: ['colleague', 'acquaintance', 'client'], answerIndex: 0 },
+        { type: 'gap', prompt: 'My ___ has doubled since I took on the new project.', answer: 'workload' },
+        { type: 'choice', prompt: "'To apply for a job' means...", options: ['to quit', 'to submit a request to be considered for a position', 'to get fired'], answerIndex: 1 },
+        { type: 'gap', prompt: 'You should always ___ your salary before accepting an offer.', answer: 'negotiate' },
+        { type: 'choice', prompt: 'Which word means being promoted to a higher position?', options: ['promotion', 'resignation', 'deadline'], answerIndex: 0 },
+        { type: 'gap', prompt: 'The ___ for this report is Friday at noon.', answer: 'deadline' },
+        { type: 'choice', prompt: "A 'skillset' refers to...", options: ['your salary', 'your set of abilities', 'your job title'], answerIndex: 1 },
+        { type: 'gap', prompt: 'During the interview, a light joke helped ___ ___ ___.', answer: 'break the ice' },
+        { type: 'choice', prompt: "'Small talk' is...", options: ['a formal presentation', 'light casual conversation', 'a business contract'], answerIndex: 1 },
+        { type: 'gap', prompt: 'He showed his ___ ___ at the airport before boarding.', answer: 'boarding pass' },
+        { type: 'choice', prompt: "'To check in' means...", options: ['to register for your flight', 'to leave the airport', 'to buy a ticket'], answerIndex: 0 },
+        { type: 'gap', prompt: 'If a product is broken, it is ___.', answer: 'faulty' }
       ],
       listening: {
         title: "Marco's Promotion",
         sentences: [
           'After three years at the company, Marco finally got the promotion he wanted.',
+          'He had applied for the position twice before finally succeeding.',
           'His new role came with a bigger workload, but also new challenges.',
           'His colleague, who had been there much longer, gave him some advice.',
           'She told him to negotiate his new salary before accepting.',
           'Marco felt nervous, but decided to ask for a fair raise.',
           'To his surprise, his manager agreed almost immediately.',
+          'He immediately set a personal deadline to learn his new responsibilities within a month.',
           'Marco started his new position feeling confident about his skillset.'
         ],
         questions: [
           { prompt: 'What happened to Marco after three years?', options: ['He resigned', 'He got a promotion', 'He got fired'], answerIndex: 1 },
+          { prompt: 'How many times had Marco applied for this position before?', options: ['Once', 'Twice', 'Three times'], answerIndex: 1 },
+          { prompt: 'What came with his new role?', options: ['A pay cut', 'A bigger workload', 'Fewer responsibilities'], answerIndex: 1 },
+          { prompt: 'Who gave Marco advice?', options: ['His manager', 'His colleague', 'A stranger'], answerIndex: 1 },
           { prompt: 'What did his colleague advise him to do?', options: ['Quit', 'Negotiate his salary', 'Ignore the offer'], answerIndex: 1 },
+          { prompt: 'How did Marco feel before asking for a raise?', options: ['Confident', 'Nervous', 'Angry'], answerIndex: 1 },
+          { prompt: 'How did his manager react to the raise request?', options: ['Refused completely', 'Agreed almost immediately', 'Ignored it'], answerIndex: 1 },
+          { prompt: 'What did Marco set for himself?', options: ['A vacation', 'A personal deadline', 'A resignation date'], answerIndex: 1 },
           { prompt: 'How did Marco feel at the end?', options: ['Confident', 'Angry', 'Confused'], answerIndex: 0 }
         ]
-      },
-      conversation: {
-        situation: 'You just got a promotion and now discuss your new salary with your manager.',
-        start: 'n1',
-        nodes: {
-          n1: { them: "So, congratulations on the promotion. Let's talk about your new salary.", next: 'n2', choices: [
-            { text: 'Thank you! I was hoping we could discuss a raise that reflects the new responsibilities.', correct: true },
-            { text: 'Thank you, I already know I deserve much more.', correct: false, feedback: 'Klingt anspruchsvoll/überheblich statt kooperativ. Diplomatischer formulieren.' },
-            { text: 'Thank you, I was hoping we could discuss a raise who reflects the new responsibilities.', correct: false, feedback: '"Who" bezieht sich auf Personen, nicht auf Dinge wie "a raise". Richtig: "...a raise that reflects the new responsibilities."' }
-          ]},
-          n2: { them: 'That\'s fair. What figure did you have in mind?', next: 'n3', choices: [
-            { text: 'Based on my research, I think a 10% increase would be appropriate.', correct: true },
-            { text: 'As much as possible, obviously.', correct: false, feedback: 'Zu vage und wenig professionell für eine Gehaltsverhandlung. Nenne eine konkrete, begründete Zahl.' },
-            { text: 'Based on my research, I think a 10% increase would be appropriate since long time.', correct: false, feedback: '"Since long time" ist ein typischer Übersetzungsfehler aus dem Deutschen und passt inhaltlich nicht — lass den Zusatz einfach weg.' }
-          ]},
-          n3: { them: 'That sounds reasonable given your new workload.', next: 'n4', choices: [
-            { text: 'I really appreciate that. Thank you for considering it.', correct: true },
-            { text: "I knew you'd agree eventually.", correct: false, feedback: 'Klingt selbstgefällig gegenüber einem Entgegenkommen. Dankbarer formulieren.' },
-            { text: 'I am appreciate that a lot.', correct: false, feedback: '"Appreciate" ist ein Vollverb, kein "be + appreciate" nötig: "I really appreciate that."' }
-          ]},
-          n4: { them: "Let's also talk about your new responsibilities going forward.", next: 'n5', choices: [
-            { text: "Sure, I'd love to understand what's expected of me in this new role.", correct: true },
-            { text: "I already know everything, don't worry.", correct: false, feedback: 'Wirkt überheblich gegenüber dem Vorgesetzten. Zeig dich offen für Erwartungen.' },
-            { text: "Sure, I would love to understand what it's expected from me.", correct: false, feedback: 'Doppelte Passiv-Konstruktion ist unnötig verschachtelt. Einfacher: "what\'s expected of me."' }
-          ]},
-          n5: { them: "We'll get the paperwork sorted this week.", next: 'end', choices: [
-            { text: 'Great, thank you so much for your support!', correct: true },
-            { text: 'Finally, took you long enough.', correct: false, feedback: 'Klingt undankbar/passiv-aggressiv nach einer positiven Nachricht. Freundlicher abschließen.' },
-            { text: 'Great, thanks so much for you support.', correct: false, feedback: 'Wieder "you" statt "your" — richtig: "thank you so much for your support!"' }
-          ]},
-          end: { them: "You've earned it. Welcome to the new role!", end: true }
-        }
       },
       quiz: [
         { type: 'gap', prompt: 'The employee ___ I mentioned earlier just resigned.', answer: ['who', 'that'] },
         { type: 'choice', prompt: '"Deadline" means...', options: ['a type of meeting', 'the date something is due', 'a job title'], answerIndex: 1 },
         { type: 'choice', prompt: 'Choose the non-defining clause:', options: ['My sister who lives in Rome is visiting.', 'My sister, who lives in Rome, is visiting.'], answerIndex: 1 },
-        { type: 'choice', prompt: '"To negotiate" means...', options: ['to argue angrily', 'to discuss and reach an agreement', 'to refuse'], answerIndex: 1 },
-        { type: 'choice', prompt: '"Workload" refers to...', options: ['your salary', 'the amount of work you have', 'your job title'], answerIndex: 1 },
-        { type: 'gap', prompt: 'By next year, she ___ (work) here for a decade.', answer: 'will have worked' },
+        { type: 'gap', prompt: 'This is the department ___ all complaints are handled.', answer: 'where' },
+        { type: 'choice', prompt: 'The manager ___ office is upstairs just called a meeting.', options: ['whose', 'who'], answerIndex: 0 },
+        { type: 'gap', prompt: 'The intern ___ we hired last month is already doing great.', answer: ['who', 'that'] },
+        { type: 'choice', prompt: 'Choose the correctly punctuated sentence:', options: ['My colleague, who I trust completely, will lead the project.', 'My colleague who I trust completely, will lead the project.'], answerIndex: 0 },
+        { type: 'gap', prompt: "That's the reason ___ she was promoted so quickly.", answer: 'why' },
         { type: 'choice', prompt: '"Deadline" is closest in meaning to...', options: ['a type of contract', 'the date something is due', 'a job title'], answerIndex: 1 },
-        { type: 'choice', prompt: '"To apply for a job" means...', options: ['to quit your job', 'to submit a request to be considered for a position', 'to get promoted'], answerIndex: 1 }
+        { type: 'choice', prompt: '"To negotiate" means...', options: ['to argue angrily', 'to discuss and reach an agreement', 'to refuse'], answerIndex: 1 },
+        { type: 'gap', prompt: 'Her ___ increased a lot after the merger.', answer: 'workload' },
+        { type: 'choice', prompt: '"To apply for a job" means...', options: ['to quit your job', 'to submit a request to be considered for a position', 'to get promoted'], answerIndex: 1 },
+        { type: 'gap', prompt: 'He was proud of his broad ___ after years of training.', answer: 'skillset' },
+        { type: 'choice', prompt: '"Resignation" means...', options: ['being fired', 'formally quitting your job', 'being promoted'], answerIndex: 1 },
+        { type: 'choice', prompt: '"Icebreaker" means...', options: ['a cold drink', 'a question or activity to start a conversation', 'an argument'], answerIndex: 1 },
+        { type: 'gap', prompt: "We only met once — she's just an ___.", answer: 'acquaintance' },
+        { type: 'choice', prompt: "'To hit it off' means...", options: ['to argue', 'to get along well immediately', 'to leave early'], answerIndex: 1 },
+        { type: 'gap', prompt: 'Our flight was ___ by three hours.', answer: 'delayed' },
+        { type: 'choice', prompt: "'Layover' means...", options: ['a stop between flights', 'a delayed flight', 'a type of ticket'], answerIndex: 0 },
+        { type: 'gap', prompt: 'You need your ___ ___ to board.', answer: 'boarding pass' },
+        { type: 'choice', prompt: 'Where do you collect your suitcase?', options: ['Customs', 'Boarding gate', 'Luggage claim'], answerIndex: 2 },
+        { type: 'choice', prompt: '"Faulty" means...', options: ['expensive', 'broken/defective', 'new'], answerIndex: 1 },
+        { type: 'gap', prompt: 'The store gave me a full ___ after I complained.', answer: 'refund' },
+        { type: 'choice', prompt: '"To exchange an item" means...', options: ['to throw it away', 'to swap it for another one', 'to pay more'], answerIndex: 1 }
       ]
     },
 
@@ -417,7 +481,19 @@ WEEKS.week01 = {
           { type: 'gap', prompt: 'If we had booked a table, we ___ (not/wait) now.', answer: "wouldn't be waiting" },
           { type: 'choice', prompt: 'If she ___ more time, she would have cooked dinner herself.', options: ['had had', 'has'], answerIndex: 0 },
           { type: 'gap', prompt: "If he wasn't so busy at work, he ___ (join) us for dinner tonight.", answer: 'would join' },
-          { type: 'choice', prompt: 'We wouldn\'t be so full now if we ___ dessert.', options: ["hadn't ordered", "didn't order"], answerIndex: 0 }
+          { type: 'choice', prompt: 'We wouldn\'t be so full now if we ___ dessert.', options: ["hadn't ordered", "didn't order"], answerIndex: 0 },
+          { type: 'gap', prompt: 'If she ___ (study) harder at school, she would have a better job now.', answer: 'had studied' },
+          { type: 'choice', prompt: "If I hadn't missed the bus, I ___ late for the reservation now.", options: ["wouldn't be", "wouldn't have been"], answerIndex: 0 },
+          { type: 'gap', prompt: 'If they ___ (not/cancel) the reservation, we would be eating there right now.', answer: "hadn't cancelled" },
+          { type: 'choice', prompt: 'If he were more confident, he ___ have asked for a discount earlier.', options: ['would', 'will'], answerIndex: 0 },
+          { type: 'gap', prompt: "If I weren't allergic to shellfish, I ___ (order) the seafood platter tonight.", answer: 'would order' },
+          { type: 'choice', prompt: "If we hadn't split the bill, one of us ___ have paid everything.", options: ['would', "wouldn't"], answerIndex: 0 },
+          { type: 'gap', prompt: 'She wouldn\'t be so thirsty now if she ___ (drink) more water earlier.', answer: 'had drunk' },
+          { type: 'choice', prompt: 'If you were a chef, what ___ your signature dish be?', options: ['would', 'will'], answerIndex: 0 },
+          { type: 'gap', prompt: "If the waiter ___ (recommend) the fish, we wouldn't have ordered the steak.", answer: 'had recommended' },
+          { type: 'choice', prompt: "If I hadn't left my wallet at home, I ___ pay for dinner right now.", options: ['could', "couldn't"], answerIndex: 0 },
+          { type: 'gap', prompt: 'We wouldn\'t need a reservation now if this restaurant ___ (be) less popular.', answer: 'were' },
+          { type: 'choice', prompt: 'If she weren\'t so busy, she ___ have joined us for the tasting menu last night.', options: ['would', 'will'], answerIndex: 0 }
         ]
       },
       vocabulary: [
@@ -436,66 +512,70 @@ WEEKS.week01 = {
         { type: 'choice', prompt: "'To split the bill' means...", options: ['one person pays for everyone', 'everyone pays their own share', 'the restaurant pays'], answerIndex: 1 },
         { type: 'gap', prompt: "I'm ___ ___ shellfish, so I can't eat this dish.", answer: 'allergic to' },
         { type: 'choice', prompt: "The chef's speciality is called the...", options: ['signature dish', 'starter', 'reservation'], answerIndex: 0 },
-        { type: 'gap', prompt: 'We left a generous ___ for the waiter.', answer: 'tip' }
+        { type: 'gap', prompt: 'We left a generous ___ for the waiter.', answer: 'tip' },
+        { type: 'choice', prompt: "'To recommend' means...", options: ['to suggest something good', 'to complain about something', 'to cancel an order'], answerIndex: 0 },
+        { type: 'gap', prompt: 'I made a ___ for two at 8 PM.', answer: 'reservation' },
+        { type: 'choice', prompt: "What is a 'starter'?", options: ['the main course', 'a small dish before the main course', 'a dessert'], answerIndex: 1 },
+        { type: 'gap', prompt: 'What would you ___ from the menu?', answer: 'recommend' },
+        { type: 'choice', prompt: "'Bill' and 'check' both mean...", options: ['a type of tip', "the restaurant's receipt of what you owe", 'a reservation'], answerIndex: 1 },
+        { type: 'gap', prompt: 'Everyone paid their own share — we decided to ___ ___ ___.', answer: 'split the bill' },
+        { type: 'choice', prompt: "A 'signature dish' is...", options: ['the cheapest item', "the chef's speciality", 'a vegetarian option'], answerIndex: 1 },
+        { type: 'gap', prompt: "The waiter's joke helped ___ ___ ___ at the start of the meal.", answer: 'break the ice' },
+        { type: 'choice', prompt: "'Layover' means...", options: ['a stop between flights', 'a type of dessert', 'a reservation'], answerIndex: 0 },
+        { type: 'gap', prompt: 'The dish arrived cold and clearly ___.', answer: 'faulty' },
+        { type: 'choice', prompt: 'A person you work with is your...', options: ['colleague', 'tip', 'starter'], answerIndex: 0 },
+        { type: 'gap', prompt: 'The ___ for finishing this menu design is tomorrow.', answer: 'deadline' }
       ],
       listening: {
         title: "Nina's Birthday Dinner",
         sentences: [
           'Nina booked a table at a popular restaurant for her birthday.',
           'When they arrived, the restaurant said they had no reservation on record.',
+          "One of Nina's friends mentioned she was allergic to shellfish, just in case.",
           'If she had brought her confirmation email, it would have solved the problem instantly.',
           'Luckily, the waiter found a table for them after a short wait.',
           'The waiter recommended the signature dish, a slow-cooked duck.',
           'Everyone loved the food, especially the starter.',
+          'Nina thanked the waiter warmly for finding them a table on such a busy night.',
           'At the end, they decided to split the bill and leave a good tip.'
         ],
         questions: [
           { prompt: 'What problem did Nina have at the restaurant?', options: ['No reservation found', 'Restaurant closed', 'Wrong address'], answerIndex: 0 },
+          { prompt: "What did one of Nina's friends mention?", options: ['She was allergic to shellfish', "She didn't like duck", 'She had to leave early'], answerIndex: 0 },
+          { prompt: 'What would have solved the problem instantly?', options: ['Bringing the confirmation email', 'Calling ahead', 'Paying extra'], answerIndex: 0 },
+          { prompt: 'Who found them a table?', options: ['The waiter', 'The manager', 'A different customer'], answerIndex: 0 },
           { prompt: 'What did the waiter recommend?', options: ['A drink', 'The signature dish', 'A dessert'], answerIndex: 1 },
+          { prompt: 'What was the signature dish?', options: ['Slow-cooked duck', 'Grilled fish', 'Vegetable soup'], answerIndex: 0 },
+          { prompt: 'What did everyone especially love?', options: ['The starter', 'The dessert', 'The drinks'], answerIndex: 0 },
+          { prompt: 'What did Nina do for the waiter?', options: ['Complained', 'Thanked him warmly', 'Ignored him'], answerIndex: 1 },
           { prompt: 'How did they pay?', options: ['Nina paid alone', 'They split the bill', "They didn't pay"], answerIndex: 1 }
         ]
       },
-      conversation: {
-        situation: 'You arrive at a restaurant and order dinner.',
-        start: 'n1',
-        nodes: {
-          n1: { them: 'Good evening, do you have a reservation?', next: 'n2', choices: [
-            { text: "Yes, it's under the name Schmidt, for two people.", correct: true },
-            { text: 'Yes, obviously, we booked days ago.', correct: false, feedback: 'Klingt leicht gereizt gegenüber einer Standardfrage. Sachlich antworten.' },
-            { text: "Yes, it's on name Schmidt, for two peoples.", correct: false, feedback: 'Zwei Fehler: "under the name" statt "on name", und "people" ist bereits Plural (kein "s"). Richtig: "under the name Schmidt, for two people."' }
-          ]},
-          n2: { them: 'Perfect, right this way. Can I get you something to drink?', next: 'n3', choices: [
-            { text: 'Could we see the wine list, please?', correct: true },
-            { text: 'Bring us your best wine, now.', correct: false, feedback: 'Klingt sehr befehlend für einen Restaurantbesuch. Höflicher formulieren.' },
-            { text: 'Can we to see the wine list?', correct: false, feedback: 'Nach Modalverben wie "can" folgt der Infinitiv ohne "to": "Can we see the wine list?"' }
-          ]},
-          n3: { them: 'Of course. Are you ready to order, or do you need a few more minutes?', next: 'n4', choices: [
-            { text: "We're ready. I'd like the signature dish, please.", correct: true },
-            { text: "Just bring whatever's fastest.", correct: false, feedback: 'Wirkt gehetzt/unhöflich gegenüber der Speisekarte. Besser konkret bestellen.' },
-            { text: 'We are ready, I would like the signature dish, please, since a long time.', correct: false, feedback: '"Since a long time" ist falsch übersetzt aus dem Deutschen und passt inhaltlich nicht zur Bestellung. Einfach weglassen.' }
-          ]},
-          n4: { them: 'Excellent choice. And for you — anything to start?', next: 'n5', choices: [
-            { text: "I'll have the soup as a starter, thank you.", correct: true },
-            { text: "I don't really do starters.", correct: false, feedback: 'Klingt etwas abweisend gegenüber einer freundlichen Nachfrage. Konkreter antworten.' },
-            { text: 'I will have the soup for starter.', correct: false, feedback: 'Es heißt "as a starter", nicht "for starter". Richtig: "I\'ll have the soup as a starter."' }
-          ]},
-          n5: { them: "I'll bring that right out. Anything else?", next: 'end', choices: [
-            { text: "That's all for now, thank you.", correct: true },
-            { text: 'No, hurry up though.', correct: false, feedback: 'Klingt ungeduldig/unfreundlich. Freundlich abschließen.' },
-            { text: "That's all for now, thanks for you service.", correct: false, feedback: 'Wieder "you" statt "your": "thanks for your service" — oder einfach "That\'s all for now, thank you."' }
-          ]},
-          end: { them: "Great, I'll be right back with your order.", end: true }
-        }
-      },
       quiz: [
         { type: 'gap', prompt: 'If I ___ (know) about the allergy, I wouldn\'t have ordered peanuts.', answer: 'had known' },
-        { type: 'choice', prompt: '"To split the bill" means...', options: ['one person pays everything', 'everyone pays their share', 'no one pays'], answerIndex: 1 },
-        { type: 'choice', prompt: 'A "starter" is...', options: ['the main course', 'a small dish before the main course', 'a dessert'], answerIndex: 1 },
         { type: 'choice', prompt: 'If I were you, I ___ try the fish.', options: ['would', 'would have'], answerIndex: 0 },
-        { type: 'choice', prompt: '"Signature dish" means...', options: ['the cheapest dish', "the chef's speciality", 'a vegetarian dish'], answerIndex: 1 },
         { type: 'gap', prompt: "If the restaurant ___ (be) less busy, we wouldn't have waited so long.", answer: 'had been' },
+        { type: 'choice', prompt: 'If she had booked earlier, she ___ have a table by the window right now.', options: ['would', "wouldn't"], answerIndex: 0 },
+        { type: 'gap', prompt: "We wouldn't be so full now if we ___ (not/order) dessert.", answer: "hadn't ordered" },
+        { type: 'choice', prompt: "If he weren't allergic to nuts, he ___ have tried the cake yesterday.", options: ['would', 'will'], answerIndex: 0 },
+        { type: 'gap', prompt: 'If they ___ (arrive) earlier, they would have got a better table.', answer: 'had arrived' },
+        { type: 'choice', prompt: "If I hadn't forgotten my wallet, I ___ pay right now.", options: ['could', "couldn't"], answerIndex: 0 },
+        { type: 'choice', prompt: "'To split the bill' means...", options: ['one person pays everything', 'everyone pays their share', 'no one pays'], answerIndex: 1 },
+        { type: 'choice', prompt: 'A "starter" is...', options: ['the main course', 'a small dish before the main course', 'a dessert'], answerIndex: 1 },
+        { type: 'gap', prompt: 'Could we have the ___, please?', answer: ['bill', 'check'] },
+        { type: 'choice', prompt: '"Signature dish" means...', options: ['the cheapest dish', "the chef's speciality", 'a vegetarian dish'], answerIndex: 1 },
+        { type: 'gap', prompt: "I'm ___ ___ peanuts, so please leave them out.", answer: 'allergic to' },
         { type: 'choice', prompt: '"Reservation" means...', options: ['a booking for a table', 'a type of dish', 'a complaint'], answerIndex: 0 },
-        { type: 'choice', prompt: '"To recommend" means...', options: ['to suggest something good', 'to complain about something', 'to cancel an order'], answerIndex: 0 }
+        { type: 'choice', prompt: '"To introduce oneself" means...', options: ['to say who you are to someone new', 'to leave a conversation', 'to argue'], answerIndex: 0 },
+        { type: 'gap', prompt: 'They ___ ___ ___ immediately and became friends.', answer: 'hit it off' },
+        { type: 'choice', prompt: "'Connecting flight' means...", options: ['your first flight', 'a flight continuing your journey after a layover', 'a cancelled flight'], answerIndex: 1 },
+        { type: 'gap', prompt: 'We had to declare our goods at ___.', answer: 'customs' },
+        { type: 'choice', prompt: "'To miss a flight' means...", options: ['to arrive too late to board', 'to enjoy a flight', 'to upgrade your seat'], answerIndex: 0 },
+        { type: 'gap', prompt: "___ ___ protect you when a product doesn't work as promised.", answer: 'consumer rights' },
+        { type: 'choice', prompt: '"Warranty" means...', options: ['a discount code', 'a guarantee that covers repairs', 'a delivery fee'], answerIndex: 1 },
+        { type: 'choice', prompt: '"Workload" refers to...', options: ['your salary', 'the amount of work you have', 'your job title'], answerIndex: 1 },
+        { type: 'gap', prompt: 'You should always ___ your salary before accepting an offer.', answer: 'negotiate' },
+        { type: 'choice', prompt: '"To apply for a job" means...', options: ['to quit your job', 'to submit a request to be considered for a position', 'to get promoted'], answerIndex: 1 }
       ]
     },
 
@@ -515,7 +595,19 @@ WEEKS.week01 = {
           { type: 'choice', prompt: "'I have a headache,' Tom said. → Tom said he ___ a headache.", options: ['has', 'had'], answerIndex: 1 },
           { type: 'choice', prompt: "'I will see a doctor tomorrow,' she said. → She said she ___ a doctor the next day.", options: ['would see', 'will see'], answerIndex: 0 },
           { type: 'gap', prompt: "'Don't move,' the paramedic said. → The paramedic told him ___.", answer: 'not to move' },
-          { type: 'choice', prompt: "'I have been feeling dizzy,' he said. → He said he ___ feeling dizzy.", options: ['had been', 'has been'], answerIndex: 0 }
+          { type: 'choice', prompt: "'I have been feeling dizzy,' he said. → He said he ___ feeling dizzy.", options: ['had been', 'has been'], answerIndex: 0 },
+          { type: 'gap', prompt: "'I can't breathe properly,' she said. → She said she ___ breathe properly.", answer: "couldn't" },
+          { type: 'choice', prompt: "'Are you feeling better?' the nurse asked. → The nurse asked if he ___ feeling better.", options: ['was', 'is'], answerIndex: 0 },
+          { type: 'gap', prompt: "'I took the medicine an hour ago,' he said. → He said he ___ (take) the medicine an hour before.", answer: 'had taken' },
+          { type: 'choice', prompt: "'Rest for two days,' the doctor said. → The doctor told me ___ for two days.", options: ['to rest', 'rest'], answerIndex: 0 },
+          { type: 'gap', prompt: "'Where does it hurt?' the doctor asked. → The doctor asked ___ it hurt.", answer: 'where' },
+          { type: 'choice', prompt: "'I may need surgery,' she said. → She said she ___ need surgery.", options: ['may', 'might'], answerIndex: 1 },
+          { type: 'gap', prompt: "'Have you taken any painkillers?' the doctor asked. → The doctor asked ___ ___ (I/take) any painkillers.", answer: 'if I had taken' },
+          { type: 'choice', prompt: "'Don't worry, it's not serious,' the doctor said. → The doctor told her ___ worry.", options: ['not to', 'to not'], answerIndex: 0 },
+          { type: 'gap', prompt: "'I felt dizzy this morning,' he said. → He said he ___ (feel) dizzy that morning.", answer: 'had felt' },
+          { type: 'choice', prompt: "'Call me if the pain gets worse,' she said. → She told me ___ her if the pain got worse.", options: ['to call', 'call'], answerIndex: 0 },
+          { type: 'gap', prompt: "'The doctor is examining her now,' he said. → He said the doctor ___ (examine) her then.", answer: 'was examining' },
+          { type: 'choice', prompt: "'I've never had this symptom before,' she said. → She said she ___ never had that symptom before.", options: ['had', 'has'], answerIndex: 0 }
         ]
       },
       vocabulary: [
@@ -534,66 +626,70 @@ WEEKS.week01 = {
         { type: 'choice', prompt: "What is 'first aid'?", options: ['a hospital department', 'immediate help given to an injured person', 'a type of medicine'], answerIndex: 1 },
         { type: 'gap', prompt: 'The doctor wrote her a ___ for painkillers.', answer: 'prescription' },
         { type: 'choice', prompt: "'To recover' means...", options: ['to get worse', 'to get better', 'to feel pain'], answerIndex: 1 },
-        { type: 'gap', prompt: 'They rushed him to the ___ ___ after the fall.', answer: 'emergency room' }
+        { type: 'gap', prompt: 'They rushed him to the ___ ___ after the fall.', answer: 'emergency room' },
+        { type: 'choice', prompt: 'Which of these reduces pain?', options: ['painkiller', 'symptom', 'prescription'], answerIndex: 0 },
+        { type: 'gap', prompt: 'They called an ___ immediately after the accident.', answer: 'ambulance' },
+        { type: 'choice', prompt: "'To feel dizzy' means...", options: ['to feel like everything is spinning', 'to feel very happy', 'to feel hungry'], answerIndex: 0 },
+        { type: 'gap', prompt: 'It took her a month to ___ fully after the surgery.', answer: 'recover' },
+        { type: 'choice', prompt: 'A document that lets you buy specific medicine is a...', options: ['symptom', 'prescription', 'painkiller'], answerIndex: 1 },
+        { type: 'gap', prompt: 'He learned some ___ ___ in case of emergencies at work.', answer: 'first aid' },
+        { type: 'choice', prompt: "'Emergency room' is best described as...", options: ['a waiting room for check-ups', 'the hospital department for urgent cases', 'a pharmacy'], answerIndex: 1 },
+        { type: 'gap', prompt: "During the check-up, the nurse's friendly joke helped ___ ___ ___.", answer: 'break the ice' },
+        { type: 'choice', prompt: "'Delayed' is the opposite of...", options: ['on time', 'cancelled', 'boarding'], answerIndex: 0 },
+        { type: 'gap', prompt: 'The thermometer was ___, so it gave the wrong reading.', answer: 'faulty' },
+        { type: 'choice', prompt: '"Deadline" means...', options: ['a type of meeting', 'the date something is due', 'a job title'], answerIndex: 1 },
+        { type: 'gap', prompt: 'Could we have the ___, please?', answer: ['bill', 'check'] }
       ],
       listening: {
         title: "James' Dizzy Spell",
         sentences: [
           'During lunch, James suddenly felt dizzy and short of breath.',
           'A colleague quickly gave him some first aid and called an ambulance.',
+          'Paramedics arrived within minutes and checked his blood pressure.',
           'At the hospital, the doctor asked him about his symptoms.',
           'James told the doctor he had felt this way once before.',
           'The doctor said it was probably just low blood pressure.',
           'She gave him a prescription and told him to rest for two days.',
+          'He also promised to drink more water and eat more regularly.',
           'By the weekend, James had fully recovered.'
         ],
         questions: [
           { prompt: 'What happened to James at lunch?', options: ['He felt dizzy', 'He broke his arm', 'He fell asleep'], answerIndex: 0 },
           { prompt: 'What did his colleague do?', options: ['Ignored it', 'Gave first aid and called an ambulance', 'Drove him home'], answerIndex: 1 },
-          { prompt: 'What did the doctor say caused it?', options: ['A serious illness', 'Low blood pressure', 'Nothing, it was fine'], answerIndex: 1 }
+          { prompt: 'Who arrived within minutes?', options: ['Paramedics', 'His family', 'The police'], answerIndex: 0 },
+          { prompt: 'What did the paramedics check?', options: ['His temperature', 'His blood pressure', 'His eyesight'], answerIndex: 1 },
+          { prompt: 'What did the doctor ask about?', options: ['His job', 'His symptoms', 'His diet'], answerIndex: 1 },
+          { prompt: 'Had James felt this way before?', options: ['Yes, once before', 'No, never', "He wasn't sure"], answerIndex: 0 },
+          { prompt: 'What did the doctor say caused it?', options: ['A serious illness', 'Low blood pressure', 'Nothing, it was fine'], answerIndex: 1 },
+          { prompt: 'What did James promise to do?', options: ['Exercise more', 'Drink more water and eat more regularly', 'See a specialist'], answerIndex: 1 },
+          { prompt: 'How was James by the weekend?', options: ['Fully recovered', 'Still dizzy', 'In hospital'], answerIndex: 0 }
         ]
       },
-      conversation: {
-        situation: "You're at the doctor's office describing your symptoms.",
-        start: 'n1',
-        nodes: {
-          n1: { them: 'Good morning, what seems to be the problem today?', next: 'n2', choices: [
-            { text: "I've been feeling dizzy and tired for the past two days.", correct: true },
-            { text: 'Everything, I feel terrible in general.', correct: false, feedback: 'Zu unspezifisch für eine medizinische Diagnose. Beschreibe konkrete Symptome.' },
-            { text: 'I feel dizzy and tired since two days.', correct: false, feedback: '"Since two days" ist falsch — mit einer Zeitdauer nutzt man "for": "I\'ve been feeling dizzy and tired for two days."' }
-          ]},
-          n2: { them: 'I see. Have you had any other symptoms, like headaches or fever?', next: 'n3', choices: [
-            { text: "Yes, I've also had a mild headache since yesterday.", correct: true },
-            { text: "Maybe, I don't really pay attention to that.", correct: false, feedback: 'Das hilft dem Arzt nicht bei der Diagnose. Sei konkreter.' },
-            { text: 'Yes, I have also a mild headache since yesterday.', correct: false, feedback: 'Im Present Perfect gehört "also" zwischen Hilfsverb und Partizip: "I\'ve also had a mild headache."' }
-          ]},
-          n3: { them: "Alright, it sounds like low blood pressure. I'll write you a prescription.", next: 'n4', choices: [
-            { text: 'Thank you, doctor. Should I take the medicine with food?', correct: true },
-            { text: "Are you sure it's nothing serious?", correct: false, feedback: 'Verständliche Sorge, aber wirkt misstrauisch gegenüber der Diagnose. Sachlicher nachfragen.' },
-            { text: 'Thank you, should I take the medicine with the food?', correct: false, feedback: 'Bei einer allgemeinen Aussage über Mahlzeiten braucht man keinen bestimmten Artikel: "with food", nicht "with the food."' }
-          ]},
-          n4: { them: 'Yes, take it after meals. Do you have any allergies I should know about?', next: 'n5', choices: [
-            { text: "No, I don't have any allergies that I know of.", correct: true },
-            { text: "I don't know, I never checked.", correct: false, feedback: 'Etwas unbestimmt für eine medizinisch wichtige Frage. Klarer antworten.' },
-            { text: 'No, I have no allergies since born.', correct: false, feedback: '"Since born" ist keine natürliche englische Wendung. Besser: "No, I don\'t have any allergies that I know of."' }
-          ]},
-          n5: { them: 'Perfect. Rest for a couple of days and you should feel better soon.', next: 'end', choices: [
-            { text: 'Understood. Thank you so much for your help.', correct: true },
-            { text: 'Fine, whatever you say.', correct: false, feedback: 'Klingt widerwillig/desinteressiert. Dankbar abschließen.' },
-            { text: 'Understood, thank you so much for you help.', correct: false, feedback: 'Wieder "you" statt "your" — "thank you so much for your help."' }
-          ]},
-          end: { them: 'You\'re welcome. Take care and rest well.', end: true }
-        }
-      },
       quiz: [
-        { type: 'gap', prompt: "'I feel dizzy,' she said. → She said she ___ dizzy.", answer: 'felt' },
+        { type: 'gap', prompt: "'I feel sick,' she said. → She said she ___ sick.", answer: 'felt' },
         { type: 'choice', prompt: '"First aid" means...', options: ['a type of medicine', 'immediate help given to someone injured', 'a hospital department'], answerIndex: 1 },
         { type: 'gap', prompt: "'Rest for two days,' the doctor said. → The doctor told me ___ for two days.", answer: 'to rest' },
         { type: 'choice', prompt: '"To recover" means...', options: ['to get worse', 'to get better/heal', 'to feel pain'], answerIndex: 1 },
-        { type: 'choice', prompt: 'A "symptom" is...', options: ['a type of treatment', 'a sign of illness', 'a hospital room'], answerIndex: 1 },
         { type: 'gap', prompt: "'I need to rest,' he said. → He said he ___ to rest.", answer: 'needed' },
+        { type: 'choice', prompt: "'Call an ambulance!' she shouted. → She told them ___ an ambulance.", options: ['to call', 'call'], answerIndex: 0 },
+        { type: 'gap', prompt: "'Have you taken your medicine?' the nurse asked. → The nurse asked ___ ___ (I/take) my medicine.", answer: 'if I had taken' },
+        { type: 'choice', prompt: "'I might need surgery,' he said. → He said he ___ need surgery.", options: ['might', 'will'], answerIndex: 0 },
+        { type: 'choice', prompt: 'A "symptom" is...', options: ['a type of treatment', 'a sign of illness', 'a hospital room'], answerIndex: 1 },
+        { type: 'gap', prompt: 'The doctor gave her a ___ for antibiotics.', answer: 'prescription' },
         { type: 'choice', prompt: '"Painkiller" means...', options: ['a type of injury', 'medicine that reduces pain', 'a hospital department'], answerIndex: 1 },
-        { type: 'choice', prompt: '"Emergency room" means...', options: ['a waiting room for appointments', 'the hospital department for urgent cases', 'a pharmacy'], answerIndex: 1 }
+        { type: 'gap', prompt: 'They rushed him to the ___ ___.', answer: 'emergency room' },
+        { type: 'choice', prompt: '"To feel dizzy" means...', options: ['to feel like everything is spinning', 'to feel very happy', 'to feel hungry'], answerIndex: 0 },
+        { type: 'gap', prompt: "Knowing basic ___ ___ can save someone's life in an emergency.", answer: 'first aid' },
+        { type: 'choice', prompt: "'Small talk' is usually about...", options: ['deep personal problems', 'light topics like the weather', 'business contracts'], answerIndex: 1 },
+        { type: 'gap', prompt: "We only exchanged a few words — we're just ___.", answer: 'acquaintances' },
+        { type: 'choice', prompt: "'To check in' means...", options: ['to register for your flight', 'to collect your luggage', 'to go through security'], answerIndex: 0 },
+        { type: 'gap', prompt: 'Our connecting flight was ___ by three hours.', answer: 'delayed' },
+        { type: 'choice', prompt: '"Consumer rights" protect you when...', options: ['you want a discount', 'a product is faulty or misdescribed', 'you are late for a delivery'], answerIndex: 1 },
+        { type: 'gap', prompt: 'I was given a full ___ after the item broke.', answer: 'refund' },
+        { type: 'choice', prompt: '"Resignation" means...', options: ['being fired', 'formally quitting your job', 'being promoted'], answerIndex: 1 },
+        { type: 'gap', prompt: 'Her ___ increased a lot after the merger.', answer: 'workload' },
+        { type: 'choice', prompt: "A 'signature dish' is...", options: ['the cheapest item', "the chef's speciality", 'a vegetarian option'], answerIndex: 1 },
+        { type: 'gap', prompt: 'We left a generous ___ for the waiter.', answer: 'tip' }
       ]
     },
 
@@ -612,20 +708,42 @@ WEEKS.week01 = {
         encouragement: 'Wiederhole diese Wörter in ein paar Tagen im Vokabeltrainer noch einmal – Wiederholung mit Abstand ist der Schlüssel zum Langzeitgedächtnis.'
       },
       quiz: [
-        { type: 'choice', prompt: 'Choose correct: I ___ this article twice already.', options: ['have read', 'have been reading'], answerIndex: 0 },
-        { type: 'gap', prompt: 'The lights are off, they ___ (must/leave).', answer: 'must have left' },
-        { type: 'choice', prompt: 'My order ___ cancelled. (passive)', options: ['was', 'were'], answerIndex: 0 },
-        { type: 'gap', prompt: 'The manager ___ hired me left the company.', answer: ['who', 'that'] },
-        { type: 'gap', prompt: 'If I ___ (know) earlier, I would have helped.', answer: 'had known' },
-        { type: 'gap', prompt: "'I am tired,' he said. → He said he ___ tired.", answer: 'was' },
+        { type: 'choice', prompt: "I ___ this book three times — it's fantastic.", options: ['have read', 'have been reading'], answerIndex: 0 },
+        { type: 'gap', prompt: 'How long ___ you ___ (learn) English?', answer: 'have you been learning' },
+        { type: 'choice', prompt: 'I ___ her since we were children.', options: ['have known', 'have been knowing'], answerIndex: 0 },
+        { type: 'gap', prompt: "She ___ (finish) her work, so she's free now.", answer: 'has finished' },
+        { type: 'gap', prompt: "The lights are off. They ___ (must/might/can't – leave) already.", answer: 'must have left' },
+        { type: 'choice', prompt: 'He can\'t have missed the flight because...', options: ['he is calling from the gate right now', 'he left home late', 'his bag is heavy'], answerIndex: 0 },
+        { type: 'gap', prompt: "The streets are wet — it ___ (must/might/can't – rain) last night.", answer: 'must have rained' },
+        { type: 'choice', prompt: "She ___ forgotten her passport — she's calling the airline in a panic.", options: ['must have', "can't have"], answerIndex: 0 },
+        { type: 'gap', prompt: 'My package ___ (deliver) to the wrong house.', answer: 'was delivered' },
+        { type: 'choice', prompt: 'Choose correct passive: I ___ overcharged for my order.', options: ['was', 'did'], answerIndex: 0 },
+        { type: 'gap', prompt: 'All faulty products ___ (replace) free of charge.', answer: 'are replaced' },
+        { type: 'choice', prompt: 'My refund ___ processed within five working days.', options: ['will be', 'will'], answerIndex: 0 },
+        { type: 'gap', prompt: 'The employee ___ I mentioned earlier just resigned.', answer: ['who', 'that'] },
+        { type: 'choice', prompt: 'Choose the non-defining clause:', options: ['My sister who lives in Rome is visiting.', 'My sister, who lives in Rome, is visiting.'], answerIndex: 1 },
+        { type: 'gap', prompt: 'This is the department ___ all complaints are handled.', answer: 'where' },
+        { type: 'choice', prompt: 'The manager ___ office is upstairs just called a meeting.', options: ['whose', 'who'], answerIndex: 0 },
+        { type: 'gap', prompt: 'If I ___ (know) about the allergy, I wouldn\'t have ordered peanuts.', answer: 'had known' },
+        { type: 'choice', prompt: 'If I were you, I ___ try the fish.', options: ['would', 'would have'], answerIndex: 0 },
+        { type: 'gap', prompt: "We wouldn't be so full now if we ___ (not/order) dessert.", answer: "hadn't ordered" },
+        { type: 'choice', prompt: "If he weren't allergic to nuts, he ___ have tried the cake yesterday.", options: ['would', 'will'], answerIndex: 0 },
+        { type: 'gap', prompt: "'I feel sick,' she said. → She said she ___ sick.", answer: 'felt' },
+        { type: 'choice', prompt: "'I will see a doctor tomorrow,' she said. → She said she ___ a doctor the next day.", options: ['would see', 'will see'], answerIndex: 0 },
+        { type: 'gap', prompt: "'Rest for two days,' the doctor said. → The doctor told me ___ for two days.", answer: 'to rest' },
+        { type: 'choice', prompt: "'I may need surgery,' she said. → She said she ___ need surgery.", options: ['may', 'might'], answerIndex: 1 },
+        { type: 'choice', prompt: '"To break the ice" means...', options: ['to be very cold', 'to start a conversation comfortably', 'to end a friendship'], answerIndex: 1 },
+        { type: 'gap', prompt: "We only met once — she's just an ___.", answer: 'acquaintance' },
         { type: 'choice', prompt: '"Layover" means...', options: ['a stop between flights', 'a delayed flight', 'a type of ticket'], answerIndex: 0 },
-        { type: 'choice', prompt: '"Faulty" means...', options: ['broken', 'new', 'expensive'], answerIndex: 0 },
-        { type: 'choice', prompt: '"To negotiate" means...', options: ['to argue', 'to discuss to reach agreement', 'to ignore'], answerIndex: 1 },
-        { type: 'choice', prompt: '"Symptom" means...', options: ['a sign of illness', 'a treatment', 'a hospital'], answerIndex: 0 },
-        { type: 'choice', prompt: '"Icebreaker" means...', options: ['a cold drink', 'a question or activity to start a conversation', 'an argument'], answerIndex: 1 },
-        { type: 'gap', prompt: 'The candidate ___ we hired starts on Monday.', answer: ['who', 'that'] },
-        { type: 'choice', prompt: '"To split the bill" means...', options: ['one person pays for all', 'everyone pays their own share', 'the meal is free'], answerIndex: 1 },
-        { type: 'gap', prompt: "'I feel great today,' she said. → She said she ___ great that day.", answer: 'felt' }
+        { type: 'gap', prompt: 'You need your ___ ___ to board the plane.', answer: 'boarding pass' },
+        { type: 'choice', prompt: '"Faulty" means...', options: ['expensive', 'broken/defective', 'new'], answerIndex: 1 },
+        { type: 'gap', prompt: 'The store gave me a full ___ after I complained.', answer: 'refund' },
+        { type: 'choice', prompt: '"To negotiate" means...', options: ['to argue angrily', 'to discuss and reach an agreement', 'to refuse'], answerIndex: 1 },
+        { type: 'gap', prompt: 'The ___ for this report is Friday at noon.', answer: 'deadline' },
+        { type: 'choice', prompt: '"To split the bill" means...', options: ['one person pays everything', 'everyone pays their share', 'no one pays'], answerIndex: 1 },
+        { type: 'gap', prompt: "I'm ___ ___ shellfish, so I can't eat this dish.", answer: 'allergic to' },
+        { type: 'choice', prompt: '"To recover" means...', options: ['to get worse', 'to get better/heal', 'to feel pain'], answerIndex: 1 },
+        { type: 'gap', prompt: 'They rushed him to the ___ ___.', answer: 'emergency room' }
       ]
     }
   }

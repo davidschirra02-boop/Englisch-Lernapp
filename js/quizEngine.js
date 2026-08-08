@@ -1,30 +1,20 @@
 /* Generischer Frage-Runner für Choice- und Gap-Fill-Items.
    Wird von Grammatik-Übungen, Wortschatz-Vertiefung, Hörverständnis und
    Quiz-Blöcken genutzt. Unterstützt Zurück-Navigation zu bereits
-   beantworteten Fragen (schreibgeschützte Review-Ansicht). */
+   beantworteten Fragen (schreibgeschützte Review-Ansicht).
+
+   Tastatur: Pfeiltasten bewegen den Fokus (siehe keynav.js), Enter aktiviert
+   den fokussierten Button nativ. Nach jeder Aktion wird der sinnvolle
+   nächste Button automatisch fokussiert, damit Enter allein durch die
+   Übung führt. */
 
 const QuizEngine = {
   run(container, items, opts = {}) {
     const total = items.length;
     const state = items.map(() => ({ answered: false, correct: null, chosenIndex: null, chosenText: null }));
     let idx = 0;
-    let enterHandler = null;
 
     function scoreCount() { return state.filter(s => s.correct).length; }
-
-    function clearEnterHandler() {
-      if (enterHandler) { document.removeEventListener('keydown', enterHandler); enterHandler = null; }
-    }
-
-    function armEnterAdvance() {
-      clearEnterHandler();
-      enterHandler = (e) => {
-        if (e.key !== 'Enter') return;
-        const btn = container.querySelector('.next-btn');
-        if (btn) { e.preventDefault(); btn.click(); }
-      };
-      document.addEventListener('keydown', enterHandler);
-    }
 
     function correctText(item) {
       return Array.isArray(item.answer) ? item.answer[0] : (item.answer ?? item.options?.[item.answerIndex]);
@@ -44,19 +34,18 @@ const QuizEngine = {
     }
 
     function bindNext(isLast) {
-      container.querySelector('.next-btn').addEventListener('click', () => {
-        clearEnterHandler();
+      const btn = container.querySelector('.next-btn');
+      btn.addEventListener('click', () => {
         if (isLast) {
           const wrong = items.filter((it, i) => state[i].correct === false);
           opts.onComplete?.(scoreCount(), total, wrong);
         }
         else { idx++; renderItem(); }
       });
-      armEnterAdvance();
+      KeyNav.focusSoon(btn);
     }
 
     function renderItem() {
-      clearEnterHandler();
       const item = items[idx];
       const st = state[idx];
       st.answered ? renderReviewed(item, st) : renderFresh(item);
@@ -96,17 +85,20 @@ const QuizEngine = {
         };
         container.querySelector('.check-btn').addEventListener('click', check);
         input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+        KeyNav.focusSoon(input);
       } else {
-        container.querySelectorAll('.choice').forEach(btn => {
+        const choiceButtons = Array.from(container.querySelectorAll('.choice'));
+        choiceButtons.forEach(btn => {
           btn.addEventListener('click', () => {
             const i = Number(btn.dataset.i);
             const correct = i === item.answerIndex;
-            container.querySelectorAll('.choice').forEach(b => b.disabled = true);
+            choiceButtons.forEach(b => b.disabled = true);
             btn.classList.add(correct ? 'correct' : 'incorrect');
             if (!correct) container.querySelector(`.choice[data-i="${item.answerIndex}"]`)?.classList.add('correct');
             finalize(correct, i, item.options[i]);
           });
         });
+        KeyNav.focusSoon(choiceButtons[0]);
       }
     }
 

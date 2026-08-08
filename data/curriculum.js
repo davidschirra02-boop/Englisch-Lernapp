@@ -37,7 +37,7 @@ function buildCurriculum(totalDays = 90) {
         title: isReviewDay ? `${theme} – Wochen-Review` : `${theme} – Tag ${d}`,
         focusAreas: isReviewDay
           ? ['review', 'quiz']
-          : ['grammar', 'vocab', 'listening', 'conversation', 'quiz'],
+          : ['grammar', 'vocab', 'listening', 'quiz'],
         minutesEstimate: 90
       });
       day++;

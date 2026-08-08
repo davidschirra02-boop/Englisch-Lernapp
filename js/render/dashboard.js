@@ -15,7 +15,7 @@ Render.dashboard = function (root) {
     const dn = weekStartDay + i;
     const accessible = dn <= day;
     const cls = Store.isDayComplete(dn) ? 'done' : (dn === day ? 'today' : '');
-    chips += `<div class="day-chip ${cls} ${accessible ? 'clickable' : ''}" data-day="${dn}">${dn}</div>`;
+    chips += `<button type="button" class="day-chip ${cls} ${accessible ? 'clickable' : ''}" data-day="${dn}" ${accessible ? '' : 'disabled'}>${dn}</button>`;
   }
 
   root.innerHTML = `

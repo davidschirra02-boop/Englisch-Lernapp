@@ -2,7 +2,9 @@
 
 Kurzreferenz zum Ergänzen weiterer Wochen, ohne die App-Architektur erneut herleiten zu müssen. Eine neue Woche = eine neue Datei `data/weeks/weekNN.js`, zusätzlich in `index.html` per `<script src="data/weeks/weekNN.js"></script>` **nach** `data/weeks-index.js` einbinden.
 
-Themen der 13 Wochen stehen bereits in `data/curriculum.js` (`WEEK_THEMES`). Woche 1 (`data/weeks/week01.js`) ist die Referenzimplementierung — beim Schreiben neuer Wochen einfach diese Datei kopieren und Inhalte austauschen. Woche 1 wurde bewusst vertieft (siehe unten), damit eine Lektion nicht 5-10, sondern eher 20-30 Minuten dauert — neue Wochen sollen densselben Umfang haben.
+Themen der 13 Wochen stehen bereits in `data/curriculum.js` (`WEEK_THEMES`). Woche 1 (`data/weeks/week01.js`) ist die Referenzimplementierung — beim Schreiben neuer Wochen einfach diese Datei kopieren und Inhalte austauschen. Woche 1 wurde bewusst sehr umfangreich angelegt (siehe unten), damit eine Lektion nicht 20-30, sondern eher 45-60 Minuten dauert und der Schwierigkeitsgrad hochbleibt — neue Wochen sollen denselben Umfang haben.
+
+Es gibt **keinen Konversationstrainer** mehr (bewusst entfernt zugunsten von mehr Grammatik-/Vokabel-/Lückentextaufgaben) — nicht versehentlich wieder einführen.
 
 ## Grundgerüst
 
@@ -11,7 +13,7 @@ WEEKS.weekNN = {
   key: 'weekNN',
   title: 'Wochenthema (aus WEEK_THEMES)',
   days: {
-    1: { grammar, vocabulary, vocabPractice, listening, conversation, quiz },
+    1: { grammar, vocabulary, vocabPractice, listening, quiz },
     2: { ... }, 3: { ... }, 4: { ... }, 5: { ... }, 6: { ... },
     7: { review: true, summary, quiz }   // Tag 7 ist immer reiner Review-Tag
   }
@@ -20,14 +22,21 @@ WEEKS.weekNN = {
 
 ## Feld-Schemas (Tag 1-6)
 
-- **grammar**: `{ ruleTitle, explanation, contrast, examples: [{en, de}] (3x), exercises: [...] (6x) }`
-  Ein C1-relevanter Grammatikpunkt pro Tag, `explanation` und `contrast` auf Deutsch, `examples` als Satzpaare, **6 Übungen** (Mischung choice/gap).
-- **vocabulary**: Array von 8 `{ word, translation, example, mnemonic, category }` — `category` = Wochenthema in 1-2 Worten, `mnemonic` auf Deutsch.
-- **vocabPractice**: Array von **6 Items** (choice/gap), die genau die 8 Wörter aus `vocabulary` abfragen — eigener Lektionsschritt direkt nach den Flashcards, damit die Wörter aktiv statt nur passiv gelernt werden.
-- **listening**: `{ title, sentences: [6-8 Sätze], questions: [...] (3x) }`
-- **conversation**: `{ situation, start: 'n1', nodes: { n1: {...}, ..., end: { them, end:true } } }`
-  **5 Knoten tief** (`n1`-`n5` + `end`). Jeder Knoten: `{ them, next: 'nX', choices: [...] }` mit **3 Choices**: genau 1x `{text, correct:true}`, 2x `{text, correct:false, feedback:'...'}`. Die beiden Falsch-Antworten müssen **plausibel und subtil falsch** sein (z. B. leicht zu förmlich/zu informell, ein typischer deutscher Interferenzfehler wie "since three years", eine falsche Zeitform, ein unpassender Ton) — **nicht** offensichtlich unhöflich oder absurd, sonst ist die richtige Antwort zu leicht erkennbar. Jede falsche Antwort braucht ein eigenes, kurzes deutsches Feedback, das erklärt, warum sie falsch ist und wie es richtig heißt. Die Anzeige-Reihenfolge der Choices wird vom Renderer automatisch zufällig gemischt — die Reihenfolge in den Daten spielt keine Rolle.
-- **quiz**: Array von **8 Items**, Mischung aus Grammatik und Vokabeln des Tages.
+- **grammar**: `{ ruleTitle, explanation, contrast, examples: [{en, de}] (3x), exercises: [...] (18x) }`
+  Ein C1-relevanter Grammatikpunkt pro Tag, `explanation` und `contrast` auf Deutsch, `examples` als Satzpaare, **18 Übungen** (Mischung choice/gap), die den Grammatikpunkt aus vielen verschiedenen Blickwinkeln testen (nicht 3x dieselbe Konstruktion umformuliert).
+- **vocabulary**: Array von 8 `{ word, translation, example, mnemonic, category }` — `category` = Wochenthema in 1-2 Worten, `mnemonic` auf Deutsch. Die Wortanzahl bleibt bei 8 (nicht verdreifacht); stattdessen wird jedes Wort in `vocabPractice`/`quiz` aus mehreren Blickwinkeln abgefragt (Definition, Lückentext in neuem Kontext, Übersetzungsrichtung DE→EN und EN→DE, Odd-one-out, Kollokation).
+- **vocabPractice**: Array von **18 Items** (choice/gap). Davon ca. 12-14 zu den 8 neuen Wörtern des Tages, der Rest (**ab Tag 2**) gezielte Wiederholung von Vokabeln aus vorherigen Tagen derselben Woche (kumulatives Interleaving — siehe unten).
+- **listening**: `{ title, sentences: [8-9 Sätze], questions: [...] (9x) }`. Wird beim Betreten des Schritts **automatisch komplett vorgelesen** (Autoplay, siehe `js/render/lesson.js` `renderListening`/`playAll`) — einzelne Sätze bleiben per Klick oder ↓/↑+Enter erneut abspielbar, das bricht die Autoplay-Sequenz ab. Die Story darf entsprechend etwas mehr Substanz haben, um 9 unterschiedliche, nicht triviale Verständnisfragen zu tragen (Reihenfolge, Zahlen/Fakten, Inferenz, im Text verwendeter Wortschatz).
+- **quiz**: Array von **24 Items**. Etwa die Hälfte zur Grammatik des Tages, die andere Hälfte zu den Vokabeln des Tages, **ab Tag 2** ergänzt um ca. 5-10 Items, die Grammatik/Vokabeln früherer Tage derselben Woche wiederholen (siehe Interleaving unten).
+
+## Kumulatives Interleaving (ab Tag 2)
+
+Jeder Tag ab Tag 2 muss einen Teil seiner `vocabPractice`- und `quiz`-Items der **vorherigen Tage derselben Woche** widmen, nicht nur dem eigenen neuen Stoff:
+
+- Tag 2 wiederholt Tag 1, Tag 3 wiederholt Tag 1+2, Tag 4 wiederholt Tag 1-3, usw. — je weiter die Woche fortschreitet, desto breiter die Wiederholungsbasis.
+- Faustregel: von 18 `vocabPractice`-Items ca. 4-6 Review-Items älterer Tage; von 24 `quiz`-Items ca. 5-10 Review-Items (Grammatik und Vokabeln gemischt).
+- Wiederholungsfragen dürfen in einem neuen Satz/Kontext stehen, müssen aber inhaltlich klar erkennbar dieselbe Vokabel/Regel abfragen wie am Ursprungstag (kein Copy-Paste des exakten Prompts nötig, aber auch keine Verwässerung der Bedeutung).
+- Tag 7 (Review) bündelt das Ganze in einem großen kumulativen Quiz von **~36 Items** (je Grammatikpunkt der Woche ca. 4 Items, je Vokabeltag ca. 2 Items) — kein `grammar`/`vocabulary`/`vocabPractice`/`listening`, nur `summary` + `quiz`.
 
 ## Exercise/Quiz-Item-Typen (von `QuizEngine` genutzt)
 
@@ -49,7 +58,7 @@ WEEKS.weekNN = {
 7: {
   review: true,
   summary: { intro, grammarPoints: [6 Stichpunkte, je 1 Zeile], encouragement },
-  quiz: [ ... 14 Items, gemischt aus der ganzen Woche ... ]
+  quiz: [ ... ~36 Items, gemischt aus der ganzen Woche (siehe Interleaving oben) ... ]
 }
 ```
 

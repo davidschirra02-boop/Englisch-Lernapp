@@ -24,21 +24,30 @@ const Flashcard = {
     const card = container.querySelector('.flashcard');
     const controls = container.querySelector('#srs-controls');
 
-    card.addEventListener('click', () => {
-      flipped = !flipped;
-      card.classList.toggle('flipped', flipped);
-      if (flipped) {
-        controls.style.display = 'flex';
-        controls.innerHTML = graded
-          ? `<button class="btn ghost" data-ok="0">Nochmal üben</button><button class="btn" data-ok="1">Wusste ich!</button>`
-          : `<button class="btn" data-ok="1">Weiter →</button>`;
-        controls.querySelectorAll('button').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            onNext?.(btn.dataset.ok === '1');
-          });
+    function flip() {
+      if (flipped) return;
+      flipped = true;
+      card.classList.add('flipped');
+      controls.style.display = 'flex';
+      controls.innerHTML = graded
+        ? `<button class="btn ghost" data-ok="0">Nochmal üben</button><button class="btn" data-ok="1">Wusste ich!</button>`
+        : `<button class="btn" data-ok="1">Weiter →</button>`;
+      controls.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          onNext?.(btn.dataset.ok === '1');
         });
-      }
+      });
+      KeyNav.focusSoon(controls.querySelector('button'));
+    }
+
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', 'Karte umdrehen');
+    card.addEventListener('click', flip);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); }
     });
+    KeyNav.focusSoon(card);
   }
 };
