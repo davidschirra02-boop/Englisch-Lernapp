@@ -54,6 +54,7 @@ Render.vocab = function (root) {
       </div>`;
     Flashcard.render(root.querySelector('#flash-slot'), due[idx], {
       graded: true,
+      reversed: Math.random() < 0.5,
       onNext: (correct) => {
         SRS.gradeWord(due[idx].id, correct);
         idx++;

@@ -1,4 +1,6 @@
-/* Dashboard: Fortschrittsring, Streak, heutige Lektion, Wochenübersicht. */
+/* Dashboard: Fortschrittsring, Streak, heutige Lektion, Wochenübersicht.
+   Die Wochenübersicht ist zwischen allen bereits erreichten Wochen
+   blätterbar (nicht nur die aktuelle Woche). */
 
 Render.dashboard = function (root) {
   const s = Store.get();
@@ -8,15 +10,8 @@ Render.dashboard = function (root) {
   const pct = Math.round(((day - 1) / 90) * 100);
   const wordsLearned = Object.keys(s.srs).length;
   const daysDone = Object.keys(s.completedDays).length;
-
-  const weekStartDay = meta ? day - meta.dayInWeek + 1 : 1;
-  let chips = '';
-  for (let i = 0; i < 7 && weekStartDay + i <= 90; i++) {
-    const dn = weekStartDay + i;
-    const accessible = dn <= day;
-    const cls = Store.isDayComplete(dn) ? 'done' : (dn === day ? 'today' : '');
-    chips += `<button type="button" class="day-chip ${cls} ${accessible ? 'clickable' : ''}" data-day="${dn}" ${accessible ? '' : 'disabled'}>${dn}</button>`;
-  }
+  const currentWeek = meta ? meta.week : 1;
+  let viewWeek = currentWeek;
 
   root.innerHTML = `
     <div class="card hero stagger">
@@ -43,14 +38,38 @@ Render.dashboard = function (root) {
       <button class="btn" id="start-lesson" ${finished ? 'disabled' : ''}>${Store.isDayComplete(day) ? 'Nochmal üben' : 'Lektion starten'} →</button>
     </div>
 
-    <div class="card stagger">
-      <h3>Diese Woche</h3>
-      <div class="week-strip">${chips}</div>
-    </div>
+    <div class="card stagger" id="week-card"></div>
   `;
 
   root.querySelector('#start-lesson')?.addEventListener('click', () => goto(`#/day/${day}`));
-  root.querySelectorAll('.day-chip.clickable').forEach(chip => {
-    chip.addEventListener('click', () => goto(`#/day/${chip.dataset.day}`));
-  });
+
+  function renderWeekCard() {
+    const weekDays = CURRICULUM.filter(d => d.week === viewWeek);
+    const weekTitle = weekDays[0]?.weekTitle || '';
+    const chips = weekDays.map(d => {
+      const dn = d.day;
+      const accessible = dn <= day;
+      const cls = Store.isDayComplete(dn) ? 'done' : (dn === day ? 'today' : '');
+      return `<button type="button" class="day-chip ${cls} ${accessible ? 'clickable' : ''}" data-day="${dn}" ${accessible ? '' : 'disabled'}>${dn}</button>`;
+    }).join('');
+
+    root.querySelector('#week-card').innerHTML = `
+      <div class="section-title">
+        <h3>Woche ${viewWeek}${weekTitle ? ' — ' + weekTitle : ''}</h3>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn ghost small" id="prev-week" ${viewWeek <= 1 ? 'disabled' : ''}>← Vorherige</button>
+          <button type="button" class="btn ghost small" id="next-week" ${viewWeek >= currentWeek ? 'disabled' : ''}>Nächste →</button>
+        </div>
+      </div>
+      <div class="week-strip">${chips}</div>
+    `;
+
+    root.querySelectorAll('.day-chip.clickable').forEach(chip => {
+      chip.addEventListener('click', () => goto(`#/day/${chip.dataset.day}`));
+    });
+    root.querySelector('#prev-week')?.addEventListener('click', () => { viewWeek--; renderWeekCard(); });
+    root.querySelector('#next-week')?.addEventListener('click', () => { viewWeek++; renderWeekCard(); });
+  }
+
+  renderWeekCard();
 };
