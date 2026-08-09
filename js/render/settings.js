@@ -30,6 +30,18 @@ Render.settings = function (root) {
     </div>
 
     <div class="card">
+      <h3>Hintergrund</h3>
+      <div style="display:flex; align-items:center; gap:14px; margin:16px 0;">
+        <label class="muted" style="font-size:0.85rem; white-space:nowrap; width:180px;">Transparenz der Kacheln</label>
+        <input type="range" id="alpha-slider" min="0.15" max="0.75" step="0.05" value="${s.panelAlpha}" style="flex:1;" />
+      </div>
+      <div style="display:flex; align-items:center; gap:14px; margin:16px 0;">
+        <label class="muted" style="font-size:0.85rem; white-space:nowrap; width:180px;">Geschwindigkeit Hintergrundvideo</label>
+        <input type="range" id="speed-slider" min="0.1" max="1" step="0.05" value="${s.bgVideoSpeed}" style="flex:1;" />
+      </div>
+    </div>
+
+    <div class="card">
       <h4>Fortschritt zurücksetzen</h4>
       <p class="muted">Setzt Streak, abgeschlossene Tage und Vokabel-Fortschritt vollständig zurück. Das kann nicht rückgängig gemacht werden.</p>
       <button class="btn amber" id="reset-btn">Fortschritt zurücksetzen</button>
@@ -42,6 +54,18 @@ Render.settings = function (root) {
 
   root.querySelector('#rate-slider')?.addEventListener('input', (e) => {
     Store.update(st => { st.speechRate = Number(e.target.value); });
+  });
+
+  root.querySelector('#alpha-slider')?.addEventListener('input', (e) => {
+    const val = Number(e.target.value);
+    Store.update(st => { st.panelAlpha = val; });
+    document.documentElement.style.setProperty('--panel-alpha', val);
+  });
+
+  root.querySelector('#speed-slider')?.addEventListener('input', (e) => {
+    const val = Number(e.target.value);
+    Store.update(st => { st.bgVideoSpeed = val; });
+    VideoBG.setSpeed(val);
   });
 
   root.querySelector('#reload-voices')?.addEventListener('click', () => {

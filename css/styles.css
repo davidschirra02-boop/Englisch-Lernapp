@@ -4,31 +4,37 @@
    ============================================================ */
 
 :root {
-  --paper: #f6f1e6;
-  --paper-raised: #fffdf8;
-  --ink: #24313d;
-  --ink-soft: #5b6b74;
-  --line: #e2d8c3;
+  color-scheme: dark;
+  --panel-alpha: 0.45;
+  --paper: rgba(255, 255, 255, 0.06);
+  --paper-raised: rgba(255, 255, 255, 0.10);
+  --ink: #f8fafc;
+  --ink-soft: #cbd5e1;
+  --line: rgba(255, 255, 255, 0.15);
 
   --teal: #2f6f6a;
   --teal-dark: #234f4c;
-  --teal-tint: #e3efec;
+  --teal-light: #7ee8d3;
+  --teal-tint: rgba(47, 111, 106, 0.3);
 
   --amber: #d97b3f;
-  --amber-tint: #fbe8d8;
+  --amber-light: #ffc98a;
+  --amber-tint: rgba(217, 123, 63, 0.3);
 
   --coral: #c1543f;
-  --coral-tint: #f7e2dd;
+  --coral-light: #fca5a5;
+  --coral-tint: rgba(193, 84, 63, 0.3);
 
   --good: #3f8a5c;
-  --good-tint: #e2f0e6;
+  --good-light: #86efac;
+  --good-tint: rgba(63, 138, 92, 0.3);
 
   --radius-s: 10px;
   --radius-m: 16px;
   --radius-l: 24px;
 
-  --shadow-card: 0 1px 2px rgba(36, 49, 61, 0.06), 0 8px 24px -12px rgba(36, 49, 61, 0.18);
-  --shadow-pop: 0 12px 32px -8px rgba(36, 49, 61, 0.28);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2), 0 8px 24px -12px rgba(0, 0, 0, 0.45);
+  --shadow-pop: 0 12px 32px -8px rgba(0, 0, 0, 0.55);
 
   --font-display: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
   --font-body: "Segoe UI", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
@@ -45,26 +51,40 @@ html, body {
 body {
   font-family: var(--font-body);
   color: var(--ink);
-  background:
-    radial-gradient(circle at 15% 8%, rgba(47, 111, 106, 0.05), transparent 40%),
-    radial-gradient(circle at 85% 92%, rgba(217, 123, 63, 0.06), transparent 45%),
-    var(--paper);
+  background: #0a0a0d;
   min-height: 100vh;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-/* subtle paper grain */
-body::before {
-  content: "";
+#bg-video-layer {
   position: fixed;
   inset: 0;
-  pointer-events: none;
-  opacity: 0.5;
-  background-image:
-    radial-gradient(rgba(36,49,61,0.035) 1px, transparent 1px);
-  background-size: 3px 3px;
-  z-index: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  opacity: 0;
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+  filter: contrast(1.18) saturate(1.3) brightness(1.04);
+  transition: opacity 1.8s ease;
+  will-change: opacity;
+}
+
+.bg-video.active { opacity: 1; }
+
+#bg-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
 }
 
 h1, h2, h3, h4 {
@@ -111,7 +131,7 @@ button {
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--teal-dark);
+  color: var(--teal-light);
 }
 
 .brand .tag {
@@ -123,11 +143,13 @@ button {
 nav.tabs {
   display: flex;
   gap: 4px;
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
+  background: rgba(15, 15, 20, var(--panel-alpha));
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 999px;
   padding: 4px;
   box-shadow: var(--shadow-card);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
 }
 
 nav.tabs a {
@@ -147,16 +169,18 @@ nav.tabs a.active {
 
 nav.tabs a:not(.active):hover {
   background: var(--teal-tint);
-  color: var(--teal-dark);
+  color: var(--teal-light);
 }
 
 /* ---------------- Cards & Layout ---------------- */
 
 .card {
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
+  background: rgba(15, 15, 20, var(--panel-alpha));
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-l);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-pop);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
   padding: 28px;
   margin-bottom: 20px;
   animation: rise 0.45s ease both;
@@ -218,7 +242,7 @@ nav.tabs a:not(.active):hover {
   font-family: var(--font-display);
 }
 
-.ring .ring-label .num { display: block; font-size: 1.5rem; font-weight: 700; color: var(--teal-dark); }
+.ring .ring-label .num { display: block; font-size: 1.5rem; font-weight: 700; color: var(--teal-light); }
 .ring .ring-label .of { display: block; font-size: 0.7rem; color: var(--ink-soft); }
 
 .stat-row {
@@ -233,14 +257,14 @@ nav.tabs a:not(.active):hover {
   align-items: center;
   gap: 8px;
   background: var(--teal-tint);
-  color: var(--teal-dark);
+  color: var(--teal-light);
   border-radius: 999px;
   padding: 8px 14px;
   font-size: 0.82rem;
   font-weight: 600;
 }
 
-.stat-pill.amber { background: var(--amber-tint); color: #8a4a1f; }
+.stat-pill.amber { background: var(--amber-tint); color: var(--amber-light); }
 .stat-pill .icon { font-size: 1rem; }
 
 .week-strip {
@@ -293,7 +317,7 @@ nav.tabs a:not(.active):hover {
 
 .btn.ghost {
   background: transparent;
-  color: var(--teal-dark);
+  color: var(--teal-light);
   box-shadow: none;
   border: 1.5px solid var(--line);
 }
@@ -341,7 +365,7 @@ nav.tabs a:focus-visible {
   font-size: 0.72rem;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--teal-dark);
+  color: var(--teal-light);
   background: var(--teal-tint);
   padding: 5px 12px;
   border-radius: 999px;
@@ -416,9 +440,9 @@ nav.tabs a:focus-visible {
   animation: rise 0.3s ease both;
 }
 
-.feedback.good { background: var(--good-tint); color: #245335; }
-.feedback.bad { background: var(--coral-tint); color: #7a2e1f; }
-.feedback-explain { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(122, 46, 31, 0.2); font-size: 0.85rem; line-height: 1.45; }
+.feedback.good { background: var(--good-tint); color: var(--good-light); }
+.feedback.bad { background: var(--coral-tint); color: var(--coral-light); }
+.feedback-explain { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.2); font-size: 0.85rem; line-height: 1.45; color: var(--ink); }
 
 /* ---------------- Vocabulary flashcards ---------------- */
 
@@ -496,7 +520,8 @@ nav.tabs a:focus-visible {
 
 /* ---------------- Misc ---------------- */
 
-.field {
+.field,
+.gap-input {
   width: 100%;
   padding: 11px 14px;
   border-radius: var(--radius-s);
@@ -506,6 +531,9 @@ nav.tabs a:focus-visible {
   font-size: 0.9rem;
   color: var(--ink);
 }
+
+.gap-input::placeholder { color: var(--ink-soft); }
+.gap-input:disabled { opacity: 0.7; }
 
 input[type="range"] { accent-color: var(--teal); }
 

@@ -16,7 +16,9 @@ function defaultState() {
     srs: {},             // { wordId: { box, due } }
     voiceURI: null,      // gewählte Stimme fürs Hörverständnis
     speechRate: 0.95,
-    lessonProgress: null // { day, stepIdx } - zuletzt erreichter Schritt der laufenden Lektion
+    lessonProgress: null, // { day, stepIdx } - zuletzt erreichter Schritt der laufenden Lektion
+    panelAlpha: 0.45,     // Transparenz der Glass-Panels (Cards, Nav)
+    bgVideoSpeed: 0.4     // playbackRate des Hintergrundvideos
   };
 }
 

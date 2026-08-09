@@ -51,5 +51,6 @@ function ensureWordsInSRS(day) {
 window.addEventListener('hashchange', router);
 window.addEventListener('DOMContentLoaded', () => {
   Store.touchToday();
+  document.documentElement.style.setProperty('--panel-alpha', Store.get().panelAlpha);
   router();
 });
