@@ -11,7 +11,7 @@
    Geschwindigkeit ist live über VideoBG.setSpeed() steuerbar (siehe Einstellungen). */
 const VideoBG = (function () {
   const VIDEOS = [
-    'Videomaterial/' + encodeURIComponent('Billionaire💲Luxury Lifestyle Visualization💰 Life Of Billionaires #billionairelifestyle.mp4')
+    'Videomaterial/' + encodeURIComponent('No Copyright Video, Background, Green Screen, Motion Graphics, Animated Background, Copyright Free.mp4')
   ];
 
   let playbackRate = (typeof Store !== 'undefined' && Store.get().bgVideoSpeed) || 0.4;

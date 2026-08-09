@@ -1,7 +1,11 @@
 /* Wiederverwendbare Flashcard-Komponente: Eintritts-Modus (nur "Weiter")
    und SRS-Modus (Bewertung "Wusste ich nicht" / "Wusste ich!"). Mit
    reversed:true wird die Abfragerichtung gedreht (Deutsch → Englisch statt
-   Englisch → Deutsch), damit beide Richtungen trainiert werden. */
+   Englisch → Deutsch), damit beide Richtungen trainiert werden.
+   Im SRS-Modus liegen die beiden Bewertungs-Buttons nebeneinander; ←/→
+   wechselt zwischen ihnen bereits automatisch über KeyNav.horizontalNeighbor
+   (siehe keynav.js). ↑/↓ ist hier bewusst deaktiviert, siehe flip(), da die
+   Buttons keine sinnvolle vertikale Nachbarschaft haben. */
 
 const Flashcard = {
   render(container, word, { graded = false, onNext, reversed = false } = {}) {
@@ -38,11 +42,20 @@ const Flashcard = {
       controls.innerHTML = graded
         ? `<button class="btn ghost" data-ok="0">Nochmal üben</button><button class="btn" data-ok="1">Wusste ich!</button>`
         : `<button class="btn" data-ok="1">Weiter →</button>`;
-      controls.querySelectorAll('button').forEach(btn => {
+      const ctrlButtons = Array.from(controls.querySelectorAll('button'));
+      ctrlButtons.forEach((btn, i) => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           onNext?.(btn.dataset.ok === '1');
         });
+        if (graded) {
+          btn.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+              e.preventDefault();
+              e.stopImmediatePropagation();
+            }
+          });
+        }
       });
       KeyNav.focusSoon(controls.querySelector('button'));
     }
