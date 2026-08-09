@@ -30,7 +30,18 @@ Render.settings = function (root) {
     </div>
 
     <div class="card">
+      <h3>Design</h3>
+      <p class="muted">Drei eigenständige Oberflächen zur Wahl — nicht nur andere Farben, sondern unterschiedliche Gestaltung.</p>
+      <div style="display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;">
+        <button class="btn ${s.theme === 'glass' ? '' : 'ghost'}" data-theme-btn="glass">🌌 Glassmorphism</button>
+        <button class="btn ${s.theme === 'aurora' ? '' : 'ghost'}" data-theme-btn="aurora">🌸 Aurora</button>
+        <button class="btn ${s.theme === 'brutalist' ? '' : 'ghost'}" data-theme-btn="brutalist">◼ Brutalist</button>
+      </div>
+    </div>
+
+    <div class="card">
       <h3>Hintergrund</h3>
+      <p class="muted" style="font-size:0.8rem;">Video-Hintergrund ist nur im Glassmorphism-Design sichtbar.</p>
       <div style="display:flex; align-items:center; gap:14px; margin:16px 0;">
         <label class="muted" style="font-size:0.85rem; white-space:nowrap; width:230px; flex-shrink:0;">Transparenz der Kacheln</label>
         <input type="range" id="alpha-slider" min="0" max="1" step="0.05" value="${s.panelAlpha}" style="flex:1;" />
@@ -66,6 +77,15 @@ Render.settings = function (root) {
     const val = Number(e.target.value);
     Store.update(st => { st.bgVideoSpeed = val; });
     VideoBG.setSpeed(val);
+  });
+
+  root.querySelectorAll('[data-theme-btn]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const theme = btn.dataset.themeBtn;
+      Store.update(st => { st.theme = theme; });
+      applyTheme(theme);
+      router();
+    });
   });
 
   root.querySelector('#reload-voices')?.addEventListener('click', () => {

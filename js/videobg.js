@@ -204,6 +204,7 @@ const VideoBG = (function () {
 
   function render(now) {
     if (stopped) return;
+    if (canvas.offsetParent === null) { requestAnimationFrame(render); return; }
     try {
       if (animDuration > 0) {
         const t = Math.min(1, (now - animStart) / animDuration);

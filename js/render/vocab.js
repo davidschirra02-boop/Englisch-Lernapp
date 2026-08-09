@@ -1,21 +1,92 @@
-/* Vokabeltrainer: Spaced-Repetition-Warteschlange (fällige Karten) plus
-   Kategorie-Browser über alle bisher gelernten Wörter. Vor jeder
-   Wiederholungsrunde wird die Abfragerichtung gewählt (Englisch → Deutsch
-   oder Deutsch → Englisch) und für die gesamte Runde beibehalten. Am Ende
-   werden die falsch bewerteten Wörter noch einmal aufgelistet. */
+/* Vokabeltrainer: Übersicht ("Hub") mit allen Kapiteln (= Vokabel-Kategorien,
+   entsprechen den Wochenthemen). Von dort aus wählt man ein Kapitel (oder
+   "alle gemischt") und dann die Abfragerichtung (Englisch → Deutsch /
+   Deutsch → Englisch). Übungen sind jederzeit wiederholbar, nicht nur wenn
+   Karten laut SRS fällig sind — der Fällig-Status wird nur noch als Hinweis
+   pro Kapitel angezeigt. Am Ende einer Runde werden falsch bewertete Wörter
+   noch einmal aufgelistet.
 
-function categoryBrowserHtml(words) {
-  const byCat = {};
-  words.forEach(w => { (byCat[w.category || 'Sonstiges'] = byCat[w.category || 'Sonstiges'] || []).push(w); });
-  return `
-    <div class="card">
-      <h3>Alle gelernten Wörter</h3>
-      ${Object.entries(byCat).map(([cat, ws]) => `
-        <div style="margin-bottom:14px;">
-          <div class="module-label">${cat}</div>
-          ${ws.map(w => `<div class="example-box"><span class="en"><strong>${w.word}</strong> — ${w.translation}</span></div>`).join('')}
-        </div>`).join('')}
-    </div>`;
+   Für Abwechslung wird pro Karte zufällig eine von drei Übungsarten
+   gewählt: klassische Flashcard (umdrehen + selbst einschätzen), Multiple-
+   Choice (Wort/Übersetzung erkennen, automatisch ausgewertet) oder
+   Lückentext (die Wendung im Beispielsatz ergänzen, falls sie dort
+   wörtlich vorkommt — sonst weicht die Auswahl auf Flashcard/Choice aus). */
+
+/* Sucht die Wendung `word.word` im Beispielsatz, um daraus eine Lücke zu
+   bauen. Versucht auch ohne führendes "to " (Infinitiv-Partikel steht oft
+   nicht in derselben Form im Satz). Liefert null, wenn kein wörtlicher
+   Treffer existiert (z. B. bei konjugierten Formen wie "oneself"→"myself"). */
+function findGapBlank(word) {
+  const ex = word.example || '';
+  const candidates = [word.word, word.word.replace(/^to /i, '')];
+  for (const c of candidates) {
+    const idx = ex.toLowerCase().indexOf(c.toLowerCase());
+    if (idx !== -1) {
+      return { before: ex.slice(0, idx), target: ex.slice(idx, idx + c.length), after: ex.slice(idx + c.length) };
+    }
+  }
+  return null;
+}
+
+function pickExerciseType(word, list) {
+  const gap = findGapBlank(word);
+  const pool = ['flashcard', 'flashcard'];
+  if (list.length > 1) pool.push('choice');
+  if (gap) pool.push('gap');
+  return { type: pool[Math.floor(Math.random() * pool.length)], gap };
+}
+
+function renderChoiceCard(container, word, list, direction, { onNext }) {
+  const prompt = direction === 'de-en' ? word.translation : word.word;
+  const correct = direction === 'de-en' ? word.word : word.translation;
+  const distractors = shuffleArray(list.filter(w => w !== word)).slice(0, 3)
+    .map(w => direction === 'de-en' ? w.word : w.translation);
+  const options = shuffleArray([correct, ...distractors]);
+  container.innerHTML = `
+    <div class="category">${word.category || ''}</div>
+    <p class="exercise-prompt">${prompt}</p>
+    <div class="choice-list">${options.map((o, i) => `<button class="choice" data-i="${i}">${o}</button>`).join('')}</div>
+    <div class="feedback-slot"></div>`;
+  const buttons = Array.from(container.querySelectorAll('.choice'));
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const isCorrect = btn.textContent === correct;
+      buttons.forEach(b => b.disabled = true);
+      btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+      if (!isCorrect) buttons.find(b => b.textContent === correct)?.classList.add('correct');
+      container.querySelector('.feedback-slot').innerHTML = `
+        <div class="feedback ${isCorrect ? 'good' : 'bad'}">${isCorrect ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${correct}"`}</div>
+        <div style="margin-top:10px;"><button class="btn next-btn">Weiter →</button></div>`;
+      container.querySelector('.next-btn').addEventListener('click', () => onNext(isCorrect));
+      KeyNav.focusSoon(container.querySelector('.next-btn'));
+    });
+  });
+  KeyNav.focusSoon(buttons[0]);
+}
+
+function renderGapCard(container, word, blank, { onNext }) {
+  container.innerHTML = `
+    <div class="category">${word.category || ''}</div>
+    <p class="exercise-prompt">${blank.before}<strong>___</strong>${blank.after}</p>
+    <p class="muted" style="font-size:0.85rem;">Übersetzung: ${word.translation}</p>
+    <input type="text" class="gap-input" placeholder="Fehlendes Wort/Wendung eingeben..." />
+    <div style="margin-top:10px;"><button class="btn ghost check-btn">Prüfen</button></div>
+    <div class="feedback-slot"></div>`;
+  const input = container.querySelector('.gap-input');
+  const check = () => {
+    if (input.disabled) return;
+    const correct = input.value.trim().toLowerCase() === blank.target.trim().toLowerCase();
+    input.disabled = true;
+    container.querySelector('.check-btn').disabled = true;
+    container.querySelector('.feedback-slot').innerHTML = `
+      <div class="feedback ${correct ? 'good' : 'bad'}">${correct ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${blank.target.trim()}"`}</div>
+      <div style="margin-top:10px;"><button class="btn next-btn">Weiter →</button></div>`;
+    container.querySelector('.next-btn').addEventListener('click', () => onNext(correct));
+    KeyNav.focusSoon(container.querySelector('.next-btn'));
+  };
+  container.querySelector('.check-btn').addEventListener('click', check);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+  KeyNav.focusSoon(input);
 }
 
 Render.vocab = function (root) {
@@ -32,75 +103,103 @@ Render.vocab = function (root) {
     return;
   }
 
-  const s = Store.get();
-  const due = words.filter(w => SRS.isDue(s.srs[w.id]));
+  const byCat = {};
+  words.forEach(w => { (byCat[w.category || 'Sonstiges'] = byCat[w.category || 'Sonstiges'] || []).push(w); });
 
-  if (due.length === 0) {
-    root.innerHTML = `
-      <div class="card empty-state">
-        <div class="big">✅</div>
-        <h3>Alles wiederholt!</h3>
-        <p class="muted">Du hast aktuell ${words.length} Wörter gelernt. Neue Wiederholungen erscheinen automatisch, sobald sie fällig sind.</p>
-      </div>
-      ${categoryBrowserHtml(words)}`;
-    return;
-  }
+  renderHub();
 
-  renderDirectionChoice();
+  function renderHub() {
+    const s = Store.get();
+    const dueCount = w => w.filter(x => SRS.isDue(s.srs[x.id])).length;
+    const totalDue = dueCount(words);
 
-  function renderDirectionChoice() {
-    const dir = s.vocabDirection || 'en-de';
     root.innerHTML = `
       <div class="card">
-        <h3>Wiederholung (${due.length} fällig)</h3>
+        <h3>Vokabeltrainer</h3>
+        <p class="muted">${totalDue > 0 ? `${totalDue} von ${words.length} Vokabeln sitzen aktuell noch nicht.` : `Alle ${words.length} Vokabeln sitzen gerade gut — üben lohnt sich trotzdem!`}</p>
+        <button class="btn" id="mix-all">🔀 Alle Kapitel gemischt üben (${words.length})</button>
+      </div>
+      <div class="card">
+        <h3>Kapitel</h3>
+        ${Object.entries(byCat).map(([cat, ws]) => {
+          const due = dueCount(ws);
+          return `
+            <div class="chapter-row">
+              <div>
+                <strong>${cat}</strong>
+                <div class="muted" style="font-size:0.8rem;">${ws.length} Wörter${due > 0 ? ` · ${due} sitzen noch nicht` : ''}</div>
+              </div>
+              <button class="btn ghost small" data-cat="${cat}">Wiederholen →</button>
+            </div>`;
+        }).join('')}
+      </div>`;
+
+    root.querySelector('#mix-all').addEventListener('click', () => renderDirectionChoice(shuffleArray(words), 'Alle Kapitel'));
+    root.querySelectorAll('[data-cat]').forEach(btn => {
+      btn.addEventListener('click', () => renderDirectionChoice(shuffleArray(byCat[btn.dataset.cat]), btn.dataset.cat));
+    });
+  }
+
+  function renderDirectionChoice(list, title) {
+    const dir = Store.get().vocabDirection || 'en-de';
+    root.innerHTML = `
+      <div class="card">
+        <button class="btn ghost small" id="back-to-hub">← Zurück zur Übersicht</button>
+        <h3 style="margin-top:10px;">${title} (${list.length} Karten)</h3>
         <p class="muted">In welche Richtung möchtest du übersetzen?</p>
         <div style="display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;">
           <button class="btn ${dir === 'en-de' ? '' : 'ghost'}" id="dir-en-de">Englisch → Deutsch</button>
           <button class="btn ${dir === 'de-en' ? '' : 'ghost'}" id="dir-de-en">Deutsch → Englisch</button>
         </div>
       </div>`;
-    root.querySelector('#dir-en-de').addEventListener('click', () => startReview('en-de'));
-    root.querySelector('#dir-de-en').addEventListener('click', () => startReview('de-en'));
+    root.querySelector('#back-to-hub').addEventListener('click', renderHub);
+    root.querySelector('#dir-en-de').addEventListener('click', () => startReview(list, title, 'en-de'));
+    root.querySelector('#dir-de-en').addEventListener('click', () => startReview(list, title, 'de-en'));
   }
 
-  function startReview(direction) {
+  function startReview(list, title, direction) {
     Store.update(st => { st.vocabDirection = direction; });
     let idx = 0;
     const wrongWords = [];
     showCard();
 
     function showCard() {
+      const word = list[idx];
       root.innerHTML = `
         <div class="card">
-          <div class="module-label">Wiederholung (${idx + 1}/${due.length})</div>
+          <div class="module-label">${title} (${idx + 1}/${list.length})</div>
           <div id="flash-slot"></div>
         </div>`;
-      Flashcard.render(root.querySelector('#flash-slot'), due[idx], {
-        graded: true,
-        reversed: direction === 'de-en',
-        onNext: (correct) => {
-          SRS.gradeWord(due[idx].id, correct);
-          if (!correct) wrongWords.push(due[idx]);
-          idx++;
-          if (idx >= due.length) renderSessionDone();
-          else showCard();
-        }
-      });
+      const slot = root.querySelector('#flash-slot');
+      const onNext = (correct) => {
+        SRS.gradeWord(word.id, correct);
+        if (!correct) wrongWords.push(word);
+        idx++;
+        if (idx >= list.length) renderSessionDone();
+        else showCard();
+      };
+      const { type, gap } = pickExerciseType(word, list);
+      if (type === 'choice') renderChoiceCard(slot, word, list, direction, { onNext });
+      else if (type === 'gap') renderGapCard(slot, word, gap, { onNext });
+      else Flashcard.render(slot, word, { graded: true, reversed: direction === 'de-en', onNext });
     }
 
     function renderSessionDone() {
       root.innerHTML = `
         <div class="card empty-state">
           <div class="big">🎉</div>
-          <h3>Wiederholung abgeschlossen!</h3>
-          <p class="muted">Komm morgen wieder für die nächste Runde.</p>
+          <h3>Runde abgeschlossen!</h3>
+          <p class="muted">Komm jederzeit wieder für die nächste Runde.</p>
         </div>
         ${wrongWords.length > 0 ? `
           <div class="card">
             <h3>Diese Wörter saßen noch nicht</h3>
             ${wrongWords.map(w => `<div class="example-box"><span class="en"><strong>${w.word}</strong> — ${w.translation}</span></div>`).join('')}
           </div>` : ''}
-        ${categoryBrowserHtml(words)}`;
+        <div class="card">
+          <button class="btn ghost" id="back-to-hub2">← Zurück zur Übersicht</button>
+        </div>`;
+      root.querySelector('#back-to-hub2').addEventListener('click', renderHub);
     }
   }
 };

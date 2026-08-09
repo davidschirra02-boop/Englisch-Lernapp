@@ -19,7 +19,8 @@ function defaultState() {
     lessonProgress: null, // { day, stepIdx } - zuletzt erreichter Schritt der laufenden Lektion
     panelAlpha: 0.45,     // 0..1: Frosted-Glass-Intensität der Kacheln (0 = ganz durchsichtig, 1 = starker Blur+dunkel), siehe applyPanelTransparency()
     bgVideoSpeed: 0.4,    // playbackRate des Hintergrundvideos
-    vocabDirection: 'en-de' // zuletzt gewählte Abfragerichtung im Vokabeltrainer: 'en-de' oder 'de-en'
+    vocabDirection: 'en-de', // zuletzt gewählte Abfragerichtung im Vokabeltrainer: 'en-de' oder 'de-en'
+    theme: 'glass'        // UI-Design: 'glass' (Dark Glassmorphism + Video), 'aurora' (helles Gradient-Design), 'brutalist' (Neo-Brutalismus)
   };
 }
 

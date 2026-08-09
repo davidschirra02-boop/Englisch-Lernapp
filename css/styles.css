@@ -8,6 +8,7 @@
   --panel-alpha: 0.29;
   --panel-blur: 9px;
   --panel-saturate: 122%;
+  --panel-rgb: 15, 15, 20;
   --paper: rgba(255, 255, 255, 0.06);
   --paper-raised: rgba(255, 255, 255, 0.10);
   --ink: #f8fafc;
@@ -160,7 +161,7 @@ button {
 nav.tabs {
   display: flex;
   gap: 4px;
-  background: rgba(15, 15, 20, var(--panel-alpha));
+  background: rgba(var(--panel-rgb), var(--panel-alpha));
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 999px;
   padding: 4px;
@@ -192,7 +193,7 @@ nav.tabs a:not(.active):hover {
 /* ---------------- Cards & Layout ---------------- */
 
 .card {
-  background: rgba(15, 15, 20, var(--panel-alpha));
+  background: rgba(var(--panel-rgb), var(--panel-alpha));
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-l);
   box-shadow: var(--shadow-pop);
@@ -459,7 +460,7 @@ nav.tabs a:focus-visible {
 
 .feedback.good { background: var(--good-tint); color: var(--good-light); }
 .feedback.bad { background: var(--coral-tint); color: var(--coral-light); }
-.feedback-explain { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.2); font-size: 0.85rem; line-height: 1.45; color: var(--ink); }
+.feedback-explain { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 0.85rem; line-height: 1.45; color: var(--ink); }
 
 /* ---------------- Vocabulary flashcards ---------------- */
 
@@ -559,6 +560,9 @@ input[type="range"] { accent-color: var(--teal); }
 .mt-24 { margin-top: 24px; }
 .section-title { display:flex; align-items:center; justify-content:space-between; gap: 12px; }
 
+.chapter-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); }
+.chapter-row:last-child { border-bottom:none; }
+
 .empty-state {
   text-align: center;
   padding: 40px 20px;
@@ -573,3 +577,138 @@ footer.done-banner {
 }
 
 footer.done-banner .big { font-size: 3rem; margin-bottom: 6px; }
+
+/* ============================================================
+   Design-Themes (wählbar in den Einstellungen, siehe js/app.js
+   applyTheme() + js/render/settings.js). "glass" (Standard, oben
+   definiert) bleibt das dunkle Glassmorphism-Design mit Video-
+   Hintergrund. Die beiden folgenden Themes ändern Farb-Variablen UND
+   Struktur (Radius/Schatten/Blur/Video) für einen wirklich eigenen Look,
+   nicht nur andere Akzentfarben.
+   ============================================================ */
+
+/* ---- Aurora: helles Gradient-Mesh-Design ---- */
+html[data-theme="aurora"] {
+  color-scheme: light;
+  --panel-rgb: 255, 255, 255;
+  --paper: rgba(109, 40, 217, 0.06);
+  --paper-raised: rgba(109, 40, 217, 0.1);
+  --ink: #201c33;
+  --ink-soft: #635c7a;
+  --line: rgba(32, 28, 51, 0.12);
+
+  --teal: #6d28d9;
+  --teal-dark: #5b21b6;
+  --teal-light: #6d28d9;
+  --teal-tint: rgba(109, 40, 217, 0.12);
+
+  --amber: #ec4899;
+  --amber-light: #db2777;
+  --amber-tint: rgba(236, 72, 153, 0.14);
+
+  --coral: #f97316;
+  --coral-light: #c2410c;
+  --coral-tint: rgba(249, 115, 22, 0.14);
+
+  --good: #059669;
+  --good-light: #047857;
+  --good-tint: rgba(5, 150, 105, 0.14);
+
+  --radius-s: 14px;
+  --radius-m: 20px;
+  --radius-l: 28px;
+
+  --shadow-card: 0 1px 2px rgba(109, 40, 217, 0.08), 0 12px 32px -14px rgba(109, 40, 217, 0.35);
+  --shadow-pop: 0 20px 48px -14px rgba(109, 40, 217, 0.35);
+  --font-display: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+html[data-theme="aurora"] body {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(167, 139, 250, 0.55), transparent 45%),
+    radial-gradient(circle at 88% 12%, rgba(244, 114, 182, 0.5), transparent 45%),
+    radial-gradient(circle at 50% 95%, rgba(110, 231, 183, 0.45), transparent 50%),
+    #f5f3ff;
+}
+
+html[data-theme="aurora"] #bg-video-layer { display: none; }
+
+html[data-theme="aurora"] .card,
+html[data-theme="aurora"] nav.tabs {
+  border: 1px solid rgba(109, 40, 217, 0.15);
+}
+
+html[data-theme="aurora"] .btn {
+  box-shadow: 0 8px 20px -8px rgba(109, 40, 217, 0.5);
+}
+
+/* ---- Brutalist: Neo-Brutalismus, flach & hochkontrastig ---- */
+html[data-theme="brutalist"] {
+  color-scheme: light;
+  --panel-alpha: 1;
+  --panel-rgb: 255, 255, 255;
+  --paper: #f2f2f2;
+  --paper-raised: #ffffff;
+  --ink: #0a0a0a;
+  --ink-soft: #333333;
+  --line: #000000;
+
+  --teal: #0044ff;
+  --teal-dark: #0033cc;
+  --teal-light: #0044ff;
+  --teal-tint: rgba(0, 68, 255, 0.12);
+
+  --amber: #ffde00;
+  --amber-light: #7a6400;
+  --amber-tint: rgba(255, 222, 0, 0.3);
+
+  --coral: #ff3366;
+  --coral-light: #b3002e;
+  --coral-tint: rgba(255, 51, 102, 0.15);
+
+  --good: #00c853;
+  --good-light: #007a33;
+  --good-tint: rgba(0, 200, 83, 0.15);
+
+  --radius-s: 0px;
+  --radius-m: 0px;
+  --radius-l: 0px;
+
+  --shadow-card: 5px 5px 0 #000;
+  --shadow-pop: 7px 7px 0 #000;
+  --font-display: Arial, "Helvetica Neue", sans-serif;
+  --font-body: Arial, "Helvetica Neue", sans-serif;
+}
+
+html[data-theme="brutalist"] body { background: #fff4de; }
+
+html[data-theme="brutalist"] #bg-video-layer { display: none; }
+
+html[data-theme="brutalist"] .card,
+html[data-theme="brutalist"] nav.tabs {
+  border: 3px solid #000;
+  border-radius: 0;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html[data-theme="brutalist"] nav.tabs a { border-radius: 0; }
+html[data-theme="brutalist"] nav.tabs a.active { color: #fff; }
+
+html[data-theme="brutalist"] .btn {
+  border: 3px solid #000;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #000;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #000;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+html[data-theme="brutalist"] .btn:hover { background: var(--teal); transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #000; color: #000; }
+html[data-theme="brutalist"] .btn.ghost { background: #fff; }
+html[data-theme="brutalist"] .btn.amber { background: var(--amber); }
+html[data-theme="brutalist"] .day-chip { border-radius: 0; border: 2px solid #000; }
+html[data-theme="brutalist"] h1, html[data-theme="brutalist"] h2, html[data-theme="brutalist"] h3, html[data-theme="brutalist"] h4 {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

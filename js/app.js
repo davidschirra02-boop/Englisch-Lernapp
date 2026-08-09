@@ -20,6 +20,7 @@ function router() {
   setActiveTab(name === 'day' ? 'dashboard' : name);
   if (name === 'day') Render.lesson(root, Number(param) || Store.get().currentDay);
   else if (name === 'vocab') Render.vocab(root);
+  else if (name === 'grammar') Render.grammar(root);
   else if (name === 'settings') Render.settings(root);
   else Render.dashboard(root);
   window.scrollTo(0, 0);
@@ -59,9 +60,25 @@ function applyPanelTransparency(v) {
   root.setProperty('--panel-saturate', saturate.toFixed(0) + '%');
 }
 
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+}
+
+/* Mischt ein Array (Fisher-Yates), ohne das Original zu verändern. Genutzt
+   von Vokabeltrainer und Grammatik-Tab für zufällig gemischte Übungsrunden. */
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 window.addEventListener('hashchange', router);
 window.addEventListener('DOMContentLoaded', () => {
   Store.touchToday();
   applyPanelTransparency(Store.get().panelAlpha);
+  applyTheme(Store.get().theme || 'glass');
   router();
 });

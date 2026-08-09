@@ -58,11 +58,7 @@ const KeyNav = {
      (root.innerHTML-Ersetzung setzt den Fokus stets auf <body> zurück).
      Nur wenn der Fokus wirklich verloren ist (activeElement === body) wird
      eingegriffen, damit gezielte Fokus-Setzungen einzelner Render-Funktionen
-     (z.B. KeyNav.focusSoon auf eine bestimmte Karte) nicht gestört werden —
-     deren setTimeout(...,0) läuft ohnehin erst NACH diesem MutationObserver-
-     Callback und gewinnt somit. So bleibt die App auch außerhalb von
-     Übungen (Dashboard, Abschluss-Screens, Einstellungen, ...) komplett
-     ohne Maus bedienbar. */
+     (z.B. KeyNav.focusSoon auf eine bestimmte Karte) nicht gestört werden. */
   focusFirstIfLost() {
     if (document.activeElement && document.activeElement !== document.body) return;
     document.querySelector(KeyNav.CONTENT_SELECTOR)?.querySelector(KeyNav.SELECTOR)?.focus();
@@ -73,7 +69,20 @@ const KeyNav = {
     KeyNav.focusFirstIfLost();
     new MutationObserver(() => {
       KeyNav.wireAll();
-      KeyNav.focusFirstIfLost();
+      /* Wichtig: per setTimeout(...,0) verzögern, NICHT direkt hier aufrufen.
+         Im QuizEngine wird das beantwortete Element (Auswahl-Button/Eingabe)
+         beim Auswerten disabled — das wirft den Fokus sofort auf <body>
+         zurück, noch bevor QuizEngine.bindNext() per KeyNav.focusSoon() den
+         "Weiter"-Button fokussiert. Würde focusFirstIfLost hier synchron
+         (als Microtask) reagieren, würde es fälschlich den zuvor im Markup
+         stehenden "← Zurück"-Button fokussieren — und da Browser Enter beim
+         Loslassen an das GERADE fokussierte Element weiterleiten, feuert
+         dann ein ungewollter Klick auf "← Zurück" und man springt eine
+         Frage zurück. Der setTimeout(...,0) hier läuft immer NACH einem
+         bereits synchron geplanten focusSoon(...,0), sodass ein echtes
+         Fokus-Ziel stets zuerst gewinnt und dieser Fallback nur noch dann
+         greift, wenn wirklich niemand den Fokus gesetzt hat. */
+      setTimeout(KeyNav.focusFirstIfLost, 0);
     }).observe(document.body, { childList: true, subtree: true });
   },
 
