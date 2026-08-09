@@ -48,9 +48,20 @@ function ensureWordsInSRS(day) {
   dc.content.vocabulary.forEach((w, idx) => SRS.ensureWord(`w${day}-${idx}`));
 }
 
+/* Regler-Wert 0..1: 0 = voll durchsichtig (kein Frosted-Glass), 1 = starker Frosted-Glass-Effekt. */
+function applyPanelTransparency(v) {
+  const alpha = v * 0.65;
+  const blur = v * 20;
+  const saturate = 100 + v * 50;
+  const root = document.documentElement.style;
+  root.setProperty('--panel-alpha', alpha.toFixed(3));
+  root.setProperty('--panel-blur', blur.toFixed(1) + 'px');
+  root.setProperty('--panel-saturate', saturate.toFixed(0) + '%');
+}
+
 window.addEventListener('hashchange', router);
 window.addEventListener('DOMContentLoaded', () => {
   Store.touchToday();
-  document.documentElement.style.setProperty('--panel-alpha', Store.get().panelAlpha);
+  applyPanelTransparency(Store.get().panelAlpha);
   router();
 });

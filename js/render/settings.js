@@ -32,11 +32,11 @@ Render.settings = function (root) {
     <div class="card">
       <h3>Hintergrund</h3>
       <div style="display:flex; align-items:center; gap:14px; margin:16px 0;">
-        <label class="muted" style="font-size:0.85rem; white-space:nowrap; width:180px;">Transparenz der Kacheln</label>
-        <input type="range" id="alpha-slider" min="0.15" max="0.75" step="0.05" value="${s.panelAlpha}" style="flex:1;" />
+        <label class="muted" style="font-size:0.85rem; white-space:nowrap; width:230px; flex-shrink:0;">Transparenz der Kacheln</label>
+        <input type="range" id="alpha-slider" min="0" max="1" step="0.05" value="${s.panelAlpha}" style="flex:1;" />
       </div>
       <div style="display:flex; align-items:center; gap:14px; margin:16px 0;">
-        <label class="muted" style="font-size:0.85rem; white-space:nowrap; width:180px;">Geschwindigkeit Hintergrundvideo</label>
+        <label class="muted" style="font-size:0.85rem; white-space:nowrap; width:230px; flex-shrink:0;">Geschwindigkeit Hintergrundvideo</label>
         <input type="range" id="speed-slider" min="0.1" max="1" step="0.05" value="${s.bgVideoSpeed}" style="flex:1;" />
       </div>
     </div>
@@ -59,7 +59,7 @@ Render.settings = function (root) {
   root.querySelector('#alpha-slider')?.addEventListener('input', (e) => {
     const val = Number(e.target.value);
     Store.update(st => { st.panelAlpha = val; });
-    document.documentElement.style.setProperty('--panel-alpha', val);
+    applyPanelTransparency(val);
   });
 
   root.querySelector('#speed-slider')?.addEventListener('input', (e) => {
