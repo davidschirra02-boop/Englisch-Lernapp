@@ -20,6 +20,12 @@ const QuizEngine = {
       return Array.isArray(item.answer) ? item.answer[0] : (item.answer ?? item.options?.[item.answerIndex]);
     }
 
+    function feedbackHtml(item, correct) {
+      const explain = (!correct && item.explanation) ? `<div class="feedback-explain">💡 ${item.explanation}</div>` : '';
+      const text = correct ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${correctText(item)}"`;
+      return `<div class="feedback ${correct ? 'good' : 'bad'}">${text}${explain}</div>`;
+    }
+
     function topline() {
       return `
         <div class="quiz-topline">
@@ -67,8 +73,7 @@ const QuizEngine = {
 
       function finalize(correct, chosenIndex, chosenText) {
         state[idx] = { answered: true, correct, chosenIndex, chosenText };
-        container.querySelector('.feedback-slot').innerHTML =
-          `<div class="feedback ${correct ? 'good' : 'bad'}">${correct ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${correctText(item)}"`}</div>`;
+        container.querySelector('.feedback-slot').innerHTML = feedbackHtml(item, correct);
         container.querySelector('.next-slot').innerHTML = `<button class="btn next-btn">${isLast ? 'Fertig' : 'Weiter'} →</button>`;
         bindNext(isLast);
       }
@@ -117,7 +122,7 @@ const QuizEngine = {
       container.innerHTML = `
         ${topline()}
         ${bodyHtml}
-        <div class="feedback ${st.correct ? 'good' : 'bad'}">${st.correct ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${correctText(item)}"`}</div>
+        ${feedbackHtml(item, st.correct)}
         <div class="next-slot" style="margin-top:14px;"><button class="btn next-btn">${isLast ? 'Fertig' : 'Weiter'} →</button></div>
       `;
       bindBack();
