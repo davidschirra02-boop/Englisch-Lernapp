@@ -4,13 +4,13 @@
    Deutsch → Englisch). Übungen sind jederzeit wiederholbar, nicht nur wenn
    Karten laut SRS fällig sind — der Fällig-Status wird nur noch als Hinweis
    pro Kapitel angezeigt. Am Ende einer Runde werden falsch bewertete Wörter
-   noch einmal aufgelistet.
+   noch einmal aufgelistet, plus die Wahl, direkt nur diese oder wieder
+   alle Vokabeln aus allen Kapiteln zu üben.
 
-   Für Abwechslung wird pro Karte zufällig eine von drei Übungsarten
-   gewählt: klassische Flashcard (umdrehen + selbst einschätzen), Multiple-
-   Choice (Wort/Übersetzung erkennen, automatisch ausgewertet) oder
+   Für Abwechslung wird pro Karte zufällig eine von zwei Übungsarten
+   gewählt: klassische Flashcard (umdrehen + selbst einschätzen) oder
    Lückentext (die Wendung im Beispielsatz ergänzen, falls sie dort
-   wörtlich vorkommt — sonst weicht die Auswahl auf Flashcard/Choice aus). */
+   wörtlich vorkommt — sonst bleibt es bei Flashcard). */
 
 /* Sucht die Wendung `word.word` im Beispielsatz, um daraus eine Lücke zu
    bauen. Versucht auch ohne führendes "to " (Infinitiv-Partikel steht oft
@@ -28,40 +28,10 @@ function findGapBlank(word) {
   return null;
 }
 
-function pickExerciseType(word, list) {
+function pickExerciseType(word) {
   const gap = findGapBlank(word);
-  const pool = ['flashcard', 'flashcard'];
-  if (list.length > 1) pool.push('choice');
-  if (gap) pool.push('gap');
-  return { type: pool[Math.floor(Math.random() * pool.length)], gap };
-}
-
-function renderChoiceCard(container, word, list, direction, { onNext }) {
-  const prompt = direction === 'de-en' ? word.translation : word.word;
-  const correct = direction === 'de-en' ? word.word : word.translation;
-  const distractors = shuffleArray(list.filter(w => w !== word)).slice(0, 3)
-    .map(w => direction === 'de-en' ? w.word : w.translation);
-  const options = shuffleArray([correct, ...distractors]);
-  container.innerHTML = `
-    <div class="category">${word.category || ''}</div>
-    <p class="exercise-prompt">${prompt}</p>
-    <div class="choice-list">${options.map((o, i) => `<button class="choice" data-i="${i}">${o}</button>`).join('')}</div>
-    <div class="feedback-slot"></div>`;
-  const buttons = Array.from(container.querySelectorAll('.choice'));
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const isCorrect = btn.textContent === correct;
-      buttons.forEach(b => b.disabled = true);
-      btn.classList.add(isCorrect ? 'correct' : 'incorrect');
-      if (!isCorrect) buttons.find(b => b.textContent === correct)?.classList.add('correct');
-      container.querySelector('.feedback-slot').innerHTML = `
-        <div class="feedback ${isCorrect ? 'good' : 'bad'}">${isCorrect ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${correct}"`}</div>
-        <div style="margin-top:10px;"><button class="btn next-btn">Weiter →</button></div>`;
-      container.querySelector('.next-btn').addEventListener('click', () => onNext(isCorrect));
-      KeyNav.focusSoon(container.querySelector('.next-btn'));
-    });
-  });
-  KeyNav.focusSoon(buttons[0]);
+  if (!gap) return { type: 'flashcard', gap: null };
+  return { type: Math.random() < 0.5 ? 'gap' : 'flashcard', gap };
 }
 
 function renderGapCard(container, word, blank, { onNext }) {
@@ -178,9 +148,8 @@ Render.vocab = function (root) {
         if (idx >= list.length) renderSessionDone();
         else showCard();
       };
-      const { type, gap } = pickExerciseType(word, list);
-      if (type === 'choice') renderChoiceCard(slot, word, list, direction, { onNext });
-      else if (type === 'gap') renderGapCard(slot, word, gap, { onNext });
+      const { type, gap } = pickExerciseType(word);
+      if (type === 'gap') renderGapCard(slot, word, gap, { onNext });
       else Flashcard.render(slot, word, { graded: true, reversed: direction === 'de-en', onNext });
     }
 
@@ -193,12 +162,21 @@ Render.vocab = function (root) {
         </div>
         ${wrongWords.length > 0 ? `
           <div class="card">
-            <h3>Diese Wörter saßen noch nicht</h3>
+            <h3>Diese ${wrongWords.length} Wörter saßen noch nicht</h3>
             ${wrongWords.map(w => `<div class="example-box"><span class="en"><strong>${w.word}</strong> — ${w.translation}</span></div>`).join('')}
           </div>` : ''}
         <div class="card">
-          <button class="btn ghost" id="back-to-hub2">← Zurück zur Übersicht</button>
+          <h3>Wie geht's weiter?</h3>
+          <div style="display:flex; gap:12px; margin-top:10px; flex-wrap:wrap;">
+            ${wrongWords.length > 0 ? `<button class="btn" id="retry-wrong">🎯 Nur die ${wrongWords.length} nicht sitzenden üben</button>` : ''}
+            <button class="btn ${wrongWords.length > 0 ? 'ghost' : ''}" id="retry-all">🔀 Alle Vokabeln aus allen Kapiteln üben (${words.length})</button>
+            <button class="btn ghost" id="back-to-hub2">← Zurück zur Übersicht</button>
+          </div>
         </div>`;
+      if (wrongWords.length > 0) {
+        root.querySelector('#retry-wrong').addEventListener('click', () => startReview(shuffleArray(wrongWords), 'Nicht sitzende Vokabeln', direction));
+      }
+      root.querySelector('#retry-all').addEventListener('click', () => startReview(shuffleArray(words), 'Alle Kapitel', direction));
       root.querySelector('#back-to-hub2').addEventListener('click', renderHub);
     }
   }
