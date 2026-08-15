@@ -106,7 +106,7 @@ Render.grammar = function (root) {
 
   function startPractice(chapter, exercises, title, filter) {
     let pool = filter === 'all' ? exercises : exercises.filter(it => it.type === filter);
-    pool = shuffleArray(pool);
+    pool = spaceOutTopics(shuffleArray(pool));
     if (pool.length === 0) {
       root.innerHTML = `
         <div class="card empty-state">

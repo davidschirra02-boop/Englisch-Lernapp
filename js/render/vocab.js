@@ -38,11 +38,15 @@ function renderGapCard(container, word, blank, { onNext }) {
   container.innerHTML = `
     <div class="category">${word.category || ''}</div>
     <p class="exercise-prompt">${blank.before}<strong>___</strong>${blank.after}</p>
-    <p class="muted" style="font-size:0.85rem;">Übersetzung: ${word.translation}</p>
     <input type="text" class="gap-input" placeholder="Fehlendes Wort/Wendung eingeben..." />
+    <div class="hint-row"><button type="button" class="btn ghost small hint-word-btn">🔤 Gesuchtes Wort auf Deutsch</button></div>
+    <div class="hint-slot"></div>
     <div style="margin-top:10px;"><button class="btn ghost check-btn">Prüfen</button></div>
     <div class="feedback-slot"></div>`;
   const input = container.querySelector('.gap-input');
+  container.querySelector('.hint-word-btn').addEventListener('click', () => {
+    container.querySelector('.hint-slot').innerHTML = `<div class="hint-text">🇩🇪 ${word.translation}</div>`;
+  });
   const check = () => {
     if (input.disabled) return;
     const correct = input.value.trim().toLowerCase() === blank.target.trim().toLowerCase();

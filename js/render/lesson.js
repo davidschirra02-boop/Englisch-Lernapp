@@ -5,6 +5,7 @@ const STEP_LABELS = {
   grammar: 'Grammatik',
   vocab: 'Wortschatz',
   vocabPractice: 'Wortschatz-Vertiefung',
+  translation: 'Übersetzung',
   listening: 'Hörverständnis',
   quiz: 'Quiz',
   review: 'Wochen-Review'
@@ -31,7 +32,9 @@ Render.lesson = function (root, day) {
 
   const { content } = dc;
   const isReview = !!content.review;
-  const stepNames = isReview ? ['review', 'quiz'] : ['grammar', 'vocab', 'vocabPractice', 'listening', 'quiz'];
+  const stepNames = isReview
+    ? ['review', 'quiz']
+    : ['grammar', 'vocab', 'vocabPractice', ...(content.translation ? ['translation'] : []), 'listening', 'quiz'];
   let stepIdx = Math.min(Store.getLessonStep(day), stepNames.length - 1);
   let quizScore = 0, quizTotal = 0;
   let missedItems = [];
@@ -58,6 +61,7 @@ Render.lesson = function (root, day) {
     if (step === 'grammar') renderGrammar();
     else if (step === 'vocab') renderVocabIntro();
     else if (step === 'vocabPractice') renderVocabPractice();
+    else if (step === 'translation') renderTranslation();
     else if (step === 'listening') renderListening();
     else if (step === 'review') renderReview();
     else renderQuiz();
@@ -72,7 +76,7 @@ Render.lesson = function (root, day) {
       <p class="muted" style="margin-top:14px;"><strong>Vergleich mit Deutsch:</strong> ${g.contrast}</p>
       <div class="exercise" id="ex-slot"></div>
     `);
-    QuizEngine.run(root.querySelector('#ex-slot'), g.exercises, {
+    QuizEngine.run(root.querySelector('#ex-slot'), spaceOutTopics(g.exercises), {
       onComplete: (score, total, wrong) => { missedItems.push(...wrong); next(); }
     });
   }
@@ -99,7 +103,14 @@ Render.lesson = function (root, day) {
 
   function renderVocabPractice() {
     shell(`<h2>Wortschatz-Vertiefung</h2><p class="muted">Festigen wir die neuen Wörter mit ein paar Übungen.</p><div id="practice-slot"></div>`);
-    QuizEngine.run(root.querySelector('#practice-slot'), content.vocabPractice, {
+    QuizEngine.run(root.querySelector('#practice-slot'), spaceOutTopics(content.vocabPractice), {
+      onComplete: (score, total, wrong) => { missedItems.push(...wrong); next(); }
+    });
+  }
+
+  function renderTranslation() {
+    shell(`<h2>Übersetzung</h2><p class="muted">Übersetze den ganzen Satz ins Englische — Wortschatz und Grammatik zählen.</p><div id="translation-slot"></div>`);
+    QuizEngine.run(root.querySelector('#translation-slot'), spaceOutTopics(content.translation), {
       onComplete: (score, total, wrong) => { missedItems.push(...wrong); next(); }
     });
   }
@@ -146,7 +157,7 @@ Render.lesson = function (root, day) {
       window.speechSynthesis?.cancel();
       const slot = root.querySelector('#listen-quiz-slot');
       slot.innerHTML = '';
-      QuizEngine.run(slot, l.questions, {
+      QuizEngine.run(slot, spaceOutTopics(l.questions), {
         onComplete: (score, total, wrong) => { missedItems.push(...wrong); next(); }
       });
     });
@@ -166,7 +177,7 @@ Render.lesson = function (root, day) {
 
   function renderQuiz() {
     shell(`<h2>Abschluss-Quiz</h2><div id="quiz-slot"></div>`);
-    QuizEngine.run(root.querySelector('#quiz-slot'), content.quiz, {
+    QuizEngine.run(root.querySelector('#quiz-slot'), spaceOutTopics(content.quiz), {
       onComplete: (score, total, wrong) => {
         quizScore = score; quizTotal = total;
         missedItems.push(...wrong);
@@ -188,7 +199,7 @@ Render.lesson = function (root, day) {
       <p class="muted">Diese Fragen hattest du falsch — beantworte sie noch einmal richtig, bevor es weitergeht.</p>
       <div id="review-slot"></div>
     `, 'Wiederholung');
-    QuizEngine.run(root.querySelector('#review-slot'), toReview, {
+    QuizEngine.run(root.querySelector('#review-slot'), spaceOutTopics(toReview), {
       onComplete: (score, total, wrong) => {
         missedItems.push(...wrong);
         if (missedItems.length > 0) renderMissedReview(onDone);

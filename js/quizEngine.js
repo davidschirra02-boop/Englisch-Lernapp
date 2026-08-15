@@ -8,6 +8,40 @@
    nächste Button automatisch fokussiert, damit Enter allein durch die
    Übung führt. */
 
+/* Ordnet Items so um, dass zwei Items mit demselben `topic` (z. B. dasselbe
+   abgefragte Wort/derselbe Grammatikpunkt) nie direkt aufeinanderfolgen —
+   auch nach einer zufälligen Mischung (siehe js/render/grammar.js). Items
+   ohne `topic`-Feld bekommen intern einen eindeutigen Schlüssel und blockieren
+   daher nie etwas (rückwärtskompatibel zu älterem Content ohne dieses Feld).
+   Greedy "größte Gruppe zuerst"-Verfahren (wie beim Reorganize-String-
+   Problem): findet immer eine gültige Reihenfolge, wenn rechnerisch möglich
+   (keine Gruppe > die Hälfte aller Items); sonst minimale Restkollisionen. */
+function spaceOutTopics(items) {
+  const groups = new Map();
+  items.forEach((it, i) => {
+    const key = it.topic || `__free_${i}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(it);
+  });
+  const queues = Array.from(groups.values());
+  const result = [];
+  let lastQueue = null;
+  while (result.length < items.length) {
+    queues.sort((a, b) => b.length - a.length);
+    let queue = queues.find(q => q.length > 0 && q !== lastQueue) || queues.find(q => q.length > 0);
+    result.push(queue.shift());
+    lastQueue = queue;
+  }
+  return result;
+}
+
+/* Toleranter Vergleich für ganze Satzübersetzungen (type: 'translate'):
+   Groß-/Kleinschreibung, Satzzeichen am Ende und doppelte Leerzeichen
+   spielen keine Rolle — der Satzbau/die Wortwahl davor muss aber stimmen. */
+function normalizeSentence(s) {
+  return s.trim().toLowerCase().replace(/[.!?]+$/, '').replace(/\s+/g, ' ');
+}
+
 const QuizEngine = {
   run(container, items, opts = {}) {
     const total = items.length;
@@ -59,9 +93,21 @@ const QuizEngine = {
 
     function renderFresh(item) {
       const isLast = idx === total - 1;
+      const hintButtons = [];
+      if (item.hintWord) hintButtons.push('<button type="button" class="btn ghost small hint-word-btn">🔤 Nur das gesuchte Wort (Deutsch)</button>');
+      if (item.hintSentence) hintButtons.push('<button type="button" class="btn ghost small hint-sentence-btn">📝 Ganzen Satz übersetzen</button>');
+      if (item.hintTargetWord) hintButtons.push('<button type="button" class="btn ghost small hint-target-btn">🔤 Gesuchtes Wort (Englisch)</button>');
+      const hintHtml = hintButtons.length ? `<div class="hint-row">${hintButtons.join('')}</div><div class="hint-slot"></div>` : '';
+
       const bodyHtml = item.type === 'gap'
         ? `<p class="exercise-prompt">${item.prompt}</p>
            <input type="text" class="gap-input" placeholder="Antwort eingeben..." />
+           ${hintHtml}
+           <div style="margin-top:10px;"><button class="btn ghost check-btn">Prüfen</button></div>`
+        : item.type === 'translate'
+        ? `<p class="exercise-prompt">${item.prompt}</p>
+           <input type="text" class="gap-input" placeholder="Ganzen Satz auf Englisch eingeben..." />
+           ${hintHtml}
            <div style="margin-top:10px;"><button class="btn ghost check-btn">Prüfen</button></div>`
         : `<p class="exercise-prompt">${item.prompt}</p>
            <div class="choice-list">
@@ -78,18 +124,35 @@ const QuizEngine = {
         bindNext(isLast);
       }
 
-      if (item.type === 'gap') {
+      if (item.type === 'gap' || item.type === 'translate') {
         const input = container.querySelector('.gap-input');
         const check = () => {
-          const val = input.value.trim().toLowerCase();
-          const accepted = (Array.isArray(item.answer) ? item.answer : [item.answer]).map(a => a.toLowerCase());
-          const correct = accepted.includes(val);
+          let correct;
+          if (item.type === 'translate') {
+            const val = normalizeSentence(input.value);
+            const accepted = (Array.isArray(item.answer) ? item.answer : [item.answer]).map(normalizeSentence);
+            correct = accepted.includes(val);
+          } else {
+            const val = input.value.trim().toLowerCase();
+            const accepted = (Array.isArray(item.answer) ? item.answer : [item.answer]).map(a => a.toLowerCase());
+            correct = accepted.includes(val);
+          }
           input.disabled = true;
           container.querySelector('.check-btn').disabled = true;
           finalize(correct, null, input.value.trim());
         };
         container.querySelector('.check-btn').addEventListener('click', check);
         input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+        const hintSlot = container.querySelector('.hint-slot');
+        container.querySelector('.hint-word-btn')?.addEventListener('click', () => {
+          hintSlot.innerHTML = `<div class="hint-text">🇩🇪 ${item.hintWord}</div>`;
+        });
+        container.querySelector('.hint-sentence-btn')?.addEventListener('click', () => {
+          hintSlot.innerHTML = `<div class="hint-text">🇩🇪 ${item.hintSentence}</div>`;
+        });
+        container.querySelector('.hint-target-btn')?.addEventListener('click', () => {
+          hintSlot.innerHTML = `<div class="hint-text">🇬🇧 ${item.hintTargetWord}</div>`;
+        });
         KeyNav.focusSoon(input);
       } else {
         const choiceButtons = Array.from(container.querySelectorAll('.choice'));
@@ -109,7 +172,7 @@ const QuizEngine = {
 
     function renderReviewed(item, st) {
       const isLast = idx === total - 1;
-      const bodyHtml = item.type === 'gap'
+      const bodyHtml = (item.type === 'gap' || item.type === 'translate')
         ? `<p class="exercise-prompt">${item.prompt}</p><input type="text" class="gap-input" value="${st.chosenText || ''}" disabled />`
         : `<p class="exercise-prompt">${item.prompt}</p>
            <div class="choice-list">

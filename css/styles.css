@@ -553,6 +553,9 @@ nav.tabs a:focus-visible {
 .gap-input::placeholder { color: var(--ink-soft); }
 .gap-input:disabled { opacity: 0.7; }
 
+.hint-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.hint-text { margin-top: 8px; padding: 9px 12px; border-radius: var(--radius-s); background: var(--teal-tint); color: var(--teal-light); font-size: 0.85rem; line-height: 1.4; }
+
 input[type="range"] { accent-color: var(--teal); }
 
 .muted { color: var(--ink-soft); }
