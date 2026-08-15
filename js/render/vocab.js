@@ -1,11 +1,13 @@
 /* Vokabeltrainer: Übersicht ("Hub") mit allen Kapiteln (= Vokabel-Kategorien,
-   entsprechen den Wochenthemen). Von dort aus wählt man ein Kapitel (oder
-   "alle gemischt") und dann die Abfragerichtung (Englisch → Deutsch /
-   Deutsch → Englisch). Übungen sind jederzeit wiederholbar, nicht nur wenn
-   Karten laut SRS fällig sind — der Fällig-Status wird nur noch als Hinweis
-   pro Kapitel angezeigt. Am Ende einer Runde werden falsch bewertete Wörter
-   noch einmal aufgelistet, plus die Wahl, direkt nur diese oder wieder
-   alle Vokabeln aus allen Kapiteln zu üben.
+   entsprechen den Wochenthemen). Von dort aus wählt man ein Kapitel, "alle
+   gemischt" oder — sofern Vokabeln fällig sind — gezielt nur die aktuell
+   nicht sitzenden Vokabeln über alle Kapitel hinweg, und dann jeweils die
+   Abfragerichtung (Englisch → Deutsch / Deutsch → Englisch). Übungen sind
+   jederzeit wiederholbar, nicht nur wenn Karten laut SRS fällig sind — der
+   Fällig-Status wird zusätzlich als Hinweis pro Kapitel angezeigt. Am Ende
+   einer Runde werden falsch bewertete Wörter noch einmal aufgelistet, plus
+   die Wahl, direkt nur diese oder wieder alle Vokabeln aus allen Kapiteln
+   zu üben.
 
    Für Abwechslung wird pro Karte zufällig eine von zwei Übungsarten
    gewählt: klassische Flashcard (umdrehen + selbst einschätzen) oder
@@ -84,19 +86,23 @@ Render.vocab = function (root) {
 
   function renderHub() {
     const s = Store.get();
-    const dueCount = w => w.filter(x => SRS.isDue(s.srs[x.id])).length;
-    const totalDue = dueCount(words);
+    const dueOf = w => w.filter(x => SRS.isDue(s.srs[x.id]));
+    const dueWords = dueOf(words);
+    const totalDue = dueWords.length;
 
     root.innerHTML = `
       <div class="card">
         <h3>Vokabeltrainer</h3>
         <p class="muted">${totalDue > 0 ? `${totalDue} von ${words.length} Vokabeln sitzen aktuell noch nicht.` : `Alle ${words.length} Vokabeln sitzen gerade gut — üben lohnt sich trotzdem!`}</p>
-        <button class="btn" id="mix-all">🔀 Alle Kapitel gemischt üben (${words.length})</button>
+        <div style="display:flex; gap:12px; margin-top:10px; flex-wrap:wrap;">
+          ${totalDue > 0 ? `<button class="btn" id="review-due">🎯 Nur die ${totalDue} nicht sitzenden üben</button>` : ''}
+          <button class="btn ${totalDue > 0 ? 'ghost' : ''}" id="mix-all">🔀 Alle Kapitel gemischt üben (${words.length})</button>
+        </div>
       </div>
       <div class="card">
         <h3>Kapitel</h3>
         ${Object.entries(byCat).map(([cat, ws]) => {
-          const due = dueCount(ws);
+          const due = dueOf(ws).length;
           return `
             <div class="chapter-row">
               <div>
@@ -108,6 +114,9 @@ Render.vocab = function (root) {
         }).join('')}
       </div>`;
 
+    if (totalDue > 0) {
+      root.querySelector('#review-due').addEventListener('click', () => renderDirectionChoice(shuffleArray(dueWords), 'Nicht sitzende Vokabeln'));
+    }
     root.querySelector('#mix-all').addEventListener('click', () => renderDirectionChoice(shuffleArray(words), 'Alle Kapitel'));
     root.querySelectorAll('[data-cat]').forEach(btn => {
       btn.addEventListener('click', () => renderDirectionChoice(shuffleArray(byCat[btn.dataset.cat]), btn.dataset.cat));
