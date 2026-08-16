@@ -16,7 +16,7 @@ function defaultState() {
     srs: {},             // { wordId: { box, due } }
     voiceURI: null,      // gewählte Stimme fürs Hörverständnis
     speechRate: 0.95,
-    lessonProgress: null, // { day, stepIdx } - zuletzt erreichter Schritt der laufenden Lektion
+    lessonProgress: null, // { day, stepIdx, missedItems, subKey, sub } - zuletzt erreichter Schritt der laufenden Lektion inkl. Fortschritt *innerhalb* des Schritts (welche Frage, welche Antworten), damit ein Reload mitten in einer Übung exakt dort fortsetzt
     panelAlpha: 0.45,     // 0..1: Frosted-Glass-Intensität der Kacheln (0 = ganz durchsichtig, 1 = starker Blur+dunkel), siehe applyPanelTransparency()
     bgVideoSpeed: 0.4,    // playbackRate des Hintergrundvideos
     vocabDirection: 'en-de', // zuletzt gewählte Abfragerichtung im Vokabeltrainer: 'en-de' oder 'de-en'
@@ -74,13 +74,61 @@ const Store = (() => {
     return !!load().completedDays[day];
   }
 
+  // Verankert lessonProgress auf (day, stepIdx). Ruft man das mit denselben
+  // Werten auf, die bereits gespeichert sind (z.B. beim erneuten Mounten der
+  // Lektion nach einem Reload), bleibt subKey/sub/missedItems unangetastet -
+  // nur ein echter Schrittwechsel setzt den Innerhalb-Schritt-Fortschritt zurück.
   function saveLessonStep(day, stepIdx) {
-    update(s => { s.lessonProgress = { day, stepIdx }; });
+    update(s => {
+      const same = s.lessonProgress && s.lessonProgress.day === day && s.lessonProgress.stepIdx === stepIdx;
+      if (same) return;
+      if (!s.lessonProgress || s.lessonProgress.day !== day) {
+        s.lessonProgress = { day, stepIdx, missedItems: [], subKey: null, sub: null };
+      } else {
+        s.lessonProgress.stepIdx = stepIdx;
+        s.lessonProgress.subKey = null;
+        s.lessonProgress.sub = null;
+      }
+    });
   }
 
   function getLessonStep(day) {
     const s = load();
     return s.lessonProgress && s.lessonProgress.day === day ? s.lessonProgress.stepIdx : 0;
+  }
+
+  // Über den Tag hinweg gesammelte, noch offene falsch beantwortete Items
+  // (für die Wiederholungsrunde am Lektionsende) - überlebt Schrittwechsel.
+  function getMissedItems(day) {
+    const s = load();
+    return (s.lessonProgress && s.lessonProgress.day === day && s.lessonProgress.missedItems) || [];
+  }
+
+  function saveMissedItems(day, items) {
+    update(s => {
+      if (s.lessonProgress && s.lessonProgress.day === day) s.lessonProgress.missedItems = items;
+    });
+  }
+
+  // Fortschritt *innerhalb* des aktuellen Schritts (z.B. welche Frage einer
+  // Übungsrunde, welche Antworten schon gegeben wurden). subKey unterscheidet
+  // Unterphasen desselben Schritts (z.B. 'listening' Hörtext vs. Fragen, oder
+  // 'quiz' Hauptquiz vs. Wiederholungsrunde).
+  function getLessonSub(day, subKey) {
+    const s = load();
+    if (s.lessonProgress && s.lessonProgress.day === day && s.lessonProgress.subKey === subKey) {
+      return s.lessonProgress.sub || null;
+    }
+    return null;
+  }
+
+  function saveLessonSub(day, subKey, sub) {
+    update(s => {
+      if (s.lessonProgress && s.lessonProgress.day === day) {
+        s.lessonProgress.subKey = subKey;
+        s.lessonProgress.sub = sub;
+      }
+    });
   }
 
   function clearLessonProgress() {
@@ -92,5 +140,9 @@ const Store = (() => {
     state = defaultState();
   }
 
-  return { get, update, touchToday, markDayComplete, isDayComplete, saveLessonStep, getLessonStep, clearLessonProgress, reset, todayISO };
+  return {
+    get, update, touchToday, markDayComplete, isDayComplete,
+    saveLessonStep, getLessonStep, getMissedItems, saveMissedItems, getLessonSub, saveLessonSub, clearLessonProgress,
+    reset, todayISO
+  };
 })();

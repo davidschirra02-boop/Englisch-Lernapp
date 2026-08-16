@@ -1,0 +1,142 @@
+/* week02 — Feld "vocabulary". Teil des nach Aufgabentyp aufgeteilten Datenschemas,
+   siehe CONTENT_GUIDE.md. Nur dieses eine Feld je Tag — andere Aufgabentypen
+   dieser Woche liegen in den Nachbardateien im selben Ordner. */
+
+defineWeekField('week02', "Reisen & Unterwegs", 1, 'vocabulary', [
+  { "word": "itinerary", "translation": "Reiseplan/Route", "example": "Our itinerary includes five cities in ten days.", "mnemonic": "\"Itiner-\" wie lateinisch \"iter\" = Weg/Reise.", "category": "Reiseplanung" },
+  { "word": "to book in advance", "translation": "im Voraus buchen", "example": "We booked the hotel in advance to get a discount.", "mnemonic": "\"Advance\" = vorwärts/im Voraus.", "category": "Reiseplanung" },
+  { "word": "accommodation", "translation": "Unterkunft", "example": "We haven't found accommodation for the last night yet.", "mnemonic": "Klingt wie \"akkommodieren\" = unterbringen.", "category": "Reiseplanung" },
+  { "word": "budget travel", "translation": "Reisen mit kleinem Budget", "example": "Budget travel means staying in hostels and cooking your own meals.", "mnemonic": "\"Budget\" = Etat, hier: knapp kalkuliert reisen.", "category": "Reiseplanung" },
+  { "word": "to pack", "translation": "packen (Koffer)", "example": "I always pack too many clothes.", "mnemonic": "Direkt aus dem Englischen bekannt (\"Backpacking\").", "category": "Reiseplanung" },
+  { "word": "round-trip ticket", "translation": "Hin- und Rückflugticket", "example": "A round-trip ticket is often cheaper than two one-way tickets.", "mnemonic": "\"Round trip\" = eine Rundreise, die zum Ausgangspunkt zurückführt.", "category": "Reiseplanung" },
+  { "word": "travel insurance", "translation": "Reiseversicherung", "example": "Always get travel insurance in case something goes wrong.", "mnemonic": "\"Insurance\" klingt wie \"ensure\" = sicherstellen.", "category": "Reiseplanung" },
+  { "word": "to set off", "translation": "aufbrechen/losfahren", "example": "We set off early to avoid the traffic.", "mnemonic": "\"Off\" wie \"los-\" — man setzt sich in Bewegung.", "category": "Reiseplanung" },
+  { "word": "to plan ahead", "translation": "im Voraus planen", "example": "It pays off to plan ahead for a big trip.", "mnemonic": "Direkt verständlich.", "category": "Reiseplanung" },
+  { "word": "off-season", "translation": "Nebensaison", "example": "Prices are much lower if you travel off-season.", "mnemonic": "Gegenteil von \"high season\".", "category": "Reiseplanung" },
+  { "word": "peak season", "translation": "Hauptsaison", "example": "Flights get expensive during peak season.", "mnemonic": "\"Peak\" = Höhepunkt.", "category": "Reiseplanung" },
+  { "word": "to cancel a trip", "translation": "eine Reise stornieren", "example": "We had to cancel our trip due to bad weather.", "mnemonic": "Direkt übersetzbar.", "category": "Reiseplanung" },
+  { "word": "non-refundable", "translation": "nicht erstattungsfähig", "example": "Be careful, this ticket is non-refundable.", "mnemonic": "\"Non-\" + \"refundable\" = nicht rückerstattbar.", "category": "Reiseplanung" },
+  { "word": "visa requirements", "translation": "Visa-Bestimmungen", "example": "Check the visa requirements before booking your flight.", "mnemonic": "Direkt übersetzbar.", "category": "Reiseplanung" },
+  { "word": "backpacking", "translation": "Rucksackreisen", "example": "They spent a year backpacking through Southeast Asia.", "mnemonic": "Direkt aus dem Englischen übernommen.", "category": "Reiseplanung" },
+  { "word": "to plan a route", "translation": "eine Route planen", "example": "We planned our route carefully to see all the highlights.", "mnemonic": "Direkt verständlich.", "category": "Reiseplanung" },
+  { "word": "currency exchange", "translation": "Geldwechsel", "example": "We exchanged some cash at the currency exchange counter.", "mnemonic": "Direkt übersetzbar.", "category": "Reiseplanung" },
+  { "word": "packing list", "translation": "Packliste", "example": "I always make a packing list before a trip.", "mnemonic": "Direkt übersetzbar.", "category": "Reiseplanung" },
+  { "word": "to be fully booked", "translation": "ausgebucht sein", "example": "The hotel was fully booked for that weekend.", "mnemonic": "\"Booked\" = gebucht, \"fully\" = vollständig.", "category": "Reiseplanung" },
+  { "word": "last-minute deal", "translation": "Last-Minute-Angebot", "example": "We found a great last-minute deal on flights.", "mnemonic": "Direkt aus dem Englischen bekannt.", "category": "Reiseplanung" }
+]);
+
+defineWeekField('week02', "Reisen & Unterwegs", 2, 'vocabulary', [
+  { "word": "public transport", "translation": "öffentlicher Nahverkehr", "example": "It's easy to get around the city using public transport.", "mnemonic": "Direkt aus dem Deutschen ableitbar.", "category": "Stadtverkehr" },
+  { "word": "to get lost", "translation": "sich verlaufen/verfahren", "example": "We got lost trying to find the old town.", "mnemonic": "\"Lost\" = verloren — man verliert die Orientierung.", "category": "Stadtverkehr" },
+  { "word": "roundabout", "translation": "Kreisverkehr", "example": "Take the second exit at the roundabout.", "mnemonic": "\"Round about\" = rundherum.", "category": "Stadtverkehr" },
+  { "word": "pedestrian zone", "translation": "Fußgängerzone", "example": "Cars aren't allowed in the pedestrian zone.", "mnemonic": "\"Pedestrian\" = Fußgänger, klingt wie \"pedal\" (Fuß).", "category": "Stadtverkehr" },
+  { "word": "to head towards", "translation": "sich in Richtung ... bewegen", "example": "Head towards the church and turn left.", "mnemonic": "\"Head\" = Kopf, hier: die Richtung ausrichten.", "category": "Stadtverkehr" },
+  { "word": "a shortcut", "translation": "eine Abkürzung", "example": "We took a shortcut through the park.", "mnemonic": "\"Short\" + \"cut\" = ein \"abgeschnittener\", kürzerer Weg.", "category": "Stadtverkehr" },
+  { "word": "signpost", "translation": "Wegweiser/Schild", "example": "Follow the signposts to the city centre.", "mnemonic": "\"Sign\" + \"post\" = ein Pfosten mit einem Schild.", "category": "Stadtverkehr" },
+  { "word": "to miss a turn", "translation": "eine Abzweigung verpassen", "example": "We missed a turn and ended up on the highway.", "mnemonic": "\"Miss\" = verpassen, \"turn\" = Abzweigung.", "category": "Stadtverkehr" },
+  { "word": "to ask for directions", "translation": "nach dem Weg fragen", "example": "We had to ask for directions three times.", "mnemonic": "Direkt übersetzbar.", "category": "Stadtverkehr" },
+  { "word": "crossroads", "translation": "Kreuzung", "example": "Turn left at the next crossroads.", "mnemonic": "\"Cross\" + \"roads\" = sich kreuzende Straßen.", "category": "Stadtverkehr" },
+  { "word": "one-way street", "translation": "Einbahnstraße", "example": "You can't drive down there, it's a one-way street.", "mnemonic": "Direkt übersetzbar.", "category": "Stadtverkehr" },
+  { "word": "traffic jam", "translation": "Verkehrsstau", "example": "We got stuck in a traffic jam on the way in.", "mnemonic": "Direkt übersetzbar.", "category": "Stadtverkehr" },
+  { "word": "to hop on/off", "translation": "ein-/aussteigen (ugs.)", "example": "We hopped on the tram and got off at the museum.", "mnemonic": "\"Hop\" = hüpfen, umgangssprachlich für schnelles Ein-/Aussteigen.", "category": "Stadtverkehr" },
+  { "word": "to double back", "translation": "umkehren/zurückgehen", "example": "We had to double back after missing our turn.", "mnemonic": "\"Double back\" = den Weg zurückgehen.", "category": "Stadtverkehr" },
+  { "word": "dead end", "translation": "Sackgasse", "example": "We drove into a dead end and had to reverse.", "mnemonic": "Direkt übersetzbar.", "category": "Stadtverkehr" },
+  { "word": "underpass", "translation": "Unterführung", "example": "Use the underpass to cross safely under the road.", "mnemonic": "\"Under\" + \"pass\" = darunter hindurchgehen.", "category": "Stadtverkehr" },
+  { "word": "to merge (into traffic)", "translation": "sich einordnen/einfädeln", "example": "Merge carefully when joining the motorway.", "mnemonic": "Direkt: zusammenführen.", "category": "Stadtverkehr" },
+  { "word": "rush hour", "translation": "Stoßzeit/Hauptverkehrszeit", "example": "Avoid driving downtown during rush hour.", "mnemonic": "Direkt aus dem Englischen bekannt.", "category": "Stadtverkehr" },
+  { "word": "zebra crossing", "translation": "Zebrastreifen", "example": "Always use the zebra crossing to cross the road.", "mnemonic": "Direkt übersetzbar (britisches Englisch).", "category": "Stadtverkehr" },
+  { "word": "to give directions", "translation": "den Weg erklären", "example": "She gave us clear directions to the station.", "mnemonic": "Gegenstück zu \"to ask for directions\".", "category": "Stadtverkehr" }
+]);
+
+defineWeekField('week02', "Reisen & Unterwegs", 3, 'vocabulary', [
+  { "word": "to check out", "translation": "auschecken", "example": "We have to check out before noon.", "mnemonic": "\"Out\" = raus — man verlässt das Hotel.", "category": "Hotels" },
+  { "word": "room service", "translation": "Zimmerservice", "example": "We ordered breakfast through room service.", "mnemonic": "Direkt aus dem Englischen bekannt.", "category": "Hotels" },
+  { "word": "a wake-up call", "translation": "Weckruf", "example": "Could I get a wake-up call at 6 AM, please?", "mnemonic": "\"Wake up\" = aufwachen + \"call\" = Anruf.", "category": "Hotels" },
+  { "word": "overbooked", "translation": "überbucht", "example": "The hotel was overbooked, so we had to find another one.", "mnemonic": "\"Over\" + \"booked\" = zu viele Buchungen.", "category": "Hotels" },
+  { "word": "en-suite", "translation": "mit eigenem Bad", "example": "All our rooms are en-suite.", "mnemonic": "Aus dem Französischen: \"in einer Folge/dazugehörig\".", "category": "Hotels" },
+  { "word": "to upgrade", "translation": "aufwerten/hochstufen", "example": "They upgraded us to a suite for free.", "mnemonic": "\"Up\" + \"grade\" = eine Stufe höher.", "category": "Hotels" },
+  { "word": "a deposit", "translation": "Anzahlung/Kaution", "example": "We paid a deposit to secure the booking.", "mnemonic": "Klingt wie \"deponieren\" = hinterlegen.", "category": "Hotels" },
+  { "word": "amenities", "translation": "Ausstattung/Annehmlichkeiten", "example": "The hotel amenities include a pool and a gym.", "mnemonic": "\"Amenity\" klingt wie \"angenehm\".", "category": "Hotels" },
+  { "word": "concierge", "translation": "Concierge/Empfangsdienst", "example": "Ask the concierge for restaurant recommendations.", "mnemonic": "Direkt aus dem Französischen/Englischen übernommen.", "category": "Hotels" },
+  { "word": "front desk", "translation": "Rezeption", "example": "Leave your key at the front desk when you go out.", "mnemonic": "Direkt übersetzbar.", "category": "Hotels" },
+  { "word": "housekeeping", "translation": "Zimmerreinigung", "example": "Housekeeping comes every morning to clean the rooms.", "mnemonic": "Direkt aus dem Englischen bekannt.", "category": "Hotels" },
+  { "word": "to check availability", "translation": "Verfügbarkeit prüfen", "example": "Let me check availability for that weekend.", "mnemonic": "Direkt übersetzbar.", "category": "Hotels" },
+  { "word": "non-smoking room", "translation": "Nichtraucherzimmer", "example": "We requested a non-smoking room.", "mnemonic": "Direkt übersetzbar.", "category": "Hotels" },
+  { "word": "late checkout", "translation": "späte Abreise", "example": "We paid extra for a late checkout.", "mnemonic": "Direkt übersetzbar.", "category": "Hotels" },
+  { "word": "to complain to management", "translation": "sich bei der Leitung beschweren", "example": "We complained to management about the noise.", "mnemonic": "Direkt verständlich.", "category": "Hotels" },
+  { "word": "bed and breakfast", "translation": "Frühstückspension", "example": "We stayed in a cosy bed and breakfast in the countryside.", "mnemonic": "Direkt aus dem Englischen bekannt (B&B).", "category": "Hotels" },
+  { "word": "to double-book", "translation": "doppelt buchen", "example": "The hotel accidentally double-booked our room.", "mnemonic": "Verwandt mit \"overbooked\".", "category": "Hotels" },
+  { "word": "minibar", "translation": "Minibar", "example": "Everything in the minibar is charged separately.", "mnemonic": "Direkt aus dem Englischen bekannt.", "category": "Hotels" },
+  { "word": "to leave a review", "translation": "eine Bewertung hinterlassen", "example": "We left a positive review after our stay.", "mnemonic": "Direkt übersetzbar.", "category": "Hotels" },
+  { "word": "no-frills", "translation": "schlicht/ohne Extras", "example": "It's a no-frills hotel, but the location is perfect.", "mnemonic": "\"Frills\" = Verzierungen/Extras, \"no-frills\" = ohne Schnickschnack.", "category": "Hotels" }
+]);
+
+defineWeekField('week02', "Reisen & Unterwegs", 4, 'vocabulary', [
+  { "word": "rental car", "translation": "Mietwagen", "example": "We picked up our rental car at the airport.", "mnemonic": "\"Rent\" = mieten.", "category": "Mietwagen" },
+  { "word": "driving licence", "translation": "Führerschein", "example": "You need a valid driving licence to rent a car.", "mnemonic": "UK \"licence\" (Substantiv) vs. US \"license\".", "category": "Mietwagen" },
+  { "word": "to fill up (the tank)", "translation": "volltanken", "example": "We filled up the tank before returning the car.", "mnemonic": "\"Fill up\" = ganz auffüllen.", "category": "Mietwagen" },
+  { "word": "toll road", "translation": "Mautstraße", "example": "The toll road was faster but cost extra.", "mnemonic": "\"Toll\" = Maut/Gebühr (nicht das deutsche \"toll\"!).", "category": "Mietwagen" },
+  { "word": "speed limit", "translation": "Geschwindigkeitsbegrenzung", "example": "The speed limit here is 100 km/h.", "mnemonic": "Direkt verständlich: \"Tempo-Limit\".", "category": "Mietwagen" },
+  { "word": "breakdown", "translation": "Panne", "example": "We had a breakdown on the motorway.", "mnemonic": "\"Break down\" = zusammenbrechen/kaputtgehen.", "category": "Mietwagen" },
+  { "word": "insurance excess", "translation": "Selbstbeteiligung", "example": "The insurance excess was 500 euros.", "mnemonic": "\"Excess\" = der Überschuss, den du selbst trägst.", "category": "Mietwagen" },
+  { "word": "to give way", "translation": "Vorfahrt gewähren", "example": "You must give way to traffic from the right.", "mnemonic": "\"Give way\" = den Weg freigeben.", "category": "Mietwagen" },
+  { "word": "roadworks", "translation": "Straßenbauarbeiten", "example": "We were delayed by roadworks on the motorway.", "mnemonic": "Direkt übersetzbar.", "category": "Mietwagen" },
+  { "word": "dashboard", "translation": "Armaturenbrett", "example": "A warning light appeared on the dashboard.", "mnemonic": "Direkt aus dem Englischen bekannt.", "category": "Mietwagen" },
+  { "word": "to overtake", "translation": "überholen", "example": "It's dangerous to overtake on a bend.", "mnemonic": "\"Over\" + \"take\" = vorbeiziehen.", "category": "Mietwagen" },
+  { "word": "car park", "translation": "Parkplatz", "example": "We left the car in the hotel car park.", "mnemonic": "Britisches Englisch für \"parking lot\".", "category": "Mietwagen" },
+  { "word": "flat tyre", "translation": "platter Reifen", "example": "We had a flat tyre halfway through the trip.", "mnemonic": "Direkt übersetzbar.", "category": "Mietwagen" },
+  { "word": "to pull over", "translation": "an den Straßenrand fahren", "example": "The police asked him to pull over.", "mnemonic": "\"Pull over\" = an die Seite fahren.", "category": "Mietwagen" },
+  { "word": "roadside assistance", "translation": "Pannenhilfe", "example": "We called roadside assistance after the breakdown.", "mnemonic": "Direkt übersetzbar.", "category": "Mietwagen" },
+  { "word": "one-way rental", "translation": "Einwegmiete", "example": "A one-way rental lets you return the car in a different city.", "mnemonic": "Kollokation mit \"rental\".", "category": "Mietwagen" },
+  { "word": "mileage", "translation": "Kilometerstand/gefahrene Strecke", "example": "The rental includes unlimited mileage.", "mnemonic": "Britisches \"mileage\" statt \"kilometrage\".", "category": "Mietwagen" },
+  { "word": "sat nav", "translation": "Navigationssystem", "example": "We used the sat nav to find the hotel.", "mnemonic": "Britische Kurzform für \"satellite navigation\".", "category": "Mietwagen" },
+  { "word": "to reverse", "translation": "rückwärts fahren", "example": "Be careful when you reverse out of the parking space.", "mnemonic": "Direkt übersetzbar.", "category": "Mietwagen" },
+  { "word": "traffic fine", "translation": "Verkehrsstrafe/Bußgeld", "example": "We got a traffic fine for speeding.", "mnemonic": "Direkt übersetzbar.", "category": "Mietwagen" }
+]);
+
+defineWeekField('week02', "Reisen & Unterwegs", 5, 'vocabulary', [
+  { "word": "landmark", "translation": "Sehenswürdigkeit/Wahrzeichen", "example": "The tower is the city's most famous landmark.", "mnemonic": "\"Land\" + \"mark\" = ein markanter Punkt in der Landschaft.", "category": "Sightseeing" },
+  { "word": "breathtaking", "translation": "atemberaubend", "example": "The view from the summit was breathtaking.", "mnemonic": "\"Breath\" + \"taking\" = einem den Atem raubend.", "category": "Sightseeing" },
+  { "word": "off the beaten track", "translation": "abseits der Touristenpfade", "example": "We found a lovely café off the beaten track.", "mnemonic": "\"Beaten track\" = der \"ausgetretene\" Weg, den alle nehmen.", "category": "Sightseeing" },
+  { "word": "tourist trap", "translation": "Touristenfalle", "example": "That restaurant near the landmark is a tourist trap.", "mnemonic": "\"Trap\" = Falle.", "category": "Sightseeing" },
+  { "word": "to be worth (doing)", "translation": "es wert sein (etwas zu tun)", "example": "The museum is definitely worth visiting.", "mnemonic": "\"Worth\" = Wert.", "category": "Sightseeing" },
+  { "word": "guided tour", "translation": "geführte Tour", "example": "We joined a guided tour of the old town.", "mnemonic": "\"Guide\" = Führer/in.", "category": "Sightseeing" },
+  { "word": "hidden gem", "translation": "verstecktes Juwel", "example": "This little village is a real hidden gem.", "mnemonic": "\"Gem\" = Edelstein, hier: ein wertvoller Fund.", "category": "Sightseeing" },
+  { "word": "overrated", "translation": "überbewertet", "example": "Many tourists think the tower is overrated.", "mnemonic": "\"Over\" + \"rated\" = zu hoch bewertet.", "category": "Sightseeing" },
+  { "word": "must-see", "translation": "unbedingt sehenswert", "example": "The old cathedral is an absolute must-see.", "mnemonic": "Wörtlich: \"muss man gesehen haben\".", "category": "Sightseeing" },
+  { "word": "to admire the view", "translation": "die Aussicht bewundern", "example": "We stopped to admire the view from the hilltop.", "mnemonic": "Direkt übersetzbar.", "category": "Sightseeing" },
+  { "word": "panoramic view", "translation": "Panoramablick", "example": "The rooftop bar offers a panoramic view of the city.", "mnemonic": "Direkt übersetzbar.", "category": "Sightseeing" },
+  { "word": "self-guided tour", "translation": "selbstständige Besichtigungstour", "example": "We preferred a self-guided tour with an audio app.", "mnemonic": "Gegensatz zu \"guided tour\".", "category": "Sightseeing" },
+  { "word": "souvenir shop", "translation": "Souvenirladen", "example": "The souvenir shop was right next to the exit.", "mnemonic": "Direkt aus dem Englischen bekannt.", "category": "Sightseeing" },
+  { "word": "crowded", "translation": "überfüllt", "example": "The square was so crowded we could barely move.", "mnemonic": "Direkt übersetzbar.", "category": "Sightseeing" },
+  { "word": "to queue up", "translation": "sich anstellen/anstehen", "example": "We queued up for almost an hour to get in.", "mnemonic": "Britisches Englisch für \"anstehen\".", "category": "Sightseeing" },
+  { "word": "admission fee", "translation": "Eintrittsgebühr", "example": "The admission fee includes a free audio guide.", "mnemonic": "Direkt übersetzbar.", "category": "Sightseeing" },
+  { "word": "historic site", "translation": "historische Stätte", "example": "The ruins are one of the region's most important historic sites.", "mnemonic": "Direkt übersetzbar.", "category": "Sightseeing" },
+  { "word": "viewpoint", "translation": "Aussichtspunkt", "example": "There's a lovely viewpoint just past the bridge.", "mnemonic": "Direkt übersetzbar.", "category": "Sightseeing" },
+  { "word": "to take a detour", "translation": "einen Umweg machen", "example": "We took a detour to see the waterfall.", "mnemonic": "Direkt übersetzbar.", "category": "Sightseeing" },
+  { "word": "iconic", "translation": "ikonisch/weltbekannt", "example": "The bridge is one of the city's most iconic sights.", "mnemonic": "Direkt aus dem Englischen bekannt.", "category": "Sightseeing" }
+]);
+
+defineWeekField('week02', "Reisen & Unterwegs", 6, 'vocabulary', [
+  { "word": "lost property", "translation": "Fundbüro/Fundsachen", "example": "Ask at the lost property office if anyone has handed in your bag.", "mnemonic": "Wörtlich: \"verlorenes Eigentum\".", "category": "Reiseprobleme" },
+  { "word": "embassy", "translation": "Botschaft", "example": "Contact your embassy if you lose your passport.", "mnemonic": "Klingt wie \"Ambassador\" = Botschafter.", "category": "Reiseprobleme" },
+  { "word": "to report (a theft)", "translation": "(einen Diebstahl) melden", "example": "We reported the theft to the local police.", "mnemonic": "\"Report\" = Bericht erstatten.", "category": "Reiseprobleme" },
+  { "word": "travel advisory", "translation": "Reisewarnung", "example": "The government issued a travel advisory for the region.", "mnemonic": "\"Advise\" = raten/warnen.", "category": "Reiseprobleme" },
+  { "word": "to be stranded", "translation": "festsitzen/gestrandet sein", "example": "We were stranded at the airport overnight.", "mnemonic": "\"Strand\" (engl.) = Ufer — man sitzt \"gestrandet\" fest.", "category": "Reiseprobleme" },
+  { "word": "replacement documents", "translation": "Ersatzdokumente", "example": "The embassy issued replacement documents within a day.", "mnemonic": "\"Replace\" = ersetzen.", "category": "Reiseprobleme" },
+  { "word": "scam", "translation": "Betrug/Abzocke", "example": "The cheap hotel offer turned out to be a scam.", "mnemonic": "Kurzes, einprägsames englisches Wort für \"Betrug\".", "category": "Reiseprobleme" },
+  { "word": "to reimburse", "translation": "erstatten/rückerstatten", "example": "The airline reimbursed us for the extra hotel night.", "mnemonic": "\"Re-\" + \"imburse\" (aus dem Französischen \"bourse\" = Geldbeutel) = ins Portemonnaie zurücklegen.", "category": "Reiseprobleme" },
+  { "word": "pickpocket", "translation": "Taschendieb(in)", "example": "Watch out for pickpockets on the metro.", "mnemonic": "\"Pocket\" = Tasche.", "category": "Reiseprobleme" },
+  { "word": "to file a police report", "translation": "eine Anzeige erstatten", "example": "We had to file a police report before the insurance would pay.", "mnemonic": "Direkt übersetzbar.", "category": "Reiseprobleme" },
+  { "word": "lost luggage", "translation": "verlorenes Gepäck", "example": "The airline is still searching for our lost luggage.", "mnemonic": "Direkt übersetzbar.", "category": "Reiseprobleme" },
+  { "word": "emergency fund", "translation": "Notfallreserve", "example": "Always keep an emergency fund for unexpected travel problems.", "mnemonic": "Direkt übersetzbar.", "category": "Reiseprobleme" },
+  { "word": "to cancel a card", "translation": "eine Karte sperren lassen", "example": "I cancelled my card immediately after it was stolen.", "mnemonic": "Direkt verständlich.", "category": "Reiseprobleme" },
+  { "word": "consulate", "translation": "Konsulat", "example": "The consulate helped us get emergency documents.", "mnemonic": "Verwandt mit \"embassy\", aber kleinere Vertretung.", "category": "Reiseprobleme" },
+  { "word": "to be scammed", "translation": "betrogen/abgezockt werden", "example": "Several tourists were scammed by fake ticket sellers.", "mnemonic": "Verb zu \"scam\".", "category": "Reiseprobleme" },
+  { "word": "worst-case scenario", "translation": "Worst-Case-Szenario", "example": "In the worst-case scenario, we'd have to spend the night at the airport.", "mnemonic": "Direkt aus dem Englischen bekannt.", "category": "Reiseprobleme" },
+  { "word": "to seek assistance", "translation": "Hilfe suchen/in Anspruch nehmen", "example": "We sought assistance from the tour operator.", "mnemonic": "Formeller als \"to ask for help\".", "category": "Reiseprobleme" },
+  { "word": "compensation", "translation": "Entschädigung", "example": "We received compensation for the cancelled flight.", "mnemonic": "Direkt übersetzbar.", "category": "Reiseprobleme" },
+  { "word": "to be repatriated", "translation": "zurückgeholt/heimgeführt werden", "example": "Stranded travellers were repatriated by a special flight.", "mnemonic": "\"Re-\" + \"patria\" (Vaterland) = zurück ins Heimatland gebracht.", "category": "Reiseprobleme" },
+  { "word": "emergency hotline", "translation": "Notfall-Hotline", "example": "Call the emergency hotline for immediate help.", "mnemonic": "Direkt übersetzbar.", "category": "Reiseprobleme" }
+]);
+

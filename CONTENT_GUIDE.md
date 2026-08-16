@@ -1,12 +1,40 @@
 # Content-Schema für neue Wochen
 
-Kurzreferenz zum Ergänzen weiterer Wochen, ohne die App-Architektur erneut herleiten zu müssen. Eine neue Woche = eine neue Datei `data/weeks/weekNN.js`, zusätzlich in `index.html` per `<script src="data/weeks/weekNN.js"></script>` **nach** `data/weeks-index.js` einbinden.
+Kurzreferenz zum Ergänzen weiterer Wochen, ohne die App-Architektur erneut herleiten zu müssen.
 
-Themen der 13 Wochen stehen bereits in `data/curriculum.js` (`WEEK_THEMES`). Woche 1+2 (`data/weeks/week01.js`, `week02.js`) sind die Referenzimplementierung — beim Schreiben neuer Wochen einfach eine dieser Dateien kopieren und Inhalte austauschen. **Stand 2026-08-14: beide Wochen wurden komplett auf das unten beschriebene, deutlich anspruchsvollere Schema überarbeitet** (schwierigere Grammatik, volle 20-Wörter-Abdeckung, neuer `translation`-Block, `topic`/Hinweis-Felder) — neue Wochen (3-13) müssen diesem aktuellen Schema folgen, nicht einer älteren, kürzeren Fassung.
+## Dateistruktur (wichtig, seit 2026-08-15)
+
+Jede Woche liegt **nicht** mehr in einer einzigen Datei, sondern als Ordner `data/weeks/weekNN/` mit **einer Datei pro Aufgabentyp**:
+
+```
+data/weeks/weekNN/grammar.js        Tag 1-6: grammar-Objekt
+data/weeks/weekNN/vocabulary.js     Tag 1-6: vocabulary-Array (Karteikarten)
+data/weeks/weekNN/vocabPractice.js  Tag 1-6: vocabPractice-Array
+data/weeks/weekNN/translation.js    Tag 1-6: translation-Array
+data/weeks/weekNN/listening.js      Tag 1-6: listening-Objekt
+data/weeks/weekNN/quiz.js           Tag 1-7: quiz-Array (inkl. Review-Quiz Tag 7)
+data/weeks/weekNN/review.js         Tag 7: review:true + summary-Objekt
+```
+
+Jede dieser Dateien ruft den Helper aus `data/weeks-index.js` auf, um **nur ihr eigenes Feld** zu setzen — unabhängig davon, ob/wann die anderen Dateien derselben Woche geladen werden:
+
+```js
+defineWeekField('weekNN', 'Wochentitel', 1, 'grammar', { ...grammar-Objekt für Tag 1... });
+defineWeekField('weekNN', 'Wochentitel', 2, 'grammar', { ...grammar-Objekt für Tag 2... });
+// usw. für Tag 3-6 in derselben Datei
+```
+
+Alle 7 Dateien einer neuen Woche zusätzlich in `index.html` **nach** `data/weeks-index.js` per `<script src="data/weeks/weekNN/<feld>.js"></script>` einbinden (Reihenfolge untereinander egal).
+
+**Zweck dieser Aufteilung:** Soll künftig **nur ein Aufgabentyp über alle Kapitel** geändert werden (z. B. "passe die Übersetzungsaufgabe in allen Kapiteln an"), reicht `Glob data/weeks/*/translation.js` — nur diese Dateien müssen gelesen/bearbeitet werden, ohne Grammatik/Vokabeln/Quiz anderer Wochen überhaupt zu öffnen. Soll dagegen eine **ganze Woche** überarbeitet werden, ist `data/weeks/weekNN/*.js` genauso einfach.
+
+Themen der 13 Wochen stehen bereits in `data/curriculum.js` (`WEEK_THEMES`). Woche 1+2 (`data/weeks/week01/`, `data/weeks/week02/`) sind die Referenzimplementierung — beim Schreiben neuer Wochen einfach den Ordner (bzw. gezielt die Datei des relevanten Aufgabentyps) kopieren und Inhalte austauschen. **Stand 2026-08-14: beide Wochen wurden komplett auf das unten beschriebene, deutlich anspruchsvollere Schema überarbeitet** (schwierigere Grammatik, volle 20-Wörter-Abdeckung, neuer `translation`-Block, `topic`/Hinweis-Felder) — neue Wochen (3-13) müssen diesem aktuellen Schema folgen, nicht einer älteren, kürzeren Fassung.
 
 Es gibt **keinen Konversationstrainer** mehr (bewusst entfernt zugunsten von mehr Grammatik-/Vokabel-/Lückentextaufgaben) — nicht versehentlich wieder einführen.
 
 ## Grundgerüst
+
+Ergibt sich zur Laufzeit aus den 7 `defineWeekField()`-Aufrufdateien (siehe oben) zu:
 
 ```js
 WEEKS.weekNN = {
@@ -85,8 +113,8 @@ Tag 7 wurde in der Überarbeitung vom 2026-08-14 **nicht** angefasst (kein `topi
 
 ## Baby-Schritte für Folge-Sessions (z. B. Woche 3)
 
-1. Nach `/compact`: kurz diese Datei lesen, dann `data/weeks/week01.js` Tag 1 als Vorlage für Struktur/Stil ansehen (harte Grammatik, `topic`/Hint-Felder, `translation`-Block).
-2. `data/weeks/weekNN.js` nach obigem Schema schreiben (Thema aus `WEEK_THEMES[N-1]`), Tag für Tag (6 Tage + Review-Tag 7 im alten, einfacheren Format).
-3. `<script>`-Tag in `index.html` ergänzen.
+1. Nach `/compact`: kurz diese Datei lesen, dann `data/weeks/week01/grammar.js` + `data/weeks/week01/translation.js` Tag 1 als Vorlage für Struktur/Stil ansehen (harte Grammatik, `topic`/Hint-Felder, `translate`-Typ). Für reinen Stil-/Formatabgleich reicht es, jeweils nur die Datei des gerade relevanten Aufgabentyps zu öffnen — nicht automatisch alle 7 Dateien einer Vorlagenwoche lesen.
+2. Ordner `data/weeks/weekNN/` anlegen, darin 7 Dateien nach obigem Schema schreiben (Thema aus `WEEK_THEMES[N-1]`), Tag für Tag (6 Tage + Review-Tag 7 im alten, einfacheren Format), jeweils per `defineWeekField('weekNN', 'Titel', tag, 'feld', wert)`.
+3. 7 `<script>`-Tags in `index.html` ergänzen (siehe bestehende week01/week02-Blöcke als Vorlage).
 4. Node-Strukturcheck: pro Tag `vocabulary.length===20`, `grammar.exercises.length===18`, jedes `vocabulary`-Wort kommt in `vocabPractice` UND `translation` als `topic` vor, `spaceOutTopics()` liefert 0 Kollisionen auf allen vier Arrays (Skript siehe Muster in den vorherigen Sessions).
 5. Im Browser kurz Tag testen (automatisierter Playwright-Durchlauf: Prompt→Item-Lookup, richtige Antworten eingeben, bis "Tag X abgeschlossen!" erscheint), dann `/compact` vor dem nächsten Tag/der nächsten Woche.

@@ -35,29 +35,37 @@ function spaceOutTopics(items) {
   return result;
 }
 
-/* Toleranter Vergleich für ganze Satzübersetzungen (type: 'translate'):
-   Groß-/Kleinschreibung, Satzzeichen am Ende und doppelte Leerzeichen
-   spielen keine Rolle — der Satzbau/die Wortwahl davor muss aber stimmen. */
-function normalizeSentence(s) {
-  return s.trim().toLowerCase().replace(/[.!?]+$/, '').replace(/\s+/g, ' ');
-}
-
 const QuizEngine = {
   run(container, items, opts = {}) {
     const total = items.length;
-    const state = items.map(() => ({ answered: false, correct: null, chosenIndex: null, chosenText: null }));
-    let idx = 0;
+    // opts.initialIdx/initialAnswers erlauben das Fortsetzen einer schon
+    // begonnenen Runde (z.B. nach einem Reload) exakt bei der zuletzt
+    // offenen Frage samt bisherigen Antworten. Nur vertraut, wenn die
+    // Länge zur aktuellen Item-Liste passt (sonst regulärer Neustart).
+    const canResume = Array.isArray(opts.initialAnswers) && opts.initialAnswers.length === total;
+    const state = canResume
+      ? opts.initialAnswers.map(s => ({ ...s }))
+      : items.map(() => ({ answered: false, correct: null, chosenIndex: null, chosenText: null, diag: null }));
+    let idx = canResume ? Math.min(Math.max(opts.initialIdx || 0, 0), total - 1) : 0;
+
+    function reportProgress() { opts.onProgress?.(idx, state); }
 
     function scoreCount() { return state.filter(s => s.correct).length; }
 
-    function correctText(item) {
+    function correctText(item, diag) {
+      if (diag) return diag.closest;
       return Array.isArray(item.answer) ? item.answer[0] : (item.answer ?? item.options?.[item.answerIndex]);
     }
 
-    function feedbackHtml(item, correct) {
+    function feedbackHtml(item, correct, diag) {
       const explain = (!correct && item.explanation) ? `<div class="feedback-explain">💡 ${item.explanation}</div>` : '';
-      const text = correct ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${correctText(item)}"`;
-      return `<div class="feedback ${correct ? 'good' : 'bad'}">${text}${explain}</div>`;
+      if (diag && diag.tier === 'close-typo') {
+        const typo = TranslationCheck.describeDiff(diag.ops.filter(o => o.type === 'sub'));
+        return `<div class="feedback good">✓ Richtig! <span class="feedback-note">(kleiner Tippfehler: ${typo})</span></div>`;
+      }
+      const diffLine = (!correct && diag) ? `<div class="feedback-explain">${TranslationCheck.describeDiff(diag.ops)}</div>` : '';
+      const text = correct ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${correctText(item, diag)}"`;
+      return `<div class="feedback ${correct ? 'good' : 'bad'}">${text}${diffLine}${explain}</div>`;
     }
 
     function topline() {
@@ -70,7 +78,7 @@ const QuizEngine = {
 
     function bindBack() {
       const btn = container.querySelector('.nav-back-btn');
-      if (btn && idx > 0) btn.addEventListener('click', () => { idx--; renderItem(); });
+      if (btn && idx > 0) btn.addEventListener('click', () => { idx--; reportProgress(); renderItem(); });
     }
 
     function bindNext(isLast) {
@@ -80,7 +88,7 @@ const QuizEngine = {
           const wrong = items.filter((it, i) => state[i].correct === false);
           opts.onComplete?.(scoreCount(), total, wrong);
         }
-        else { idx++; renderItem(); }
+        else { idx++; reportProgress(); renderItem(); }
       });
       KeyNav.focusSoon(btn);
     }
@@ -117,9 +125,10 @@ const QuizEngine = {
       container.innerHTML = `${topline()}${bodyHtml}<div class="feedback-slot"></div><div class="next-slot" style="margin-top:14px;"></div>`;
       bindBack();
 
-      function finalize(correct, chosenIndex, chosenText) {
-        state[idx] = { answered: true, correct, chosenIndex, chosenText };
-        container.querySelector('.feedback-slot').innerHTML = feedbackHtml(item, correct);
+      function finalize(correct, chosenIndex, chosenText, diag) {
+        state[idx] = { answered: true, correct, chosenIndex, chosenText, diag: diag || null };
+        reportProgress();
+        container.querySelector('.feedback-slot').innerHTML = feedbackHtml(item, correct, diag);
         container.querySelector('.next-slot').innerHTML = `<button class="btn next-btn">${isLast ? 'Fertig' : 'Weiter'} →</button>`;
         bindNext(isLast);
       }
@@ -127,11 +136,10 @@ const QuizEngine = {
       if (item.type === 'gap' || item.type === 'translate') {
         const input = container.querySelector('.gap-input');
         const check = () => {
-          let correct;
+          let correct, diag;
           if (item.type === 'translate') {
-            const val = normalizeSentence(input.value);
-            const accepted = (Array.isArray(item.answer) ? item.answer : [item.answer]).map(normalizeSentence);
-            correct = accepted.includes(val);
+            diag = TranslationCheck.classify(input.value, item);
+            correct = diag.tier !== 'wrong';
           } else {
             const val = input.value.trim().toLowerCase();
             const accepted = (Array.isArray(item.answer) ? item.answer : [item.answer]).map(a => a.toLowerCase());
@@ -139,7 +147,7 @@ const QuizEngine = {
           }
           input.disabled = true;
           container.querySelector('.check-btn').disabled = true;
-          finalize(correct, null, input.value.trim());
+          finalize(correct, null, input.value.trim(), diag);
         };
         container.querySelector('.check-btn').addEventListener('click', check);
         input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
@@ -185,7 +193,7 @@ const QuizEngine = {
       container.innerHTML = `
         ${topline()}
         ${bodyHtml}
-        ${feedbackHtml(item, st.correct)}
+        ${feedbackHtml(item, st.correct, st.diag)}
         <div class="next-slot" style="margin-top:14px;"><button class="btn next-btn">${isLast ? 'Fertig' : 'Weiter'} →</button></div>
       `;
       bindBack();
