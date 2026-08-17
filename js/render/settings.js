@@ -57,13 +57,13 @@ Render.settings = function (root) {
     <div class="card">
       <h3>Hintergrund</h3>
       <p class="muted" style="font-size:0.8rem;">Video-Hintergrund ist nur im Glassmorphism-Design sichtbar.</p>
-      <div style="display:flex; align-items:center; gap:14px; margin:16px 0;">
-        <label class="muted" style="font-size:0.85rem; white-space:nowrap; width:230px; flex-shrink:0;">Transparenz der Kacheln</label>
-        <input type="range" id="alpha-slider" min="0" max="1" step="0.05" value="${s.panelAlpha}" style="flex:1;" />
+      <div style="display:flex; align-items:center; flex-wrap:wrap; gap:14px; margin:16px 0;">
+        <label class="muted" style="font-size:0.85rem; flex:1 1 200px;">Transparenz der Kacheln</label>
+        <input type="range" id="alpha-slider" min="0" max="1" step="0.05" value="${s.panelAlpha}" style="flex:2 1 140px;" />
       </div>
-      <div style="display:flex; align-items:center; gap:14px; margin:16px 0;">
-        <label class="muted" style="font-size:0.85rem; white-space:nowrap; width:230px; flex-shrink:0;">Geschwindigkeit Hintergrundvideo</label>
-        <input type="range" id="speed-slider" min="0.1" max="1" step="0.05" value="${s.bgVideoSpeed}" style="flex:1;" />
+      <div style="display:flex; align-items:center; flex-wrap:wrap; gap:14px; margin:16px 0;">
+        <label class="muted" style="font-size:0.85rem; flex:1 1 200px;">Geschwindigkeit Hintergrundvideo</label>
+        <input type="range" id="speed-slider" min="0.1" max="1" step="0.05" value="${s.bgVideoSpeed}" style="flex:2 1 140px;" />
       </div>
     </div>
 
