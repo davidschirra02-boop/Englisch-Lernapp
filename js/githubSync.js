@@ -2,7 +2,7 @@
    Lesen funktioniert überall ohne Schlüssel (öffentlicher Gist). Schreiben
    braucht einen einmalig pro Gerät hinterlegten Zugangsschlüssel (Token). */
 
-const GIST_ID = null; // wird nach der Ersteinrichtung fest eingetragen
+const GIST_ID = '51b9ba9271f40d4d5d7f6d421bea15a2';
 const GIST_FILENAME = 'progress.json';
 const TOKEN_KEY = 'elc_gh_token';
 const GIST_OVERRIDE_KEY = 'elc_gh_gist_id'; // lokaler Ersatz, solange GIST_ID noch leer ist
