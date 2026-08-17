@@ -76,7 +76,8 @@ function shuffleArray(arr) {
 }
 
 window.addEventListener('hashchange', router);
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
+  await GitHubSync.pull();
   Store.touchToday();
   applyPanelTransparency(Store.get().panelAlpha);
   applyTheme(Store.get().theme || 'glass');

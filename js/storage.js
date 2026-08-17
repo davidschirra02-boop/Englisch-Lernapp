@@ -40,6 +40,7 @@ const Store = (() => {
 
   function save() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    window.dispatchEvent(new CustomEvent('elc:save', { detail: state }));
   }
 
   function get() {
@@ -51,6 +52,15 @@ const Store = (() => {
     fn(s);
     save();
     return s;
+  }
+
+  // Ersetzt den kompletten Zustand durch einen von außen (GitHub-Sync) geladenen
+  // Stand, z.B. beim Start, wenn ein aktuellerer Fortschritt von einem anderen
+  // Gerät vorliegt. Löst bewusst kein 'elc:save' aus, um keinen sofortigen
+  // Rückschreib-Kreislauf zum Sync-Ziel zu erzeugen.
+  function hydrate(remoteState) {
+    state = { ...defaultState(), ...remoteState };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
 
   function touchToday() {
@@ -141,7 +151,7 @@ const Store = (() => {
   }
 
   return {
-    get, update, touchToday, markDayComplete, isDayComplete,
+    get, update, hydrate, touchToday, markDayComplete, isDayComplete,
     saveLessonStep, getLessonStep, getMissedItems, saveMissedItems, getLessonSub, saveLessonSub, clearLessonProgress,
     reset, todayISO
   };

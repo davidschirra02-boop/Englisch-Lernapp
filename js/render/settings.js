@@ -6,11 +6,25 @@ Render.settings = function (root) {
   const voices = Speech.listVoices();
   const currentVoiceURI = s.voiceURI || Speech.resolveVoice()?.voiceURI || '';
   const sorted = [...voices].sort((a, b) => (Speech.isHighQuality(b.name) ? 1 : 0) - (Speech.isHighQuality(a.name) ? 1 : 0));
+  const sync = GitHubSync.getStatus();
 
   root.innerHTML = `
     <div class="card">
       <h3>Einstellungen</h3>
       <p class="muted">Aktueller Tag: ${Math.min(s.currentDay, 90)} von 90 · Streak: ${s.streak} Tage · ${Object.keys(s.srs).length} Wörter im Trainer</p>
+    </div>
+
+    <div class="card">
+      <h3>Fortschritt auf allen Geräten</h3>
+      <p class="muted">Normalerweise bleibt dein Fortschritt nur auf diesem Gerät gespeichert. Trägst du hier deinen Schlüssel ein, wird er zusätzlich online gesichert — dann siehst du auf jedem Gerät, auf dem du diese Seite öffnest, automatisch deinen aktuellen Stand. Zum bloßen Anschauen auf einem anderen Gerät brauchst du gar nichts einzutragen, nur zum Weiterüben und Speichern von diesem Gerät aus.</p>
+      ${sync.connected
+        ? `<p class="muted">✅ Verbunden${sync.lastSync ? ` · zuletzt gesichert: ${new Date(sync.lastSync).toLocaleString('de-DE')}` : ''}</p>
+           ${sync.error ? `<p class="muted" style="color:#e08;">Hinweis: ${sync.error}</p>` : ''}
+           <button class="btn ghost" id="sync-disconnect">Auf diesem Gerät trennen</button>`
+        : `<input type="password" id="sync-token" class="field" placeholder="Schlüssel einfügen" />
+           <button class="btn" id="sync-connect" style="margin-top:10px;">Verbinden</button>
+           ${sync.error ? `<p class="muted" style="color:#e08;">Hinweis: ${sync.error}</p>` : ''}`
+      }
     </div>
 
     <div class="card">
@@ -95,6 +109,20 @@ Render.settings = function (root) {
 
   root.querySelector('#test-voice')?.addEventListener('click', () => {
     Speech.speak('Hello! This is what your listening exercises will sound like from now on.');
+  });
+
+  root.querySelector('#sync-connect')?.addEventListener('click', async (e) => {
+    const token = root.querySelector('#sync-token').value.trim();
+    if (!token) return;
+    e.target.disabled = true;
+    e.target.textContent = 'Verbinde …';
+    await GitHubSync.connect(token);
+    router();
+  });
+
+  root.querySelector('#sync-disconnect')?.addEventListener('click', () => {
+    GitHubSync.disconnect();
+    router();
   });
 
   root.querySelector('#reset-btn').addEventListener('click', () => {
