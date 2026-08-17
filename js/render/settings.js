@@ -19,6 +19,7 @@ Render.settings = function (root) {
       <p class="muted">Normalerweise bleibt dein Fortschritt nur auf diesem Gerät gespeichert. Trägst du hier deinen Schlüssel ein, wird er zusätzlich online gesichert — dann siehst du auf jedem Gerät, auf dem du diese Seite öffnest, automatisch deinen aktuellen Stand. Zum bloßen Anschauen auf einem anderen Gerät brauchst du gar nichts einzutragen, nur zum Weiterüben und Speichern von diesem Gerät aus.</p>
       ${sync.connected
         ? `<p class="muted">✅ Verbunden${sync.lastSync ? ` · zuletzt gesichert: ${new Date(sync.lastSync).toLocaleString('de-DE')}` : ''}</p>
+           ${sync.gistId ? `<p class="muted" style="font-size:0.8rem;">Speicher-ID (einmalig weitergeben, damit sie fest in der App eingetragen wird): <code>${sync.gistId}</code></p>` : ''}
            ${sync.error ? `<p class="muted" style="color:#e08;">Hinweis: ${sync.error}</p>` : ''}
            <button class="btn ghost" id="sync-disconnect">Auf diesem Gerät trennen</button>`
         : `<input type="password" id="sync-token" class="field" placeholder="Schlüssel einfügen" />
