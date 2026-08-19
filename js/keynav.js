@@ -64,9 +64,31 @@ const KeyNav = {
     document.querySelector(KeyNav.CONTENT_SELECTOR)?.querySelector(KeyNav.SELECTOR)?.focus();
   },
 
+  /* Ein Klick auf eine nicht-bedienbare Stelle (leerer Bereich, Fließtext,
+     ein deaktivierter Button ...) setzt den echten Fokus normalerweise auf
+     <body> zurück - danach reagieren Pfeiltasten auf nichts mehr, bis man
+     gezielt ein Eingabefeld anklickt. Fängt das ab: nach jedem Klick, der
+     nicht ohnehin schon ein bedienbares Element trifft (dessen Fokus der
+     Browser selbst setzt), wird das dem Klickpunkt räumlich nächstgelegene
+     bedienbare Element fokussiert, damit Pfeiltasten sofort wieder greifen -
+     unabhängig davon, wohin in der App man klickt. */
+  focusNearestOnStrayClick(e) {
+    if (e.target.closest(KeyNav.SELECTOR)) return;
+    const candidates = Array.from(document.querySelectorAll(KeyNav.SELECTOR));
+    if (candidates.length === 0) return;
+    let nearest = null, bestDist = Infinity;
+    candidates.forEach(el => {
+      const r = el.getBoundingClientRect();
+      const dist = Math.hypot(r.left + r.width / 2 - e.clientX, r.top + r.height / 2 - e.clientY);
+      if (dist < bestDist) { bestDist = dist; nearest = el; }
+    });
+    nearest?.focus();
+  },
+
   init() {
     KeyNav.wireAll();
     KeyNav.focusFirstIfLost();
+    document.addEventListener('click', KeyNav.focusNearestOnStrayClick);
     new MutationObserver(() => {
       KeyNav.wireAll();
       /* Wichtig: per setTimeout(...,0) verzögern, NICHT direkt hier aufrufen.
