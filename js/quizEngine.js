@@ -37,19 +37,37 @@ function spaceOutTopics(items) {
 
 // Ermittelt anhand des gesprochenen Satzes, welche Options-Schaltfläche am
 // besten passt (per TranslationCheck.classify, das schon Tippfehler-Toleranz
-// mitbringt). Enthält der Fragesatz eine Lücke, wird für jede Option der
-// komplette Satz gebildet, damit "im Kontext gesprochen" genauso zählt wie
-// "nur die Option gesprochen". Liefert -1, wenn keine Option nahe genug dran ist.
+// mitbringt). Enthält der Fragesatz eine Lücke, wird sowohl gegen den
+// kompletten Satz mit eingesetzter Option ALS AUCH gegen die reine Option
+// allein geprüft - Menschen sagen bei Multiple-Choice oft nur die Antwort
+// selbst, nicht zwingend den ganzen Satz, und beides soll zählen. Liefert
+// -1, wenn keine Option nahe genug dran ist.
 function matchSpokenChoice(item, transcript) {
   const hasBlank = item.prompt.includes('___');
   const tierRank = { wrong: 0, 'close-typo': 1, exact: 2 };
   let bestIdx = -1, bestTier = 'wrong';
   item.options.forEach((opt, i) => {
-    const candidate = hasBlank ? item.prompt.replace('___', opt) : opt;
-    const diag = TranslationCheck.classify(transcript, { answer: [candidate] });
-    if (tierRank[diag.tier] > tierRank[bestTier]) { bestTier = diag.tier; bestIdx = i; }
+    // " '" (Leerzeichen vor Kontraktions-Apostroph, z.B. "I ___" + "'ve had"
+    // -> "I 've had") auf "I've had" zusammenziehen, sonst zerlegt die
+    // Tokenisierung "'ve" fälschlich in ein eigenes Wort und der Vergleich
+    // scheitert an einer reinen Leerzeichen-Fuge, nicht am Inhalt.
+    const candidates = hasBlank ? [item.prompt.replace('___', opt).replace(/ '/g, "'"), opt] : [opt];
+    candidates.forEach(candidate => {
+      const diag = TranslationCheck.classify(transcript, { answer: [candidate] });
+      if (tierRank[diag.tier] > tierRank[bestTier]) { bestTier = diag.tier; bestIdx = i; }
+    });
   });
   return bestIdx;
+}
+
+// Startet automatisch (ohne Antippen) ein Zuhören, aber nur wenn das
+// Mikrofon auf diesem Gerät schon erlaubt ist - sonst würde bei jeder neuen
+// Frage ungefragt ein Berechtigungsdialog aufpoppen.
+function autoListenIfGranted(startFn) {
+  if (!SpeechInput.supported() || !navigator.permissions?.query) return;
+  navigator.permissions.query({ name: 'microphone' }).then(status => {
+    if (status.state === 'granted') startFn();
+  }).catch(() => {});
 }
 
 const QuizEngine = {
@@ -188,7 +206,7 @@ const QuizEngine = {
         input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
         const micBtn = container.querySelector('.mic-btn');
         const micStatus = container.querySelector('.mic-status');
-        micBtn?.addEventListener('click', () => {
+        const startListening = () => {
           micBtn.classList.add('listening');
           micStatus.textContent = 'Höre zu …';
           SpeechInput.listen({
@@ -196,7 +214,9 @@ const QuizEngine = {
             onError: (err) => { micStatus.textContent = SpeechInput.errorText(err); },
             onEnd: () => { micBtn.classList.remove('listening'); micStatus.textContent = ''; }
           });
-        });
+        };
+        micBtn?.addEventListener('click', startListening);
+        if (micBtn) autoListenIfGranted(startListening);
         const hintSlot = container.querySelector('.hint-slot');
         container.querySelector('.hint-word-btn')?.addEventListener('click', () => {
           hintSlot.innerHTML = `<div class="hint-text">🇩🇪 ${item.hintWord}</div>`;
@@ -222,7 +242,7 @@ const QuizEngine = {
         });
         const micBtn = container.querySelector('.mic-btn');
         const micStatus = container.querySelector('.mic-status');
-        micBtn?.addEventListener('click', () => {
+        const startListening = () => {
           micBtn.classList.add('listening');
           micStatus.textContent = 'Höre zu …';
           SpeechInput.listen({
@@ -231,11 +251,14 @@ const QuizEngine = {
               const i = matchSpokenChoice(item, t);
               if (i === -1) { micStatus.textContent = `Nicht eindeutig verstanden ("${t}") – nochmal sprechen oder antippen.`; return; }
               choiceButtons[i].click();
+              container.querySelector('.feedback-slot')?.insertAdjacentHTML('beforeend', `<p class="muted" style="font-size:0.8rem;">🎤 Verstanden: „${t}"</p>`);
             },
             onError: (err) => { micStatus.textContent = SpeechInput.errorText(err); },
             onEnd: () => { micBtn.classList.remove('listening'); }
           });
-        });
+        };
+        micBtn?.addEventListener('click', startListening);
+        if (micBtn) autoListenIfGranted(startListening);
         KeyNav.focusSoon(choiceButtons[0]);
       }
     }

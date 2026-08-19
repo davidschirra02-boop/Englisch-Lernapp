@@ -73,7 +73,7 @@ function renderGapCard(container, word, blank, { onNext }) {
   input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
   const micBtn = container.querySelector('.mic-btn');
   const micStatus = container.querySelector('.mic-status');
-  micBtn?.addEventListener('click', () => {
+  const startListening = () => {
     micBtn.classList.add('listening');
     micStatus.textContent = 'Höre zu …';
     SpeechInput.listen({
@@ -81,7 +81,9 @@ function renderGapCard(container, word, blank, { onNext }) {
       onError: (err) => { micStatus.textContent = SpeechInput.errorText(err); },
       onEnd: () => { micBtn.classList.remove('listening'); micStatus.textContent = ''; }
     });
-  });
+  };
+  micBtn?.addEventListener('click', startListening);
+  if (micBtn) autoListenIfGranted(startListening);
   KeyNav.focusSoon(input);
 }
 
