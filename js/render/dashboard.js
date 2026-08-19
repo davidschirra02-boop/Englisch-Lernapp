@@ -43,6 +43,14 @@ Render.dashboard = function (root) {
 
   root.querySelector('#start-lesson')?.addEventListener('click', () => goto(`#/day/${day}`));
 
+  // Kurzes Schlagwort, worum es an dem Tag inhaltlich geht - die Grammatik-
+  // Regel jedes Tages ist das konkreteste, was die Daten hergeben (Vokabeln/
+  // Quiz haben keinen eigenen Titel). Für Wochen ohne Inhalt (noch nicht
+  // geschriebene Wochen) bleibt es leer, die Kachel zeigt dann nur die Zahl.
+  function dayTopic(dn) {
+    return getDayContent(dn)?.content?.grammar?.ruleTitle || '';
+  }
+
   function renderWeekCard() {
     const weekDays = CURRICULUM.filter(d => d.week === viewWeek);
     const weekTitle = weekDays[0]?.weekTitle || '';
@@ -50,7 +58,11 @@ Render.dashboard = function (root) {
       const dn = d.day;
       const accessible = dn <= day;
       const cls = Store.isDayComplete(dn) ? 'done' : (dn === day ? 'today' : '');
-      return `<button type="button" class="day-chip ${cls} ${accessible ? 'clickable' : ''}" data-day="${dn}" ${accessible ? '' : 'disabled'}>${dn}</button>`;
+      const topic = dayTopic(dn);
+      return `<button type="button" class="day-chip ${cls} ${accessible ? 'clickable' : ''}" data-day="${dn}" ${accessible ? '' : 'disabled'} ${topic ? `title="${topic}"` : ''}>
+        <span class="day-chip-num">${dn}</span>
+        ${topic ? `<span class="day-chip-topic">${topic}</span>` : ''}
+      </button>`;
     }).join('');
 
     root.querySelector('#week-card').innerHTML = `
