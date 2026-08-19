@@ -35,6 +35,23 @@ function spaceOutTopics(items) {
   return result;
 }
 
+// Ermittelt anhand des gesprochenen Satzes, welche Options-Schaltfläche am
+// besten passt (per TranslationCheck.classify, das schon Tippfehler-Toleranz
+// mitbringt). Enthält der Fragesatz eine Lücke, wird für jede Option der
+// komplette Satz gebildet, damit "im Kontext gesprochen" genauso zählt wie
+// "nur die Option gesprochen". Liefert -1, wenn keine Option nahe genug dran ist.
+function matchSpokenChoice(item, transcript) {
+  const hasBlank = item.prompt.includes('___');
+  const tierRank = { wrong: 0, 'close-typo': 1, exact: 2 };
+  let bestIdx = -1, bestTier = 'wrong';
+  item.options.forEach((opt, i) => {
+    const candidate = hasBlank ? item.prompt.replace('___', opt) : opt;
+    const diag = TranslationCheck.classify(transcript, { answer: [candidate] });
+    if (tierRank[diag.tier] > tierRank[bestTier]) { bestTier = diag.tier; bestIdx = i; }
+  });
+  return bestIdx;
+}
+
 const QuizEngine = {
   run(container, items, opts = {}) {
     const total = items.length;
@@ -78,12 +95,13 @@ const QuizEngine = {
 
     function bindBack() {
       const btn = container.querySelector('.nav-back-btn');
-      if (btn && idx > 0) btn.addEventListener('click', () => { idx--; reportProgress(); renderItem(); });
+      if (btn && idx > 0) btn.addEventListener('click', () => { SpeechInput.stop(); idx--; reportProgress(); renderItem(); });
     }
 
     function bindNext(isLast) {
       const btn = container.querySelector('.next-btn');
       btn.addEventListener('click', () => {
+        SpeechInput.stop();
         if (isLast) {
           const wrong = items.filter((it, i) => state[i].correct === false);
           opts.onComplete?.(scoreCount(), total, wrong);
@@ -107,17 +125,25 @@ const QuizEngine = {
       if (item.hintTargetWord) hintButtons.push('<button type="button" class="btn ghost small hint-target-btn">🔤 Gesuchtes Wort (Englisch)</button>');
       const hintHtml = hintButtons.length ? `<div class="hint-row">${hintButtons.join('')}</div><div class="hint-slot"></div>` : '';
 
+      const micBtnHtml = SpeechInput.supported()
+        ? `<button type="button" class="speak-btn mic-btn" title="Antwort sprechen">🎤</button><span class="mic-status muted" style="font-size:0.8rem;"></span>`
+        : '';
+      const choiceMicHtml = SpeechInput.supported()
+        ? `<div style="margin-bottom:10px; display:flex; align-items:center; gap:10px;"><button type="button" class="btn ghost small mic-btn">🎤 Antwort sprechen</button><span class="mic-status muted" style="font-size:0.8rem;"></span></div>`
+        : '';
+
       const bodyHtml = item.type === 'gap'
         ? `<p class="exercise-prompt">${item.prompt}</p>
            <input type="text" class="gap-input" placeholder="Antwort eingeben..." />
            ${hintHtml}
-           <div style="margin-top:10px;"><button class="btn ghost check-btn">Prüfen</button></div>`
+           <div style="margin-top:10px; display:flex; align-items:center; gap:10px;"><button class="btn ghost check-btn">Prüfen</button>${micBtnHtml}</div>`
         : item.type === 'translate'
         ? `<p class="exercise-prompt">${item.prompt}</p>
            <input type="text" class="gap-input" placeholder="Ganzen Satz auf Englisch eingeben..." />
            ${hintHtml}
-           <div style="margin-top:10px;"><button class="btn ghost check-btn">Prüfen</button></div>`
+           <div style="margin-top:10px; display:flex; align-items:center; gap:10px;"><button class="btn ghost check-btn">Prüfen</button>${micBtnHtml}</div>`
         : `<p class="exercise-prompt">${item.prompt}</p>
+           ${choiceMicHtml}
            <div class="choice-list">
              ${item.options.map((o, i) => `<button class="choice" data-i="${i}">${o}</button>`).join('')}
            </div>`;
@@ -131,6 +157,15 @@ const QuizEngine = {
         container.querySelector('.feedback-slot').innerHTML = feedbackHtml(item, correct, diag);
         container.querySelector('.next-slot').innerHTML = `<button class="btn next-btn">${isLast ? 'Fertig' : 'Weiter'} →</button>`;
         bindNext(isLast);
+        // Sprachbefehl "weiter"/"next" als Alternative zum Klick - nur wenn das
+        // Mikrofon schon erlaubt ist, damit hier nie ungefragt ein
+        // Berechtigungsdialog aufpoppt (der Button bleibt immer nutzbar).
+        SpeechInput.listenIfGranted({
+          onResult: (t) => {
+            const norm = t.trim().toLowerCase();
+            if (norm.includes('weiter') || norm.includes('next')) container.querySelector('.next-btn')?.click();
+          }
+        });
       }
 
       if (item.type === 'gap' || item.type === 'translate') {
@@ -151,6 +186,17 @@ const QuizEngine = {
         };
         container.querySelector('.check-btn').addEventListener('click', check);
         input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+        const micBtn = container.querySelector('.mic-btn');
+        const micStatus = container.querySelector('.mic-status');
+        micBtn?.addEventListener('click', () => {
+          micBtn.classList.add('listening');
+          micStatus.textContent = 'Höre zu …';
+          SpeechInput.listen({
+            onResult: (t) => { input.value = t; check(); },
+            onError: (err) => { micStatus.textContent = SpeechInput.errorText(err); },
+            onEnd: () => { micBtn.classList.remove('listening'); micStatus.textContent = ''; }
+          });
+        });
         const hintSlot = container.querySelector('.hint-slot');
         container.querySelector('.hint-word-btn')?.addEventListener('click', () => {
           hintSlot.innerHTML = `<div class="hint-text">🇩🇪 ${item.hintWord}</div>`;
@@ -172,6 +218,22 @@ const QuizEngine = {
             btn.classList.add(correct ? 'correct' : 'incorrect');
             if (!correct) container.querySelector(`.choice[data-i="${item.answerIndex}"]`)?.classList.add('correct');
             finalize(correct, i, item.options[i]);
+          });
+        });
+        const micBtn = container.querySelector('.mic-btn');
+        const micStatus = container.querySelector('.mic-status');
+        micBtn?.addEventListener('click', () => {
+          micBtn.classList.add('listening');
+          micStatus.textContent = 'Höre zu …';
+          SpeechInput.listen({
+            onResult: (t) => {
+              micStatus.textContent = '';
+              const i = matchSpokenChoice(item, t);
+              if (i === -1) { micStatus.textContent = `Nicht eindeutig verstanden ("${t}") – nochmal sprechen oder antippen.`; return; }
+              choiceButtons[i].click();
+            },
+            onError: (err) => { micStatus.textContent = SpeechInput.errorText(err); },
+            onEnd: () => { micBtn.classList.remove('listening'); }
           });
         });
         KeyNav.focusSoon(choiceButtons[0]);

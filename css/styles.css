@@ -544,6 +544,8 @@ nav.tabs a:focus-visible {
 
 .speak-btn:hover { background: var(--teal-tint); border-color: var(--teal); }
 .speak-btn.speaking { background: var(--teal); border-color: var(--teal); }
+.speak-btn.listening { background: var(--coral); border-color: var(--coral); }
+.btn.mic-btn.listening { background: var(--coral-tint); border-color: var(--coral); color: var(--coral-light); }
 
 /* ---------------- Misc ---------------- */
 

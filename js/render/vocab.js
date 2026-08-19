@@ -37,13 +37,16 @@ function pickExerciseType(word) {
 }
 
 function renderGapCard(container, word, blank, { onNext }) {
+  const micBtnHtml = SpeechInput.supported()
+    ? `<button type="button" class="speak-btn mic-btn" title="Antwort sprechen">🎤</button><span class="mic-status muted" style="font-size:0.8rem;"></span>`
+    : '';
   container.innerHTML = `
     <div class="category">${word.category || ''}</div>
     <p class="exercise-prompt">${blank.before}<strong>___</strong>${blank.after}</p>
     <input type="text" class="gap-input" placeholder="Fehlendes Wort/Wendung eingeben..." />
     <div class="hint-row"><button type="button" class="btn ghost small hint-word-btn">🔤 Gesuchtes Wort auf Deutsch</button></div>
     <div class="hint-slot"></div>
-    <div style="margin-top:10px;"><button class="btn ghost check-btn">Prüfen</button></div>
+    <div style="margin-top:10px; display:flex; align-items:center; gap:10px;"><button class="btn ghost check-btn">Prüfen</button>${micBtnHtml}</div>
     <div class="feedback-slot"></div>`;
   const input = container.querySelector('.gap-input');
   container.querySelector('.hint-word-btn').addEventListener('click', () => {
@@ -57,11 +60,28 @@ function renderGapCard(container, word, blank, { onNext }) {
     container.querySelector('.feedback-slot').innerHTML = `
       <div class="feedback ${correct ? 'good' : 'bad'}">${correct ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${blank.target.trim()}"`}</div>
       <div style="margin-top:10px;"><button class="btn next-btn">Weiter →</button></div>`;
-    container.querySelector('.next-btn').addEventListener('click', () => onNext(correct));
+    container.querySelector('.next-btn').addEventListener('click', () => { SpeechInput.stop(); onNext(correct); });
     KeyNav.focusSoon(container.querySelector('.next-btn'));
+    SpeechInput.listenIfGranted({
+      onResult: (t) => {
+        const norm = t.trim().toLowerCase();
+        if (norm.includes('weiter') || norm.includes('next')) container.querySelector('.next-btn')?.click();
+      }
+    });
   };
   container.querySelector('.check-btn').addEventListener('click', check);
   input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+  const micBtn = container.querySelector('.mic-btn');
+  const micStatus = container.querySelector('.mic-status');
+  micBtn?.addEventListener('click', () => {
+    micBtn.classList.add('listening');
+    micStatus.textContent = 'Höre zu …';
+    SpeechInput.listen({
+      onResult: (t) => { input.value = t; check(); },
+      onError: (err) => { micStatus.textContent = SpeechInput.errorText(err); },
+      onEnd: () => { micBtn.classList.remove('listening'); micStatus.textContent = ''; }
+    });
+  });
   KeyNav.focusSoon(input);
 }
 
