@@ -23,7 +23,7 @@ Render.settings = function (root) {
            ${sync.error ? `<p class="muted" style="color:#e08;">Hinweis: ${sync.error}</p>` : ''}
            <button class="btn ghost" id="sync-disconnect">Auf diesem Gerät trennen</button>`
         : `<input type="password" id="sync-token" class="field" placeholder="Schlüssel einfügen" />
-           <button class="btn" id="sync-connect" style="margin-top:10px;">Verbinden</button>
+           <button class="btn ghost" id="sync-connect" style="margin-top:10px;">Verbinden</button>
            ${sync.error ? `<p class="muted" style="color:#e08;">Hinweis: ${sync.error}</p>` : ''}`
       }
     </div>
@@ -41,7 +41,7 @@ Render.settings = function (root) {
         <label class="muted" style="font-size:0.85rem; white-space:nowrap;">Sprechtempo</label>
         <input type="range" id="rate-slider" min="0.75" max="1.15" step="0.05" value="${s.speechRate}" style="flex:1;" />
       </div>
-      <button class="btn" id="test-voice">🔊 Stimme testen</button>
+      <button class="btn ghost" id="test-voice">🔊 Stimme testen</button>
     </div>
 
     <div class="card">
@@ -65,12 +65,6 @@ Render.settings = function (root) {
         <label class="muted" style="font-size:0.85rem; flex:1 1 200px;">Geschwindigkeit Hintergrundvideo</label>
         <input type="range" id="speed-slider" min="0.1" max="1" step="0.05" value="${s.bgVideoSpeed}" style="flex:2 1 140px;" />
       </div>
-    </div>
-
-    <div class="card">
-      <h4>Fortschritt zurücksetzen</h4>
-      <p class="muted">Setzt Streak, abgeschlossene Tage und Vokabel-Fortschritt vollständig zurück. Das kann nicht rückgängig gemacht werden.</p>
-      <button class="btn amber" id="reset-btn">Fortschritt zurücksetzen</button>
     </div>
   `;
 
@@ -124,13 +118,5 @@ Render.settings = function (root) {
   root.querySelector('#sync-disconnect')?.addEventListener('click', () => {
     GitHubSync.disconnect();
     router();
-  });
-
-  root.querySelector('#reset-btn').addEventListener('click', () => {
-    if (confirm('Wirklich den gesamten Fortschritt zurücksetzen?')) {
-      Store.reset();
-      window.location.hash = '#/dashboard';
-      router();
-    }
   });
 };

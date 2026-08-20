@@ -4,6 +4,7 @@
 
 defineWeekField('week01', "Ankommen & Small Talk", 1, 'grammar', {
   "ruleTitle": "Present Perfect Simple vs. Continuous",
+  "scenario": "Small Talk",
   "explanation": "Present Perfect Simple betont das Ergebnis oder die abgeschlossene Handlung (\"I've written the email\" – die E-Mail ist fertig). Present Perfect Continuous betont die Dauer oder dass die Handlung gerade eben aufgehört hat bzw. noch andauert (\"I've been writing emails all morning\" – der Fokus liegt auf dem Vorgang, nicht auf dem Ergebnis).",
   "contrast": "Im Deutschen übersetzen wir beides oft einfach mit Perfekt (\"Ich habe geschrieben\"). Achte im Englischen auf den Fokus: Ergebnis vs. Verlauf.",
   "examples": [
@@ -35,6 +36,7 @@ defineWeekField('week01', "Ankommen & Small Talk", 1, 'grammar', {
 
 defineWeekField('week01', "Ankommen & Small Talk", 2, 'grammar', {
   "ruleTitle": "Modalverben der Vermutung (must/might/can't + have)",
+  "scenario": "Reisen",
   "explanation": "Für Vermutungen über die Vergangenheit nutzt man Modalverb + have + Partizip II. \"Must have\" = starke positive Vermutung, \"might/could have\" = mögliche Vermutung, \"can't have\" = starke Vermutung, dass etwas NICHT der Fall war.",
   "contrast": "Deutsch: \"Er muss den Zug verpasst haben\" – ähnliche Struktur, aber Englisch braucht immer \"have\" + Partizip II, nie den Infinitiv.",
   "examples": [
@@ -66,6 +68,7 @@ defineWeekField('week01', "Ankommen & Small Talk", 2, 'grammar', {
 
 defineWeekField('week01', "Ankommen & Small Talk", 3, 'grammar', {
   "ruleTitle": "Passiv für neutrale, formelle Aussagen",
+  "scenario": "Shopping",
   "explanation": "Das Passiv (be + Partizip II) rückt die Handlung oder das Objekt in den Fokus, nicht die handelnde Person. Das klingt neutraler und formeller – ideal für Beschwerden, Berichte oder wenn der Verursacher unbekannt/unwichtig ist.",
   "contrast": "Deutsch bildet das Passiv ähnlich (\"werden\" + Partizip II), aber im Englischen wird es beim Reklamieren noch häufiger verwendet als im Deutschen.",
   "examples": [
@@ -97,6 +100,7 @@ defineWeekField('week01', "Ankommen & Small Talk", 3, 'grammar', {
 
 defineWeekField('week01', "Ankommen & Small Talk", 4, 'grammar', {
   "ruleTitle": "Relativsätze: definierend vs. nicht-definierend",
+  "scenario": "Arbeit",
   "explanation": "Definierende Relativsätze (ohne Komma) liefern notwendige Informationen, um zu wissen, von wem/was die Rede ist (\"The manager who hired me is on leave\"). Nicht-definierende Relativsätze (mit Komma) liefern zusätzliche, nicht notwendige Informationen (\"My manager, who is very experienced, is on leave\").",
   "contrast": "Im Deutschen werden Relativsätze immer mit Komma abgetrennt – im Englischen zeigt das Komma (oder dessen Fehlen) einen echten Bedeutungsunterschied!",
   "examples": [
@@ -128,6 +132,7 @@ defineWeekField('week01', "Ankommen & Small Talk", 4, 'grammar', {
 
 defineWeekField('week01', "Ankommen & Small Talk", 5, 'grammar', {
   "ruleTitle": "Gemischte Konditionalsätze",
+  "scenario": "Restaurant",
   "explanation": "Der 2. Konditionalsatz beschreibt unwahrscheinliche/hypothetische Situationen in Gegenwart/Zukunft (If + Simple Past, would + Infinitiv). Der 3. Konditionalsatz beschreibt Situationen in der Vergangenheit, die nicht eingetreten sind (If + Past Perfect, would have + Partizip II). Gemischte Konditionalsätze verbinden eine vergangene Bedingung mit einer gegenwärtigen Konsequenz (oder umgekehrt).",
   "contrast": "Deutsch nutzt oft den Konjunktiv II für beides (\"Wenn ich das gewusst hätte, würde ich...\"), Englisch unterscheidet klar durch die Zeitform im if-Satz.",
   "examples": [
@@ -159,6 +164,7 @@ defineWeekField('week01', "Ankommen & Small Talk", 5, 'grammar', {
 
 defineWeekField('week01', "Ankommen & Small Talk", 6, 'grammar', {
   "ruleTitle": "Indirekte Rede (Backshift)",
+  "scenario": "Gesundheit",
   "explanation": "In der indirekten Rede verschieben sich Zeitformen meist eine Stufe zurück (Present → Past, Present Perfect → Past Perfect), und Zeit-/Ortsangaben passen sich an (\"now\" → \"then\"). Aufforderungen werden mit \"told someone to\" + Infinitiv wiedergegeben.",
   "contrast": "Im Deutschen nutzt man oft den Konjunktiv I (\"Er sagte, er sei krank\"), Englisch verschiebt stattdessen die Zeitform (Backshift).",
   "examples": [

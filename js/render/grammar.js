@@ -27,7 +27,7 @@ Render.grammar = function (root) {
   function topics(chapter) {
     return Object.entries(chapter.content.days)
       .filter(([, day]) => day.grammar)
-      .map(([dayInWeek, day]) => ({ dayInWeek: Number(dayInWeek), title: day.grammar.ruleTitle, exercises: day.grammar.exercises }));
+      .map(([dayInWeek, day]) => ({ dayInWeek: Number(dayInWeek), title: day.grammar.scenario, exercises: day.grammar.exercises }));
   }
 
   renderHub();

@@ -11,7 +11,7 @@
    Render-Funktionen KeyNav nie selbst aufrufen müssen. */
 
 const KeyNav = {
-  SELECTOR: 'button:not(:disabled), a[href], input[type="text"]:not(:disabled)',
+  SELECTOR: 'button:not(:disabled), a[href], input[type="text"]:not(:disabled), input[type="password"]:not(:disabled)',
   CONTENT_SELECTOR: '#app-root-content',
 
   wireOne(el) {

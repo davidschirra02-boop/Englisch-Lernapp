@@ -43,12 +43,12 @@ Render.dashboard = function (root) {
 
   root.querySelector('#start-lesson')?.addEventListener('click', () => goto(`#/day/${day}`));
 
-  // Kurzes Schlagwort, worum es an dem Tag inhaltlich geht - die Grammatik-
-  // Regel jedes Tages ist das konkreteste, was die Daten hergeben (Vokabeln/
-  // Quiz haben keinen eigenen Titel). Für Wochen ohne Inhalt (noch nicht
-  // geschriebene Wochen) bleibt es leer, die Kachel zeigt dann nur die Zahl.
+  // Kurzes Szenario-Schlagwort, worum es an dem Tag inhaltlich geht (z. B.
+  // "Flughafen") - bewusst ohne Nennung der geübten Grammatikform. Für
+  // Wochen ohne Inhalt (noch nicht geschriebene Wochen) bleibt es leer, die
+  // Kachel zeigt dann nur die Zahl.
   function dayTopic(dn) {
-    return getDayContent(dn)?.content?.grammar?.ruleTitle || '';
+    return getDayContent(dn)?.content?.grammar?.scenario || '';
   }
 
   function renderWeekCard() {

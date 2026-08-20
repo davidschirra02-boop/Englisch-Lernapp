@@ -29,6 +29,15 @@ const GitHubSync = (() => {
     return { ...status, gistId: effectiveGistId() };
   }
 
+  // Übersetzt einen HTTP-Status in einen für Nutzer verständlichen Grund,
+  // statt nur die rohe Statuszahl anzuzeigen.
+  function describeHttpError(status) {
+    if (status === 401) return 'Schlüssel ungültig oder abgelaufen — bitte in den Einstellungen einen neuen Zugriffsschlüssel eintragen.';
+    if (status === 403) return 'Schlüssel hat nicht die nötige Berechtigung (Gist-Zugriff) oder das Anfragelimit ist erreicht.';
+    if (status === 404) return 'Speicherort wurde nicht gefunden — evtl. wurde er gelöscht.';
+    return `Unerwarteter Fehler (HTTP ${status}).`;
+  }
+
   async function createGist(token, initialState) {
     const res = await fetch('https://api.github.com/gists', {
       method: 'POST',
@@ -39,7 +48,7 @@ const GitHubSync = (() => {
         files: { [GIST_FILENAME]: { content: JSON.stringify(initialState, null, 2) } }
       })
     });
-    if (!res.ok) throw new Error(`Gist anlegen fehlgeschlagen (${res.status})`);
+    if (!res.ok) throw new Error(`Gist anlegen fehlgeschlagen: ${describeHttpError(res.status)}`);
     const data = await res.json();
     return data.id;
   }
@@ -49,7 +58,7 @@ const GitHubSync = (() => {
     if (!id) return null;
     try {
       const res = await fetch(`https://api.github.com/gists/${id}`);
-      if (!res.ok) throw new Error(`Laden fehlgeschlagen (${res.status})`);
+      if (!res.ok) throw new Error(`Laden fehlgeschlagen: ${describeHttpError(res.status)}`);
       const data = await res.json();
       const file = data.files && data.files[GIST_FILENAME];
       if (!file || !file.content) return null;
@@ -74,7 +83,7 @@ const GitHubSync = (() => {
         headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ files: { [GIST_FILENAME]: { content: JSON.stringify(Store.get(), null, 2) } } })
       });
-      if (!res.ok) throw new Error(`Speichern fehlgeschlagen (${res.status})`);
+      if (!res.ok) throw new Error(`Speichern fehlgeschlagen: ${describeHttpError(res.status)}`);
       status.error = null;
       status.lastSync = new Date().toISOString();
     } catch (err) {

@@ -20,6 +20,7 @@ function defaultState() {
     panelAlpha: 0.45,     // 0..1: Frosted-Glass-Intensität der Kacheln (0 = ganz durchsichtig, 1 = starker Blur+dunkel), siehe applyPanelTransparency()
     bgVideoSpeed: 0.4,    // playbackRate des Hintergrundvideos
     vocabDirection: 'en-de', // zuletzt gewählte Abfragerichtung im Vokabeltrainer: 'en-de' oder 'de-en'
+    vocabMode: 'mixed',   // zuletzt gewählte Übungsart im Vokabeltrainer: 'flashcard', 'gap' oder 'mixed'
     theme: 'glass'        // UI-Design: 'glass' (Dark Glassmorphism + Video), 'aurora' (helles Gradient-Design), 'brutalist' (Neo-Brutalismus)
   };
 }
@@ -145,14 +146,9 @@ const Store = (() => {
     update(s => { s.lessonProgress = null; });
   }
 
-  function reset() {
-    localStorage.removeItem(STORAGE_KEY);
-    state = defaultState();
-  }
-
   return {
     get, update, hydrate, touchToday, markDayComplete, isDayComplete,
     saveLessonStep, getLessonStep, getMissedItems, saveMissedItems, getLessonSub, saveLessonSub, clearLessonProgress,
-    reset, todayISO
+    todayISO
   };
 })();

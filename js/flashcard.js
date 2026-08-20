@@ -40,7 +40,7 @@ const Flashcard = {
       if (reversed) exampleBox.style.visibility = 'visible';
       controls.style.display = 'flex';
       controls.innerHTML = graded
-        ? `<button class="btn ghost" data-ok="0">Nochmal üben</button><button class="btn" data-ok="1">Wusste ich!</button>`
+        ? `<button class="btn ghost" data-ok="0">Nochmal üben</button><button class="btn ghost" data-ok="1">Wusste ich!</button>`
         : `<button class="btn" data-ok="1">Weiter →</button>`;
       const ctrlButtons = Array.from(controls.querySelectorAll('button'));
       ctrlButtons.forEach((btn, i) => {

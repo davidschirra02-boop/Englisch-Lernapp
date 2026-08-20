@@ -4,6 +4,7 @@
 
 defineWeekField('week02', "Reisen & Unterwegs", 1, 'grammar', {
   "ruleTitle": "Zukunftsformen: will, going to und Present Continuous",
+  "scenario": "Reiseplanung",
   "explanation": "Für spontane Entscheidungen im Moment des Sprechens nutzt man \"will\" (\"I'll book the flight now\"). Für bereits gefasste Pläne/Absichten nutzt man \"going to\" (\"I'm going to travel to Peru next year\"). Für feste, bereits organisierte Termine/Verabredungen (mit Datum/Uhrzeit) nutzt man das Present Continuous (\"I'm meeting the travel agent at 3 PM tomorrow\").",
   "contrast": "Im Deutschen wird für alle drei Fälle oft einfach das Präsens oder \"werden\" verwendet (\"Ich treffe morgen den Reiseberater\" / \"Ich werde reisen\"). Englisch unterscheidet klar zwischen spontaner Entscheidung, Absicht und fester Verabredung.",
   "examples": [
@@ -35,6 +36,7 @@ defineWeekField('week02', "Reisen & Unterwegs", 1, 'grammar', {
 
 defineWeekField('week02', "Reisen & Unterwegs", 2, 'grammar', {
   "ruleTitle": "Indirekte Fragen und höfliche Bitten",
+  "scenario": "Stadtverkehr",
   "explanation": "Direkte Fragen (\"Where is the station?\") wirken in der Öffentlichkeit oft zu direkt. Indirekte Fragen (\"Could you tell me where the station is?\", \"Do you know if this bus goes downtown?\") klingen höflicher. Wichtig: In der indirekten Frage bleibt die Wortstellung wie im Aussagesatz (Subjekt vor Verb), kein Frage-Hilfsverb wie \"do/does/did\", und bei Ja/Nein-Fragen wird \"if\" oder \"whether\" eingefügt.",
   "contrast": "Im Deutschen ist der Unterschied zwischen direkter und indirekter Frage subtiler (\"Wo ist der Bahnhof?\" vs. \"Könnten Sie mir sagen, wo der Bahnhof ist?\") — die Wortstellung ändert sich im Deutschen nicht so radikal wie im Englischen (kein Hilfsverb-Wegfall).",
   "examples": [
@@ -66,6 +68,7 @@ defineWeekField('week02', "Reisen & Unterwegs", 2, 'grammar', {
 
 defineWeekField('week02', "Reisen & Unterwegs", 3, 'grammar', {
   "ruleTitle": "Past Simple vs. Past Perfect",
+  "scenario": "Hotels",
   "explanation": "Das Past Simple beschreibt eine abgeschlossene Handlung in der Vergangenheit. Das Past Perfect (had + Partizip II) zeigt, dass eine Handlung VOR einer anderen Vergangenheitshandlung geschah — es \"schaut zurück\" aus der Vergangenheit heraus. Besonders wichtig beim Erzählen von Ereignissen in der richtigen Reihenfolge oder beim Erklären einer Ursache, die vor dem eigentlichen Ereignis lag.",
   "contrast": "Deutsch nutzt für beides oft einfach das Perfekt oder Präteritum (\"Ich hatte schon eingecheckt, als...\"), aber Englisch braucht das Past Perfect zwingend, um klarzumachen, welches Ereignis zuerst passierte.",
   "examples": [
@@ -97,6 +100,7 @@ defineWeekField('week02', "Reisen & Unterwegs", 3, 'grammar', {
 
 defineWeekField('week02', "Reisen & Unterwegs", 4, 'grammar', {
   "ruleTitle": "Modalverben der Pflicht und Erlaubnis",
+  "scenario": "Mietwagen",
   "explanation": "\"Must\"/\"have to\" drücken eine Pflicht aus (\"must\" oft persönliche Überzeugung, \"have to\" oft eine äußere Regel/Vorschrift). \"Mustn't\" bedeutet Verbot — etwas ist nicht erlaubt! \"Don't have to\"/\"needn't\" bedeuten dagegen, dass etwas nicht nötig, aber durchaus erlaubt ist. \"Should\" drückt nur eine Empfehlung aus, keine Pflicht.",
   "contrast": "Im Deutschen wird \"müssen\" oft für alles genutzt, aber Englisch unterscheidet stark zwischen \"mustn't\" (verboten!) und \"don't have to\" (nicht nötig, aber erlaubt) — ein häufiger Fehlerquell für deutsche Lerner, die \"mustn't\" fälschlich wie \"muss nicht\" übersetzen.",
   "examples": [
@@ -128,6 +132,7 @@ defineWeekField('week02', "Reisen & Unterwegs", 4, 'grammar', {
 
 defineWeekField('week02', "Reisen & Unterwegs", 5, 'grammar', {
   "ruleTitle": "Vergleichsformen: fortgeschrittene Strukturen",
+  "scenario": "Sightseeing",
   "explanation": "Neben einfachen Komparativen/Superlativen gibt es fortgeschrittene Muster: \"the + comparative, the + comparative\" (je... desto...), \"far/much/a lot + comparative\" zur Verstärkung (\"far more interesting\"), \"by far\" vor Superlativen (\"by far the best\"), sowie unregelmäßige Formen wie \"far → farther/further\".",
   "contrast": "Deutsch hat eine ähnliche \"je...desto\"-Struktur, aber die Verstärkung von Komparativen (\"viel besser\", \"weitaus interessanter\") unterscheidet sich in der Wortstellung vom Englischen (\"much better\", \"far more interesting\") — im Englischen steht die Verstärkung immer direkt vor dem Komparativ.",
   "examples": [
@@ -159,6 +164,7 @@ defineWeekField('week02', "Reisen & Unterwegs", 5, 'grammar', {
 
 defineWeekField('week02', "Reisen & Unterwegs", 6, 'grammar', {
   "ruleTitle": "Erster vs. Zweiter Konditionalsatz",
+  "scenario": "Reiseprobleme",
   "explanation": "Der 1. Konditionalsatz (If + Present Simple, will + Infinitiv) beschreibt reale, wahrscheinliche Bedingungen in der Zukunft (\"If you lose your passport, contact the embassy\"). Der 2. Konditionalsatz (If + Past Simple, would + Infinitiv) beschreibt unwahrscheinliche oder rein hypothetische Situationen (\"If I lost my passport, I would panic\").",
   "contrast": "Deutsch nutzt für beide oft den Konjunktiv oder einfach \"wenn... dann\", Englisch unterscheidet strikt durch die Zeitform im if-Satz, ob etwas realistisch (1.) oder hypothetisch (2.) gemeint ist.",
   "examples": [

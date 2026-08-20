@@ -1,18 +1,24 @@
 /* Vokabeltrainer: Übersicht ("Hub") mit allen Kapiteln (= Vokabel-Kategorien,
    entsprechen den Wochenthemen). Von dort aus wählt man ein Kapitel, "alle
    gemischt" oder — sofern Vokabeln fällig sind — gezielt nur die aktuell
-   nicht sitzenden Vokabeln über alle Kapitel hinweg, und dann jeweils die
-   Abfragerichtung (Englisch → Deutsch / Deutsch → Englisch). Übungen sind
-   jederzeit wiederholbar, nicht nur wenn Karten laut SRS fällig sind — der
+   nicht sitzenden Vokabeln über alle Kapitel hinweg, dann die Übungsart
+   (Karteikarten / Lückentext / Gemischt) und zuletzt die Abfragerichtung
+   (Englisch → Deutsch / Deutsch → Englisch). Übungen sind jederzeit
+   wiederholbar, nicht nur wenn Karten laut SRS fällig sind — der
    Fällig-Status wird zusätzlich als Hinweis pro Kapitel angezeigt. Am Ende
    einer Runde werden falsch bewertete Wörter noch einmal aufgelistet, plus
    die Wahl, direkt nur diese oder wieder alle Vokabeln aus allen Kapiteln
    zu üben.
 
-   Für Abwechslung wird pro Karte zufällig eine von zwei Übungsarten
-   gewählt: klassische Flashcard (umdrehen + selbst einschätzen) oder
-   Lückentext (die Wendung im Beispielsatz ergänzen, falls sie dort
-   wörtlich vorkommt — sonst bleibt es bei Flashcard). */
+   Übungsarten: klassische Flashcard (umdrehen + selbst einschätzen) oder
+   Lückentext (die Wendung im Beispielsatz ergänzen, falls sie dort wörtlich
+   vorkommt; das deutsche Wort ist als Hilfestellung per Klick auf einen
+   Hinweis-Button einblendbar, nicht automatisch sichtbar). Im Modus "Nur
+   Lückentext" werden Wörter ohne wörtlichen Treffer im Beispielsatz von
+   vornherein aus der Liste entfernt, statt sie als Flashcard unterzumogeln
+   - wer "nur Lückentext" wählt, soll auch wirklich nur Lückentexte sehen.
+   Im Modus "Gemischt" wird pro Karte zufällig zwischen beiden Übungsarten
+   gewählt (dort bleibt der Flashcard-Fallback für Wörter ohne Treffer). */
 
 /* Sucht die Wendung `word.word` im Beispielsatz, um daraus eine Lücke zu
    bauen. Versucht auch ohne führendes "to " (Infinitiv-Partikel steht oft
@@ -30,23 +36,22 @@ function findGapBlank(word) {
   return null;
 }
 
-function pickExerciseType(word) {
+function pickExerciseType(word, mode) {
+  if (mode === 'flashcard') return { type: 'flashcard', gap: null };
   const gap = findGapBlank(word);
+  if (mode === 'gap') return { type: 'gap', gap }; // Liste ist für diesen Modus schon auf Treffer gefiltert
   if (!gap) return { type: 'flashcard', gap: null };
   return { type: Math.random() < 0.5 ? 'gap' : 'flashcard', gap };
 }
 
 function renderGapCard(container, word, blank, { onNext }) {
-  const micBtnHtml = SpeechInput.supported()
-    ? `<button type="button" class="speak-btn mic-btn" title="Antwort sprechen">🎤</button><span class="mic-status muted" style="font-size:0.8rem;"></span>`
-    : '';
   container.innerHTML = `
     <div class="category">${word.category || ''}</div>
     <p class="exercise-prompt">${blank.before}<strong>___</strong>${blank.after}</p>
     <input type="text" class="gap-input" placeholder="Fehlendes Wort/Wendung eingeben..." />
     <div class="hint-row"><button type="button" class="btn ghost small hint-word-btn">🔤 Gesuchtes Wort auf Deutsch</button></div>
     <div class="hint-slot"></div>
-    <div style="margin-top:10px; display:flex; align-items:center; gap:10px;"><button class="btn ghost check-btn">Prüfen</button>${micBtnHtml}</div>
+    <div style="margin-top:10px;"><button class="btn ghost check-btn">Prüfen</button></div>
     <div class="feedback-slot"></div>`;
   const input = container.querySelector('.gap-input');
   container.querySelector('.hint-word-btn').addEventListener('click', () => {
@@ -60,30 +65,11 @@ function renderGapCard(container, word, blank, { onNext }) {
     container.querySelector('.feedback-slot').innerHTML = `
       <div class="feedback ${correct ? 'good' : 'bad'}">${correct ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${blank.target.trim()}"`}</div>
       <div style="margin-top:10px;"><button class="btn next-btn">Weiter →</button></div>`;
-    container.querySelector('.next-btn').addEventListener('click', () => { SpeechInput.stop(); onNext(correct); });
+    container.querySelector('.next-btn').addEventListener('click', () => onNext(correct));
     KeyNav.focusSoon(container.querySelector('.next-btn'));
-    SpeechInput.listenIfGranted({
-      onResult: (t) => {
-        const norm = t.trim().toLowerCase();
-        if (norm.includes('weiter') || norm.includes('next')) container.querySelector('.next-btn')?.click();
-      }
-    });
   };
   container.querySelector('.check-btn').addEventListener('click', check);
   input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
-  const micBtn = container.querySelector('.mic-btn');
-  const micStatus = container.querySelector('.mic-status');
-  const startListening = () => {
-    micBtn.classList.add('listening');
-    micStatus.textContent = 'Höre zu …';
-    SpeechInput.listen({
-      onResult: (t) => { input.value = t; check(); },
-      onError: (err) => { micStatus.textContent = SpeechInput.errorText(err); },
-      onEnd: () => { micBtn.classList.remove('listening'); micStatus.textContent = ''; }
-    });
-  };
-  micBtn?.addEventListener('click', startListening);
-  if (micBtn) autoListenIfGranted(startListening);
   KeyNav.focusSoon(input);
 }
 
@@ -117,8 +103,8 @@ Render.vocab = function (root) {
         <h3>Vokabeltrainer</h3>
         <p class="muted">${totalDue > 0 ? `${totalDue} von ${words.length} Vokabeln sitzen aktuell noch nicht.` : `Alle ${words.length} Vokabeln sitzen gerade gut — üben lohnt sich trotzdem!`}</p>
         <div style="display:flex; gap:12px; margin-top:10px; flex-wrap:wrap;">
-          ${totalDue > 0 ? `<button class="btn" id="review-due">🎯 Nur die ${totalDue} nicht sitzenden üben</button>` : ''}
-          <button class="btn ${totalDue > 0 ? 'ghost' : ''}" id="mix-all">🔀 Alle Kapitel gemischt üben (${words.length})</button>
+          ${totalDue > 0 ? `<button class="btn ghost" id="review-due">🎯 Nur die ${totalDue} nicht sitzenden üben</button>` : ''}
+          <button class="btn ghost" id="mix-all">🔀 Alle Kapitel gemischt üben (${words.length})</button>
         </div>
       </div>
       <div class="card">
@@ -137,33 +123,64 @@ Render.vocab = function (root) {
       </div>`;
 
     if (totalDue > 0) {
-      root.querySelector('#review-due').addEventListener('click', () => renderDirectionChoice(shuffleArray(dueWords), 'Nicht sitzende Vokabeln'));
+      root.querySelector('#review-due').addEventListener('click', () => renderModeChoice(shuffleArray(dueWords), 'Nicht sitzende Vokabeln'));
     }
-    root.querySelector('#mix-all').addEventListener('click', () => renderDirectionChoice(shuffleArray(words), 'Alle Kapitel'));
+    root.querySelector('#mix-all').addEventListener('click', () => renderModeChoice(shuffleArray(words), 'Alle Kapitel'));
     root.querySelectorAll('[data-cat]').forEach(btn => {
-      btn.addEventListener('click', () => renderDirectionChoice(shuffleArray(byCat[btn.dataset.cat]), btn.dataset.cat));
+      btn.addEventListener('click', () => renderModeChoice(shuffleArray(byCat[btn.dataset.cat]), btn.dataset.cat));
     });
   }
 
-  function renderDirectionChoice(list, title) {
-    const dir = Store.get().vocabDirection || 'en-de';
+  function renderModeChoice(list, title) {
+    const gapCount = list.filter(w => findGapBlank(w)).length;
     root.innerHTML = `
       <div class="card">
         <button class="btn ghost small" id="back-to-hub">← Zurück zur Übersicht</button>
         <h3 style="margin-top:10px;">${title} (${list.length} Karten)</h3>
-        <p class="muted">In welche Richtung möchtest du übersetzen?</p>
+        <p class="muted">Welche Übungsart möchtest du üben?</p>
         <div style="display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;">
-          <button class="btn ${dir === 'en-de' ? '' : 'ghost'}" id="dir-en-de">Englisch → Deutsch</button>
-          <button class="btn ${dir === 'de-en' ? '' : 'ghost'}" id="dir-de-en">Deutsch → Englisch</button>
+          <button class="btn ghost" id="mode-flashcard">Karteikarten</button>
+          <button class="btn ghost" id="mode-gap" ${gapCount === 0 ? 'disabled' : ''}>Lückentext (${gapCount})</button>
+          <button class="btn ghost" id="mode-mixed">Gemischt</button>
         </div>
       </div>`;
     root.querySelector('#back-to-hub').addEventListener('click', renderHub);
-    root.querySelector('#dir-en-de').addEventListener('click', () => startReview(list, title, 'en-de'));
-    root.querySelector('#dir-de-en').addEventListener('click', () => startReview(list, title, 'de-en'));
+    root.querySelector('#mode-flashcard').addEventListener('click', () => renderDirectionChoice(list, title, 'flashcard'));
+    root.querySelector('#mode-gap').addEventListener('click', () => renderDirectionChoice(list.filter(w => findGapBlank(w)), title, 'gap'));
+    root.querySelector('#mode-mixed').addEventListener('click', () => renderDirectionChoice(list, title, 'mixed'));
   }
 
-  function startReview(list, title, direction) {
-    Store.update(st => { st.vocabDirection = direction; });
+  function renderDirectionChoice(list, title, mode) {
+    root.innerHTML = `
+      <div class="card">
+        <button class="btn ghost small" id="back-to-mode">← Zurück</button>
+        <h3 style="margin-top:10px;">${title} (${list.length} Karten)</h3>
+        <p class="muted">In welche Richtung möchtest du übersetzen?</p>
+        <div style="display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;">
+          <button class="btn ghost" id="dir-en-de">Englisch → Deutsch</button>
+          <button class="btn ghost" id="dir-de-en">Deutsch → Englisch</button>
+        </div>
+      </div>`;
+    root.querySelector('#back-to-mode').addEventListener('click', () => renderModeChoice(list, title));
+    root.querySelector('#dir-en-de').addEventListener('click', () => startReview(list, title, 'en-de', mode));
+    root.querySelector('#dir-de-en').addEventListener('click', () => startReview(list, title, 'de-en', mode));
+  }
+
+  function startReview(list, title, direction, mode) {
+    Store.update(st => { st.vocabDirection = direction; st.vocabMode = mode; });
+    // Sicherheitsnetz: "retry-all"/"retry-wrong" am Rundenende reichen ggf.
+    // eine noch ungefilterte Liste durch - im "Nur Lückentext"-Modus darf
+    // trotzdem nie ein Wort ohne Treffer im Beispielsatz durchrutschen.
+    if (mode === 'gap') list = list.filter(w => findGapBlank(w));
+    if (list.length === 0) {
+      root.innerHTML = `
+        <div class="card empty-state">
+          <p class="muted">Für diese Auswahl gibt es keine Lückentext-Vokabeln.</p>
+          <button class="btn ghost" id="back-to-hub3">← Zurück zur Übersicht</button>
+        </div>`;
+      root.querySelector('#back-to-hub3').addEventListener('click', renderHub);
+      return;
+    }
     let idx = 0;
     const wrongWords = [];
     showCard();
@@ -183,7 +200,7 @@ Render.vocab = function (root) {
         if (idx >= list.length) renderSessionDone();
         else showCard();
       };
-      const { type, gap } = pickExerciseType(word);
+      const { type, gap } = pickExerciseType(word, mode);
       if (type === 'gap') renderGapCard(slot, word, gap, { onNext });
       else Flashcard.render(slot, word, { graded: true, reversed: direction === 'de-en', onNext });
     }
@@ -203,15 +220,15 @@ Render.vocab = function (root) {
         <div class="card">
           <h3>Wie geht's weiter?</h3>
           <div style="display:flex; gap:12px; margin-top:10px; flex-wrap:wrap;">
-            ${wrongWords.length > 0 ? `<button class="btn" id="retry-wrong">🎯 Nur die ${wrongWords.length} nicht sitzenden üben</button>` : ''}
-            <button class="btn ${wrongWords.length > 0 ? 'ghost' : ''}" id="retry-all">🔀 Alle Vokabeln aus allen Kapiteln üben (${words.length})</button>
+            ${wrongWords.length > 0 ? `<button class="btn ghost" id="retry-wrong">🎯 Nur die ${wrongWords.length} nicht sitzenden üben</button>` : ''}
+            <button class="btn ghost" id="retry-all">🔀 Alle Vokabeln aus allen Kapiteln üben (${words.length})</button>
             <button class="btn ghost" id="back-to-hub2">← Zurück zur Übersicht</button>
           </div>
         </div>`;
       if (wrongWords.length > 0) {
-        root.querySelector('#retry-wrong').addEventListener('click', () => startReview(shuffleArray(wrongWords), 'Nicht sitzende Vokabeln', direction));
+        root.querySelector('#retry-wrong').addEventListener('click', () => startReview(shuffleArray(wrongWords), 'Nicht sitzende Vokabeln', direction, mode));
       }
-      root.querySelector('#retry-all').addEventListener('click', () => startReview(shuffleArray(words), 'Alle Kapitel', direction));
+      root.querySelector('#retry-all').addEventListener('click', () => startReview(shuffleArray(words), 'Alle Kapitel', direction, mode));
       root.querySelector('#back-to-hub2').addEventListener('click', renderHub);
     }
   }
