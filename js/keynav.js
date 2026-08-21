@@ -11,7 +11,7 @@
    Render-Funktionen KeyNav nie selbst aufrufen müssen. */
 
 const KeyNav = {
-  SELECTOR: 'button:not(:disabled), a[href], input[type="text"]:not(:disabled), input[type="password"]:not(:disabled)',
+  SELECTOR: 'button:not(:disabled), a[href], input[type="text"]:not(:disabled), input[type="password"]:not(:disabled), [role="button"]',
   CONTENT_SELECTOR: '#app-root-content',
 
   wireOne(el) {
@@ -71,10 +71,17 @@ const KeyNav = {
      nicht ohnehin schon ein bedienbares Element trifft (dessen Fokus der
      Browser selbst setzt), wird das dem Klickpunkt räumlich nächstgelegene
      bedienbare Element fokussiert, damit Pfeiltasten sofort wieder greifen -
-     unabhängig davon, wohin in der App man klickt. */
+     unabhängig davon, wohin in der App man klickt. Die Suche bleibt dabei
+     auf den Inhaltsbereich beschränkt, wenn der Klick dort stattfand - sonst
+     könnte ein Klick knapp neben einer Karte (z.B. im Vokabeltrainer) den
+     räumlich nächsten Navigationsreiter (z.B. "Dashboard") fokussieren, und
+     ein anschließendes Enter würde ungewollt dorthin springen statt die
+     Karte umzudrehen. */
   focusNearestOnStrayClick(e) {
     if (e.target.closest(KeyNav.SELECTOR)) return;
-    const candidates = Array.from(document.querySelectorAll(KeyNav.SELECTOR));
+    const scope = e.target.closest(KeyNav.CONTENT_SELECTOR) || document;
+    let candidates = Array.from(scope.querySelectorAll(KeyNav.SELECTOR));
+    if (candidates.length === 0) candidates = Array.from(document.querySelectorAll(KeyNav.SELECTOR));
     if (candidates.length === 0) return;
     let nearest = null, bestDist = Infinity;
     candidates.forEach(el => {
