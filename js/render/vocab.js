@@ -109,25 +109,55 @@ Render.vocab = function (root) {
       </div>
       <div class="card">
         <h3>Kapitel</h3>
+        <p class="muted" style="font-size:0.8rem;">Mehrere Kapitel anhaken, um sie zusammen zu üben.</p>
         ${Object.entries(byCat).map(([cat, ws]) => {
           const due = dueOf(ws).length;
           return `
             <div class="chapter-row">
-              <div>
+              <label style="display:flex; align-items:center;">
+                <input type="checkbox" class="chapter-select" data-cat="${cat}">
+              </label>
+              <div style="flex:1;">
                 <strong>${cat}</strong>
                 <div class="muted" style="font-size:0.8rem;">${ws.length} Wörter${due > 0 ? ` · ${due} sitzen noch nicht` : ''}</div>
               </div>
               <button class="btn ghost small" data-cat="${cat}">Wiederholen →</button>
             </div>`;
         }).join('')}
+        <div id="chapter-multi-bar" style="display:none; align-items:center; gap:12px; margin-top:14px; padding-top:14px; border-top:1px solid var(--line); flex-wrap:wrap;">
+          <span class="muted" id="chapter-multi-count"></span>
+          <button class="btn ghost" id="review-selected">Ausgewählte Kapitel zusammen üben →</button>
+        </div>
       </div>`;
 
     if (totalDue > 0) {
       root.querySelector('#review-due').addEventListener('click', () => renderModeChoice(shuffleArray(dueWords), 'Nicht sitzende Vokabeln'));
     }
     root.querySelector('#mix-all').addEventListener('click', () => renderModeChoice(shuffleArray(words), 'Alle Kapitel'));
-    root.querySelectorAll('[data-cat]').forEach(btn => {
+    root.querySelectorAll('button[data-cat]').forEach(btn => {
       btn.addEventListener('click', () => renderModeChoice(shuffleArray(byCat[btn.dataset.cat]), btn.dataset.cat));
+    });
+
+    const selectedCats = new Set();
+    const multiBar = root.querySelector('#chapter-multi-bar');
+    const multiCount = root.querySelector('#chapter-multi-count');
+    const updateMultiBar = () => {
+      const n = selectedCats.size;
+      multiBar.style.display = n > 0 ? 'flex' : 'none';
+      multiCount.textContent = `${n} Kapitel ausgewählt`;
+    };
+    root.querySelectorAll('.chapter-select').forEach(cb => {
+      cb.addEventListener('change', () => {
+        if (cb.checked) selectedCats.add(cb.dataset.cat);
+        else selectedCats.delete(cb.dataset.cat);
+        updateMultiBar();
+      });
+    });
+    root.querySelector('#review-selected').addEventListener('click', () => {
+      const cats = [...selectedCats];
+      const list = cats.flatMap(c => byCat[c]);
+      const title = cats.length <= 3 ? cats.join(' + ') : `${cats.length} Kapitel`;
+      renderModeChoice(shuffleArray(list), title);
     });
   }
 
