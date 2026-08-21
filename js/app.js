@@ -30,19 +30,6 @@ function goto(route) {
   window.location.hash = route;
 }
 
-/* Sammelt alle Vokabeln aus bereits abgeschlossenen Tagen für den SRS-Trainer. */
-function getLearnedWords() {
-  const s = Store.get();
-  const words = [];
-  Object.keys(s.completedDays).map(Number).sort((a, b) => a - b).forEach(day => {
-    const dc = getDayContent(day);
-    if (dc && dc.content.vocabulary) {
-      dc.content.vocabulary.forEach((w, idx) => words.push({ id: `w${day}-${idx}`, day, ...w }));
-    }
-  });
-  return words;
-}
-
 function ensureWordsInSRS(day) {
   const dc = getDayContent(day);
   if (!dc || !dc.content.vocabulary) return;

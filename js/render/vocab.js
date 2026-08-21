@@ -36,6 +36,20 @@ function findGapBlank(word) {
   return null;
 }
 
+/* Sammelt alle Vokabeln aus dem gesamten Curriculum (alle Wochen/Tage mit
+   hinterlegtem Vokabular), unabhängig davon, ob der jeweilige Tag schon
+   abgeschlossen wurde - Kapitel sind im Vokabeltrainer frei wählbar. */
+function getAllVocabWords() {
+  const words = [];
+  CURRICULUM.forEach(d => {
+    const dc = getDayContent(d.day);
+    if (dc && dc.content.vocabulary) {
+      dc.content.vocabulary.forEach((w, idx) => words.push({ id: `w${d.day}-${idx}`, day: d.day, ...w }));
+    }
+  });
+  return words;
+}
+
 function pickExerciseType(word, mode) {
   if (mode === 'flashcard') return { type: 'flashcard', gap: null };
   const gap = findGapBlank(word);
@@ -74,14 +88,14 @@ function renderGapCard(container, word, blank, { onNext }) {
 }
 
 Render.vocab = function (root) {
-  const words = getLearnedWords();
+  const words = getAllVocabWords();
 
   if (words.length === 0) {
     root.innerHTML = `
       <div class="card empty-state">
         <div class="big">📖</div>
-        <p>Noch keine Wörter gelernt.</p>
-        <p class="muted">Schließe deine erste Tageslektion ab, dann tauchen hier deine Vokabeln zur Wiederholung auf.</p>
+        <p>Noch keine Vokabeln hinterlegt.</p>
+        <p class="muted">Sobald Kapitel-Inhalte im Curriculum stehen, tauchen sie hier zur Auswahl auf.</p>
         <button class="btn ghost" onclick="goto('#/dashboard')">Zum Dashboard</button>
       </div>`;
     return;
