@@ -9,6 +9,7 @@ function todayISO() {
 function defaultState() {
   return {
     dailyMinutes: 90,
+    updatedAt: 0,        // Zeitstempel der letzten lokalen Änderung, siehe save() und GitHubSync.pull() - verhindert, dass ein Reload kurz nach einer Änderung (bevor der verzögerte Push fertig ist) den eigenen frischen Stand mit einem noch veralteten Remote-Stand überschreibt
     currentDay: 1,
     lastOpenedDay: null,  // zuletzt im Dashboard/als Lektion geöffneter Tag, unabhängig vom Fortschritt (currentDay) - bestimmt, welche Woche/welcher Tag im Dashboard vorausgewählt bzw. orange markiert ist, bis ein anderer Tag geöffnet wird
     completedDays: {},   // { "1": { completedAt, quizScore, quizTotal } }
@@ -41,6 +42,7 @@ const Store = (() => {
   }
 
   function save() {
+    state.updatedAt = Date.now();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     window.dispatchEvent(new CustomEvent('elc:save', { detail: state }));
   }

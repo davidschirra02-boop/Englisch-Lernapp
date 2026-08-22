@@ -63,6 +63,19 @@ const GitHubSync = (() => {
       const file = data.files && data.files[GIST_FILENAME];
       if (!file || !file.content) return null;
       const remoteState = JSON.parse(file.content);
+      // Ist der lokale Stand neuer als der gerade geladene Remote-Stand (z.B.
+      // weil der verzögerte Push einer kurz zuvor gemachten Änderung noch
+      // nicht abgeschlossen war, als die Seite neu geladen wurde), NICHT
+      // überschreiben - sonst gehen frische lokale Änderungen bei jedem
+      // schnellen Reload verloren. Stattdessen den lokalen Stand stattdessen
+      // hochladen, damit Remote nachzieht.
+      const localState = Store.get();
+      if ((localState.updatedAt || 0) > (remoteState.updatedAt || 0)) {
+        pushNow();
+        status.error = null;
+        status.lastSync = new Date().toISOString();
+        return localState;
+      }
       Store.hydrate(remoteState);
       status.error = null;
       status.lastSync = new Date().toISOString();

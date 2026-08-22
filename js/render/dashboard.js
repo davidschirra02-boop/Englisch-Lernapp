@@ -13,13 +13,14 @@ Render.dashboard = function (root) {
   const currentWeek = meta ? meta.week : 1;
   // Zuletzt geöffneter Tag (unabhängig vom Fortschritt) bestimmt, welche
   // Woche vorausgewählt und welcher Tag orange markiert ist - bleibt so,
-  // bis ein anderer Tag geöffnet wird. Wurde dieser Tag inzwischen
-  // abgeschlossen, rückt die Markierung automatisch einen Tag weiter (der
-  // nächste zu machende Tag), statt auf dem fertigen Tag stehen zu bleiben.
-  // Fällt auf den Fortschritts-Tag zurück, wenn noch nie eine Lektion
-  // geöffnet wurde (z.B. neuer Nutzer).
-  const lastOpened = s.lastOpenedDay && s.lastOpenedDay <= 90 ? s.lastOpenedDay : day;
-  const highlightDay = Math.min(Store.isDayComplete(lastOpened) ? lastOpened + 1 : lastOpened, 90);
+  // bis ein anderer Tag geöffnet wird. Wird ein Tag durch Abschluss der
+  // Lektion fertig, setzt finishLesson() diesen Wert direkt auf den
+  // nächsten Tag (siehe js/render/lesson.js) - bloßes erneutes Öffnen eines
+  // längst abgeschlossenen Tages (z.B. zum Nachschauen) lässt die Markierung
+  // dagegen bewusst auf genau diesem Tag stehen. Fällt auf den
+  // Fortschritts-Tag zurück, wenn noch nie eine Lektion geöffnet wurde
+  // (z.B. neuer Nutzer).
+  const highlightDay = s.lastOpenedDay && s.lastOpenedDay <= 90 ? s.lastOpenedDay : day;
   const highlightWeek = getDayMeta(highlightDay)?.week || currentWeek;
   let viewWeek = highlightWeek;
 

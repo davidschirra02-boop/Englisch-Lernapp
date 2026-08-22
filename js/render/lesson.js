@@ -178,11 +178,23 @@ Render.lesson = function (root, day) {
         Speech.speak(l.sentences[i], { onEnd: () => playFrom(i + 1) });
       })(0);
     }
+    // Klick auf den gerade sprechenden Button stoppt das Vorlesen komplett
+    // (auch das automatische Weiterlesen zum nächsten Satz), statt densel-
+    // ben Satz neu zu starten - playToken++ macht dabei jede noch laufende
+    // playAll()-Kette ungültig, siehe deren Abbruchbedingung oben.
+    function stopAll() {
+      playToken++;
+      Speech.stop();
+      showSpeaking(-1);
+    }
     linesEl.querySelectorAll('.speak-btn').forEach(btn => {
       const line = btn.closest('.story-line');
       btn.addEventListener('focus', () => line.classList.add('focused'));
       btn.addEventListener('blur', () => line.classList.remove('focused'));
-      btn.addEventListener('click', () => speakLine(Number(btn.dataset.i)));
+      btn.addEventListener('click', () => {
+        if (btn.classList.contains('speaking')) stopAll();
+        else speakLine(Number(btn.dataset.i));
+      });
     });
 
     function startQuestions(resumeQuiz) {
@@ -296,6 +308,12 @@ Render.lesson = function (root, day) {
     if (!isReview) ensureWordsInSRS(day);
     Store.markDayComplete(day, quizScore, quizTotal);
     Store.clearLessonProgress();
+    // Erst wenn diese Lektion hier und jetzt fertig abgeschlossen wird, rückt
+    // die Dashboard-Markierung zum nächsten Tag weiter. Bloßes erneutes
+    // Öffnen eines schon länger abgeschlossenen Tages (z.B. zum Nachschauen)
+    // soll dagegen weiterhin genau diesen Tag markiert lassen, siehe
+    // Render.dashboard.
+    Store.setLastOpenedDay(day + 1);
     renderDone();
   }
 
