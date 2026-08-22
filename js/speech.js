@@ -67,5 +67,15 @@ const Speech = (() => {
     window.speechSynthesis.speak(u);
   }
 
-  return { supported, listVoices, resolveVoice, refreshVoices, isHighQuality, speak };
+  function wireSpeakButton(btn, text) {
+    if (!btn) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.speak-btn.speaking').forEach(b => { if (b !== btn) b.classList.remove('speaking'); });
+      btn.classList.add('speaking');
+      speak(text, { onEnd: () => btn.classList.remove('speaking') });
+    });
+  }
+
+  return { supported, listVoices, resolveVoice, refreshVoices, isHighQuality, speak, wireSpeakButton };
 })();

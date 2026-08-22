@@ -77,8 +77,14 @@ function renderGapCard(container, word, blank, { onNext }) {
     input.disabled = true;
     container.querySelector('.check-btn').disabled = true;
     container.querySelector('.feedback-slot').innerHTML = `
-      <div class="feedback ${correct ? 'good' : 'bad'}">${correct ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${blank.target.trim()}"`}</div>
+      <div class="feedback ${correct ? 'good' : 'bad'}">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <span>${correct ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${blank.target.trim()}"`}</span>
+          ${word.example ? '<button type="button" class="speak-btn" aria-label="Vorlesen" title="Vorlesen">🔊</button>' : ''}
+        </div>
+      </div>
       <div style="margin-top:10px;"><button class="btn next-btn">Weiter →</button></div>`;
+    if (word.example) Speech.wireSpeakButton(container.querySelector('.feedback-slot .speak-btn'), word.example);
     container.querySelector('.next-btn').addEventListener('click', () => onNext(correct));
     KeyNav.focusSoon(container.querySelector('.next-btn'));
   };

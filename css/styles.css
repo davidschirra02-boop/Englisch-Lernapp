@@ -399,18 +399,31 @@ nav.tabs a:focus-visible {
   display: flex;
   gap: 6px;
   margin-bottom: 22px;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+
+.step-track::-webkit-scrollbar { display: none; }
 
 .step-track .seg {
-  flex: 1;
-  height: 6px;
+  flex: 0 0 auto;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
   border-radius: 999px;
+  padding: 6px 12px;
   background: var(--line);
-  overflow: hidden;
+  color: var(--ink-soft);
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-.step-track .seg.filled { background: var(--teal); }
-.step-track .seg.active { background: var(--amber); }
+.step-track .seg:hover { background: var(--teal-tint); color: var(--teal-light); }
+.step-track .seg.done { background: var(--teal-tint); color: var(--teal-light); }
+.step-track .seg.active { background: var(--amber); color: #fff; }
 
 .module-label {
   display: inline-block;

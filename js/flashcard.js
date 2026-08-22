@@ -25,13 +25,19 @@ const Flashcard = {
           </div>
         </div>
       </div>
-      <div class="example-box" id="example-box" style="${reversed ? 'visibility:hidden;' : ''}"><span class="en">${word.example}</span></div>
+      <div class="example-box" id="example-box" style="${reversed ? 'visibility:hidden;' : ''}">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <span class="en">${word.example || ''}</span>
+          ${word.example ? '<button type="button" class="speak-btn" aria-label="Vorlesen" title="Vorlesen">🔊</button>' : ''}
+        </div>
+      </div>
       <div class="srs-controls" id="srs-controls" style="display:none;"></div>
     `;
 
     const card = container.querySelector('.flashcard');
     const controls = container.querySelector('#srs-controls');
     const exampleBox = container.querySelector('#example-box');
+    if (word.example) Speech.wireSpeakButton(exampleBox.querySelector('.speak-btn'), word.example);
 
     function flip() {
       if (flipped) return;

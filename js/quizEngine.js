@@ -57,15 +57,29 @@ const QuizEngine = {
       return Array.isArray(item.answer) ? item.answer[0] : (item.answer ?? item.options?.[item.answerIndex]);
     }
 
+    // Baut aus prompt (mit "___"-Lücke) + answer den vollständigen englischen
+    // Satz zusammen, zum Vorlesen der Lösung (nur für type:'gap' relevant).
+    function resolveGapSentence(item) {
+      const ans = Array.isArray(item.answer) ? item.answer[0] : item.answer;
+      return item.prompt.replace(/_{2,}(\s+_{2,})*/, ans);
+    }
+
+    function wireFeedbackSpeak(item) {
+      if (opts.speakable && item.type === 'gap') {
+        Speech.wireSpeakButton(container.querySelector('.feedback .speak-btn'), resolveGapSentence(item));
+      }
+    }
+
     function feedbackHtml(item, correct, diag) {
       const explain = (!correct && item.explanation) ? `<div class="feedback-explain">💡 ${item.explanation}</div>` : '';
+      const speakHtml = (opts.speakable && item.type === 'gap') ? '<button type="button" class="speak-btn" aria-label="Vorlesen" title="Vorlesen">🔊</button>' : '';
       if (diag && diag.tier === 'close-typo') {
         const typo = TranslationCheck.describeDiff(diag.ops.filter(o => o.type === 'sub'));
         return `<div class="feedback good">✓ Richtig! <span class="feedback-note">(kleiner Tippfehler: ${typo})</span></div>`;
       }
       const diffLine = (!correct && diag) ? `<div class="feedback-explain">${TranslationCheck.describeDiff(diag.ops)}</div>` : '';
       const text = correct ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${correctText(item, diag)}"`;
-      return `<div class="feedback ${correct ? 'good' : 'bad'}">${text}${diffLine}${explain}</div>`;
+      return `<div class="feedback ${correct ? 'good' : 'bad'}"><div style="display:flex; align-items:center; justify-content:space-between; gap:10px;"><span>${text}</span>${speakHtml}</div>${diffLine}${explain}</div>`;
     }
 
     function topline() {
@@ -129,6 +143,7 @@ const QuizEngine = {
         state[idx] = { answered: true, correct, chosenIndex, chosenText, diag: diag || null };
         reportProgress();
         container.querySelector('.feedback-slot').innerHTML = feedbackHtml(item, correct, diag);
+        wireFeedbackSpeak(item);
         container.querySelector('.next-slot').innerHTML = `<button class="btn next-btn">${isLast ? 'Fertig' : 'Weiter'} →</button>`;
         bindNext(isLast);
       }
@@ -197,6 +212,7 @@ const QuizEngine = {
         <div class="next-slot" style="margin-top:14px;"><button class="btn next-btn">${isLast ? 'Fertig' : 'Weiter'} →</button></div>
       `;
       bindBack();
+      wireFeedbackSpeak(item);
       bindNext(isLast);
     }
 

@@ -47,17 +47,24 @@ Render.lesson = function (root, day) {
     root.innerHTML = `
       <div class="card">
         <div class="step-track">
-          ${stepNames.map((s, i) => `<div class="seg ${i < stepIdx ? 'filled' : ''} ${i === stepIdx ? 'active' : ''}"></div>`).join('')}
+          ${stepNames.map((s, i) => `<button type="button" class="seg ${i < stepIdx ? 'done' : ''} ${i === stepIdx ? 'active' : ''}" data-step-idx="${i}">${STEP_LABELS[s]}</button>`).join('')}
         </div>
-        <div class="module-label">${labelOverride || STEP_LABELS[stepNames[stepIdx]]}</div>
+        ${labelOverride ? `<div class="module-label">${labelOverride}</div>` : ''}
         ${innerHtml}
       </div>`;
+    root.querySelectorAll('.step-track .seg').forEach(btn => {
+      btn.addEventListener('click', () => goToStep(Number(btn.dataset.stepIdx)));
+    });
+  }
+
+  function goToStep(i) {
+    stepIdx = i;
+    Store.saveLessonStep(day, stepIdx);
+    renderStep();
   }
 
   function next() {
-    stepIdx++;
-    Store.saveLessonStep(day, stepIdx);
-    renderStep();
+    goToStep(stepIdx + 1);
   }
 
   function renderStep() {
@@ -120,6 +127,7 @@ Render.lesson = function (root, day) {
     QuizEngine.run(root.querySelector('#practice-slot'), spaceOutTopics(content.vocabPractice), {
       initialIdx: resume?.idx,
       initialAnswers: resume?.answers,
+      speakable: true,
       onProgress: (i, answers) => Store.saveLessonSub(day, 'vocabPractice', { idx: i, answers }),
       onComplete: (score, total, wrong) => { missedItems.push(...wrong); Store.saveMissedItems(day, missedItems); next(); }
     });
