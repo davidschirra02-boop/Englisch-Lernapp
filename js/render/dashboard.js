@@ -13,9 +13,13 @@ Render.dashboard = function (root) {
   const currentWeek = meta ? meta.week : 1;
   // Zuletzt geöffneter Tag (unabhängig vom Fortschritt) bestimmt, welche
   // Woche vorausgewählt und welcher Tag orange markiert ist - bleibt so,
-  // bis ein anderer Tag geöffnet wird. Fällt auf den Fortschritts-Tag
-  // zurück, wenn noch nie eine Lektion geöffnet wurde (z.B. neuer Nutzer).
-  const highlightDay = s.lastOpenedDay && s.lastOpenedDay <= 90 ? s.lastOpenedDay : day;
+  // bis ein anderer Tag geöffnet wird. Wurde dieser Tag inzwischen
+  // abgeschlossen, rückt die Markierung automatisch einen Tag weiter (der
+  // nächste zu machende Tag), statt auf dem fertigen Tag stehen zu bleiben.
+  // Fällt auf den Fortschritts-Tag zurück, wenn noch nie eine Lektion
+  // geöffnet wurde (z.B. neuer Nutzer).
+  const lastOpened = s.lastOpenedDay && s.lastOpenedDay <= 90 ? s.lastOpenedDay : day;
+  const highlightDay = Math.min(Store.isDayComplete(lastOpened) ? lastOpened + 1 : lastOpened, 90);
   const highlightWeek = getDayMeta(highlightDay)?.week || currentWeek;
   let viewWeek = highlightWeek;
 
@@ -63,7 +67,7 @@ Render.dashboard = function (root) {
     const chips = weekDays.map(d => {
       const dn = d.day;
       const accessible = dn <= day;
-      const cls = Store.isDayComplete(dn) ? 'done' : (dn === highlightDay ? 'today' : '');
+      const cls = dn === highlightDay ? 'today' : (Store.isDayComplete(dn) ? 'done' : '');
       const topic = dayTopic(dn);
       return `<button type="button" class="day-chip ${cls} ${accessible ? 'clickable' : ''}" data-day="${dn}" ${accessible ? '' : 'disabled'} ${topic ? `title="${topic}"` : ''}>
         <span class="day-chip-num">${dn}</span>

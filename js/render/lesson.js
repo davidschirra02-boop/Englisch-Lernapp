@@ -59,6 +59,7 @@ Render.lesson = function (root, day) {
   }
 
   function goToStep(i) {
+    Speech.stop();
     stepIdx = i;
     Store.saveLessonStep(day, stepIdx);
     renderStep();

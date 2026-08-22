@@ -16,6 +16,11 @@ function setActiveTab(name) {
 
 function router() {
   const root = document.getElementById('app-root-content');
+  // Verhindert, dass eine laufende Sprachausgabe (z.B. aus dem
+  // Hörverständnis-Schritt) beim Verlassen der Seite einfach weiterläuft -
+  // die Web Speech API läuft unabhängig vom DOM weiter, bis sie explizit
+  // gestoppt wird.
+  Speech.stop();
   const { name, param } = currentRoute();
   setActiveTab(name === 'day' ? 'dashboard' : name);
   if (name === 'day') Render.lesson(root, Number(param) || Store.get().currentDay);

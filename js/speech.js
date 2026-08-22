@@ -67,15 +67,27 @@ const Speech = (() => {
     window.speechSynthesis.speak(u);
   }
 
+  function stop() {
+    if (supported()) window.speechSynthesis.cancel();
+  }
+
+  // Klick auf einen bereits sprechenden Button stoppt die Ausgabe, statt sie
+  // neu zu starten - so kann man Vorlesen jederzeit per erneutem Klick auf
+  // dasselbe Symbol abbrechen, statt es zu Ende laufen lassen zu müssen.
   function wireSpeakButton(btn, text) {
     if (!btn) return;
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      document.querySelectorAll('.speak-btn.speaking').forEach(b => { if (b !== btn) b.classList.remove('speaking'); });
+      if (btn.classList.contains('speaking')) {
+        stop();
+        btn.classList.remove('speaking');
+        return;
+      }
+      document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
       btn.classList.add('speaking');
       speak(text, { onEnd: () => btn.classList.remove('speaking') });
     });
   }
 
-  return { supported, listVoices, resolveVoice, refreshVoices, isHighQuality, speak, wireSpeakButton };
+  return { supported, listVoices, resolveVoice, refreshVoices, isHighQuality, speak, stop, wireSpeakButton };
 })();
