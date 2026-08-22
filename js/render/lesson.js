@@ -17,6 +17,7 @@ Render.lesson = function (root, day) {
     root.innerHTML = `<div class="empty-state"><div class="big">🤔</div><p>Diesen Tag gibt es nicht.</p><button class="btn ghost" onclick="goto('#/dashboard')">Zurück zum Dashboard</button></div>`;
     return;
   }
+  Store.setLastOpenedDay(day);
 
   const dc = getDayContent(day);
   if (!dc) {
@@ -128,6 +129,7 @@ Render.lesson = function (root, day) {
       initialIdx: resume?.idx,
       initialAnswers: resume?.answers,
       speakable: true,
+      simpleFeedback: true,
       onProgress: (i, answers) => Store.saveLessonSub(day, 'vocabPractice', { idx: i, answers }),
       onComplete: (score, total, wrong) => { missedItems.push(...wrong); Store.saveMissedItems(day, missedItems); next(); }
     });

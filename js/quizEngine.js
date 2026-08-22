@@ -61,7 +61,10 @@ const QuizEngine = {
     // Satz zusammen, zum Vorlesen der Lösung (nur für type:'gap' relevant).
     function resolveGapSentence(item) {
       const ans = Array.isArray(item.answer) ? item.answer[0] : item.answer;
-      return item.prompt.replace(/_{2,}(\s+_{2,})*/, ans);
+      // Grammatik-Lücken tragen oft einen Verb-Hinweis in Klammern direkt
+      // hinter der Lücke (z.B. "I ___ (write) to him..."), der beim
+      // Zusammenbauen des vollständigen Satzes mit entfernt werden muss.
+      return item.prompt.replace(/_{2,}(\s+_{2,})*(\s*\([^)]*\))?/, ans);
     }
 
     function wireFeedbackSpeak(item) {
@@ -70,16 +73,72 @@ const QuizEngine = {
       }
     }
 
-    function feedbackHtml(item, correct, diag) {
-      const explain = (!correct && item.explanation) ? `<div class="feedback-explain">💡 ${item.explanation}</div>` : '';
+    // Löst den Text auf, der bei falscher Antwort als "Richtige Lösung"
+    // vorgelesen wird - bei Lückentexten der ganze rekonstruierte Satz
+    // (angenehmer zum Anhören als nur die fehlende Wendung).
+    function solutionText(item, diag) {
+      return item.type === 'gap' ? resolveGapSentence(item) : correctText(item, diag);
+    }
+
+    function wireBubbleSolutionSpeak(item, correct, diag) {
+      if (correct || opts.simpleFeedback) return;
+      if (item.type !== 'gap' && item.type !== 'translate') return;
+      Speech.wireSpeakButton(container.querySelector('.solution-speak-btn'), solutionText(item, diag));
+    }
+
+    // Baut die "Bubble"-Kacheln für eine falsche gap/translate-Antwort:
+    // Deine Eingabe / Richtige Lösung / Das steckt dahinter / (bei erkanntem
+    // Muster oder von Hand verfasstem item.mistakeCoach zusätzlich) Merkregel
+    // + Weiteres Beispiel. Prioritätsreihenfolge für die Erklärung:
+    // 1. item.mistakeCoach (von Hand kuratierter Inhalt, exakt auf diese
+    //    Aufgabe zugeschnitten - aktuell nur für ausgewählte Aufgaben gepflegt)
+    // 2. MistakePatterns.detect() (generische, wiederkehrende Fehlerkategorien)
+    // 3. bestehende automatische Diff-Erklärung bzw. item.explanation
+    // Ohne Treffer aus 1./2. wird nichts dazuerfunden.
+    function buildMistakeBubbles(item, diag, chosenText) {
+      const solution = solutionText(item, diag);
+      const coach = item.mistakeCoach;
+      const pattern = !coach ? MistakePatterns.detect(chosenText, solution) : null;
+      const fallbackExplain = (diag ? TranslationCheck.describeDiff(diag.ops) : '') || item.explanation || '';
+      const explanation = coach ? coach.denkfehler : (pattern ? pattern.explanation : fallbackExplain);
+      const ruleBullets = coach ? coach.merkregel : (pattern ? pattern.ruleBullets : null);
+      const example = coach ? coach.example : (pattern ? pattern.example : null);
+      const title = !coach && pattern ? ` (${pattern.title})` : '';
+      const solutionHtml = coach ? coach.correctedHtml : solution;
+
+      const explainHtml = explanation
+        ? `<div class="mistake-bubble explain"><div class="bubble-label">💭 Das steckt dahinter${title}</div><div>${explanation}</div></div>`
+        : '';
+      const ruleHtml = ruleBullets
+        ? `<div class="mistake-bubble rule"><div class="bubble-label">💡 Merkregel</div><ul>${ruleBullets.map(b => `<li>${b}</li>`).join('')}</ul></div>`
+        : '';
+      const exampleHtml = example
+        ? `<div class="mistake-bubble example"><div class="bubble-label">📌 Weiteres Beispiel</div><div class="en">${example.en}</div><div class="de">${example.de}</div></div>`
+        : '';
+
+      return `
+        <div class="mistake-bubble wrong"><div class="bubble-label">❌ Deine Eingabe</div><div>${chosenText || '–'}</div></div>
+        <div class="mistake-bubble correct"><div class="bubble-label">✅ Richtige Lösung</div><div style="display:flex; align-items:center; justify-content:space-between; gap:10px;"><span>${solutionHtml}</span><button type="button" class="speak-btn solution-speak-btn" aria-label="Vorlesen" title="Vorlesen">🔊</button></div></div>
+        ${explainHtml}${ruleHtml}${exampleHtml}`;
+    }
+
+    function feedbackHtml(item, correct, diag, chosenText) {
       const speakHtml = (opts.speakable && item.type === 'gap') ? '<button type="button" class="speak-btn" aria-label="Vorlesen" title="Vorlesen">🔊</button>' : '';
-      if (diag && diag.tier === 'close-typo') {
+      if (correct && diag && diag.tier === 'close-typo') {
         const typo = TranslationCheck.describeDiff(diag.ops.filter(o => o.type === 'sub'));
         return `<div class="feedback good">✓ Richtig! <span class="feedback-note">(kleiner Tippfehler: ${typo})</span></div>`;
       }
-      const diffLine = (!correct && diag) ? `<div class="feedback-explain">${TranslationCheck.describeDiff(diag.ops)}</div>` : '';
-      const text = correct ? '✓ Richtig!' : `✗ Nicht ganz. Richtige Antwort: "${correctText(item, diag)}"`;
-      return `<div class="feedback ${correct ? 'good' : 'bad'}"><div style="display:flex; align-items:center; justify-content:space-between; gap:10px;"><span>${text}</span>${speakHtml}</div>${diffLine}${explain}</div>`;
+      if (correct) {
+        return `<div class="feedback good"><div style="display:flex; align-items:center; justify-content:space-between; gap:10px;"><span>✓ Richtig!</span>${speakHtml}</div></div>`;
+      }
+      const useBubbles = !opts.simpleFeedback && (item.type === 'gap' || item.type === 'translate');
+      if (useBubbles) {
+        return `<div class="feedback bad">${buildMistakeBubbles(item, diag, chosenText)}</div>`;
+      }
+      const explain = item.explanation ? `<div class="feedback-explain">💡 ${item.explanation}</div>` : '';
+      const diffLine = diag ? `<div class="feedback-explain">${TranslationCheck.describeDiff(diag.ops)}</div>` : '';
+      const text = `✗ Nicht ganz. Richtige Antwort: "${correctText(item, diag)}"`;
+      return `<div class="feedback bad"><div style="display:flex; align-items:center; justify-content:space-between; gap:10px;"><span>${text}</span>${speakHtml}</div>${diffLine}${explain}</div>`;
     }
 
     function topline() {
@@ -142,8 +201,9 @@ const QuizEngine = {
       function finalize(correct, chosenIndex, chosenText, diag) {
         state[idx] = { answered: true, correct, chosenIndex, chosenText, diag: diag || null };
         reportProgress();
-        container.querySelector('.feedback-slot').innerHTML = feedbackHtml(item, correct, diag);
+        container.querySelector('.feedback-slot').innerHTML = feedbackHtml(item, correct, diag, chosenText);
         wireFeedbackSpeak(item);
+        wireBubbleSolutionSpeak(item, correct, diag);
         container.querySelector('.next-slot').innerHTML = `<button class="btn next-btn">${isLast ? 'Fertig' : 'Weiter'} →</button>`;
         bindNext(isLast);
       }
@@ -159,6 +219,7 @@ const QuizEngine = {
             const val = input.value.trim().toLowerCase();
             const accepted = (Array.isArray(item.answer) ? item.answer : [item.answer]).map(a => a.toLowerCase());
             correct = accepted.includes(val);
+            if (!correct) diag = TranslationCheck.classify(input.value, item);
           }
           input.disabled = true;
           container.querySelector('.check-btn').disabled = true;
@@ -208,11 +269,12 @@ const QuizEngine = {
       container.innerHTML = `
         ${topline()}
         ${bodyHtml}
-        ${feedbackHtml(item, st.correct, st.diag)}
+        ${feedbackHtml(item, st.correct, st.diag, st.chosenText)}
         <div class="next-slot" style="margin-top:14px;"><button class="btn next-btn">${isLast ? 'Fertig' : 'Weiter'} →</button></div>
       `;
       bindBack();
       wireFeedbackSpeak(item);
+      wireBubbleSolutionSpeak(item, st.correct, st.diag);
       bindNext(isLast);
     }
 

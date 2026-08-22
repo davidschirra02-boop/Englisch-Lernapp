@@ -10,6 +10,7 @@ function defaultState() {
   return {
     dailyMinutes: 90,
     currentDay: 1,
+    lastOpenedDay: null,  // zuletzt im Dashboard/als Lektion geöffneter Tag, unabhängig vom Fortschritt (currentDay) - bestimmt, welche Woche/welcher Tag im Dashboard vorausgewählt bzw. orange markiert ist, bis ein anderer Tag geöffnet wird
     completedDays: {},   // { "1": { completedAt, quizScore, quizTotal } }
     streak: 0,
     lastActiveDate: null,
@@ -85,6 +86,14 @@ const Store = (() => {
     return !!load().completedDays[day];
   }
 
+  function setLastOpenedDay(day) {
+    update(s => { s.lastOpenedDay = day; });
+  }
+
+  function getLastOpenedDay() {
+    return load().lastOpenedDay;
+  }
+
   // Verankert lessonProgress auf (day, stepIdx). Ruft man das mit denselben
   // Werten auf, die bereits gespeichert sind (z.B. beim erneuten Mounten der
   // Lektion nach einem Reload), bleibt subKey/sub/missedItems unangetastet -
@@ -147,7 +156,7 @@ const Store = (() => {
   }
 
   return {
-    get, update, hydrate, touchToday, markDayComplete, isDayComplete,
+    get, update, hydrate, touchToday, markDayComplete, isDayComplete, setLastOpenedDay, getLastOpenedDay,
     saveLessonStep, getLessonStep, getMissedItems, saveMissedItems, getLessonSub, saveLessonSub, clearLessonProgress,
     todayISO
   };

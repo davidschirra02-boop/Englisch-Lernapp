@@ -509,6 +509,39 @@ nav.tabs a:focus-visible {
 .feedback.bad { background: var(--coral-tint); color: var(--coral-light); }
 .feedback-explain { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 0.85rem; line-height: 1.45; color: var(--ink); }
 
+/* Bubble-Feedback bei falschen Grammatik-/Übersetzungsantworten: gestapelte
+   Kacheln statt Fließtext, jede Kachel mit ihrer eigenen Rolle eingefärbt. */
+.feedback.bad:has(.mistake-bubble) { background: transparent; padding: 0; color: inherit; }
+
+.mistake-bubble {
+  margin-top: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius-s);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  animation: rise 0.3s ease both;
+}
+.mistake-bubble:first-child { margin-top: 0; }
+
+.bubble-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  opacity: 0.85;
+}
+
+.mistake-bubble.wrong { background: var(--coral-tint); color: var(--coral-light); }
+.mistake-bubble.correct { background: var(--good-tint); color: var(--good-light); }
+.mistake-bubble.explain { background: var(--paper); color: var(--ink); }
+.mistake-bubble.rule { background: var(--amber-tint); color: var(--amber-light); }
+.mistake-bubble.rule ul { margin: 0; padding-left: 18px; }
+.mistake-bubble.rule li { margin-bottom: 4px; }
+.mistake-bubble.example { background: var(--teal-tint); color: var(--ink); }
+.mistake-bubble.example .en { color: var(--ink); }
+.mistake-bubble.example .de { color: var(--ink-soft); font-size: 0.85rem; margin-top: 2px; }
+
 /* ---------------- Vocabulary flashcards ---------------- */
 
 .flash-wrap { perspective: 1200px; margin: 8px 0 20px; }

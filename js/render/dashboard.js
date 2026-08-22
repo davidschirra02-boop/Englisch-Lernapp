@@ -11,7 +11,13 @@ Render.dashboard = function (root) {
   const wordsLearned = Object.keys(s.srs).length;
   const daysDone = Object.keys(s.completedDays).length;
   const currentWeek = meta ? meta.week : 1;
-  let viewWeek = currentWeek;
+  // Zuletzt geöffneter Tag (unabhängig vom Fortschritt) bestimmt, welche
+  // Woche vorausgewählt und welcher Tag orange markiert ist - bleibt so,
+  // bis ein anderer Tag geöffnet wird. Fällt auf den Fortschritts-Tag
+  // zurück, wenn noch nie eine Lektion geöffnet wurde (z.B. neuer Nutzer).
+  const highlightDay = s.lastOpenedDay && s.lastOpenedDay <= 90 ? s.lastOpenedDay : day;
+  const highlightWeek = getDayMeta(highlightDay)?.week || currentWeek;
+  let viewWeek = highlightWeek;
 
   root.innerHTML = `
     <div class="card hero stagger">
@@ -57,7 +63,7 @@ Render.dashboard = function (root) {
     const chips = weekDays.map(d => {
       const dn = d.day;
       const accessible = dn <= day;
-      const cls = Store.isDayComplete(dn) ? 'done' : (dn === day ? 'today' : '');
+      const cls = Store.isDayComplete(dn) ? 'done' : (dn === highlightDay ? 'today' : '');
       const topic = dayTopic(dn);
       return `<button type="button" class="day-chip ${cls} ${accessible ? 'clickable' : ''}" data-day="${dn}" ${accessible ? '' : 'disabled'} ${topic ? `title="${topic}"` : ''}>
         <span class="day-chip-num">${dn}</span>
