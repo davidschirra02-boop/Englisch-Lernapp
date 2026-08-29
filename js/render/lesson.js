@@ -5,6 +5,7 @@ const STEP_LABELS = {
   grammar: 'Grammatik',
   vocab: 'Wortschatz',
   vocabPractice: 'Wortschatz-Vertiefung',
+  vocabPracticeReview: 'Wortschatz-Wiederholung',
   translation: 'Übersetzung',
   listening: 'Hörverständnis',
   quiz: 'Quiz',
@@ -17,6 +18,8 @@ Render.lesson = function (root, day) {
     root.innerHTML = `<div class="empty-state"><div class="big">🤔</div><p>Diesen Tag gibt es nicht.</p><button class="btn ghost" onclick="goto('#/dashboard')">Zurück zum Dashboard</button></div>`;
     return;
   }
+  const priorProgress = Store.get().lessonProgress;
+  const isFreshStart = (!priorProgress || priorProgress.day !== day) && !Store.isDayComplete(day);
   Store.setLastOpenedDay(day);
 
   const dc = getDayContent(day);
@@ -33,9 +36,10 @@ Render.lesson = function (root, day) {
 
   const { content } = dc;
   const isReview = !!content.review;
+  const vocabReviewItems = isReview ? [] : buildVocabReviewItems(day);
   const stepNames = isReview
     ? ['review', 'quiz']
-    : ['grammar', 'vocab', 'vocabPractice', ...(content.translation ? ['translation'] : []), 'listening', 'quiz'];
+    : ['grammar', 'vocab', 'vocabPractice', ...(vocabReviewItems.length ? ['vocabPracticeReview'] : []), ...(content.translation ? ['translation'] : []), 'listening', 'quiz'];
   let stepIdx = Math.min(Store.getLessonStep(day), stepNames.length - 1);
   // Verankert lessonProgress auf diesen Tag (No-Op, falls schon so gesetzt -
   // wichtig, damit saveLessonSub/saveMissedItems beim allerersten Aufruf
@@ -74,6 +78,7 @@ Render.lesson = function (root, day) {
     if (step === 'grammar') renderGrammar();
     else if (step === 'vocab') renderVocabIntro();
     else if (step === 'vocabPractice') renderVocabPractice();
+    else if (step === 'vocabPracticeReview') renderVocabPracticeReview();
     else if (step === 'translation') renderTranslation();
     else if (step === 'listening') renderListening();
     else if (step === 'review') renderReview();
@@ -132,6 +137,20 @@ Render.lesson = function (root, day) {
       speakable: true,
       simpleFeedback: true,
       onProgress: (i, answers) => Store.saveLessonSub(day, 'vocabPractice', { idx: i, answers }),
+      onComplete: (score, total, wrong) => { missedItems.push(...wrong); Store.saveMissedItems(day, missedItems); next(); }
+    });
+  }
+
+  function renderVocabPracticeReview() {
+    const resume = Store.getLessonSub(day, 'vocabPracticeReview');
+    const items = (resume && Array.isArray(resume.items)) ? resume.items : vocabReviewItems;
+    shell(`<h2>Wortschatz-Wiederholung</h2><p class="muted">Ein paar Wörter aus früheren Tagen, damit sie hängen bleiben.</p><div id="practice-review-slot"></div>`);
+    QuizEngine.run(root.querySelector('#practice-review-slot'), items, {
+      initialIdx: resume?.idx,
+      initialAnswers: resume?.answers,
+      speakable: true,
+      simpleFeedback: true,
+      onProgress: (i, answers) => Store.saveLessonSub(day, 'vocabPracticeReview', { items, idx: i, answers }),
       onComplete: (score, total, wrong) => { missedItems.push(...wrong); Store.saveMissedItems(day, missedItems); next(); }
     });
   }
@@ -315,6 +334,7 @@ Render.lesson = function (root, day) {
     // Render.dashboard.
     Store.setLastOpenedDay(day + 1);
     renderDone();
+    VideoPopup.show(MOTIVATION_VIDEOS.outro.src);
   }
 
   function renderDone() {
@@ -331,4 +351,5 @@ Render.lesson = function (root, day) {
   }
 
   renderStep();
+  if (isFreshStart) VideoPopup.show(MOTIVATION_VIDEOS.intro.src);
 };

@@ -219,6 +219,62 @@ nav.tabs a:not(.active):hover {
   gap: 20px;
 }
 
+/* ---------------- Motivations-Video-Popup ---------------- */
+
+.video-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: rise 0.25s ease both;
+}
+
+.video-popup {
+  position: relative;
+  width: 78%;
+  max-width: 960px;
+  background: rgba(var(--panel-rgb), 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-pop);
+  overflow: hidden;
+}
+
+.video-popup video {
+  display: block;
+  width: 100%;
+  max-height: 80vh;
+}
+
+.video-popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-popup-close:hover { background: rgba(0, 0, 0, 0.75); }
+
+@media (max-width: 720px) {
+  .video-popup { width: 92%; }
+}
+
 @media (max-width: 720px) {
   .grid-2 { grid-template-columns: 1fr; }
 }
@@ -718,7 +774,8 @@ html[data-theme="aurora"] body {
 html[data-theme="aurora"] #bg-video-layer { display: none; }
 
 html[data-theme="aurora"] .card,
-html[data-theme="aurora"] nav.tabs {
+html[data-theme="aurora"] nav.tabs,
+html[data-theme="aurora"] .video-popup {
   border: 1px solid rgba(109, 40, 217, 0.15);
 }
 
@@ -769,11 +826,17 @@ html[data-theme="brutalist"] body { background: #fff4de; }
 html[data-theme="brutalist"] #bg-video-layer { display: none; }
 
 html[data-theme="brutalist"] .card,
-html[data-theme="brutalist"] nav.tabs {
+html[data-theme="brutalist"] nav.tabs,
+html[data-theme="brutalist"] .video-popup {
   border: 3px solid #000;
   border-radius: 0;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+}
+
+html[data-theme="brutalist"] .video-popup-close {
+  border-radius: 0;
+  border: 2px solid #000;
 }
 
 html[data-theme="brutalist"] nav.tabs a { border-radius: 0; }

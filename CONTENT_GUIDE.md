@@ -10,6 +10,7 @@ Jede Woche liegt **nicht** mehr in einer einzigen Datei, sondern als Ordner `dat
 data/weeks/weekNN/grammar.js        Tag 1-6: grammar-Objekt
 data/weeks/weekNN/vocabulary.js     Tag 1-6: vocabulary-Array (Karteikarten)
 data/weeks/weekNN/vocabPractice.js  Tag 1-6: vocabPractice-Array
+data/weeks/weekNN/vocabPracticeReview.js  Tag 1-6: vocabPracticeReview-Array
 data/weeks/weekNN/translation.js    Tag 1-6: translation-Array
 data/weeks/weekNN/listening.js      Tag 1-6: listening-Objekt
 data/weeks/weekNN/quiz.js           Tag 1-7: quiz-Array (inkl. Review-Quiz Tag 7)
@@ -24,7 +25,7 @@ defineWeekField('weekNN', 'Wochentitel', 2, 'grammar', { ...grammar-Objekt für 
 // usw. für Tag 3-6 in derselben Datei
 ```
 
-Alle 7 Dateien einer neuen Woche zusätzlich in `index.html` **nach** `data/weeks-index.js` per `<script src="data/weeks/weekNN/<feld>.js"></script>` einbinden (Reihenfolge untereinander egal).
+Alle 8 Dateien einer neuen Woche zusätzlich in `index.html` **nach** `data/weeks-index.js` per `<script src="data/weeks/weekNN/<feld>.js"></script>` einbinden (Reihenfolge untereinander egal).
 
 **Zweck dieser Aufteilung:** Soll künftig **nur ein Aufgabentyp über alle Kapitel** geändert werden (z. B. "passe die Übersetzungsaufgabe in allen Kapiteln an"), reicht `Glob data/weeks/*/translation.js` — nur diese Dateien müssen gelesen/bearbeitet werden, ohne Grammatik/Vokabeln/Quiz anderer Wochen überhaupt zu öffnen. Soll dagegen eine **ganze Woche** überarbeitet werden, ist `data/weeks/weekNN/*.js` genauso einfach.
 
@@ -41,7 +42,7 @@ WEEKS.weekNN = {
   key: 'weekNN',
   title: 'Wochenthema (aus WEEK_THEMES)',
   days: {
-    1: { grammar, vocabulary, vocabPractice, translation, listening, quiz },
+    1: { grammar, vocabulary, vocabPractice, vocabPracticeReview, translation, listening, quiz },
     2: { ... }, 3: { ... }, 4: { ... }, 5: { ... }, 6: { ... },
     7: { review: true, summary, quiz }   // Tag 7 ist immer reiner Review-Tag
   }
@@ -55,6 +56,7 @@ WEEKS.weekNN = {
   **`scenario` (seit 2026-08-20):** kurzer, alltagssprachlicher Szenario-Name (1-2 Wörter, z. B. "Reisen", "Shopping") — **muss exakt dem `category`-Wert der `vocabulary`-Wörter desselben Tages entsprechen**, damit Dashboard/Grammatik-Tab und Vokabeltrainer für denselben Tag denselben Namen zeigen. Wird als Titel in Dashboard-Kacheln und Grammatik-Tab-Themenliste angezeigt — nennt bewusst **nicht** die geübte Grammatikform. `ruleTitle` bleibt daneben als internes Metadatenfeld erhalten, wird aber nirgends mehr angezeigt.
 - **vocabulary**: Array von **20** `{ word, translation, example, mnemonic, category }` — `category` = Wochenthema in 1-2 Worten, `mnemonic` auf Deutsch.
 - **vocabPractice**: Array von **ca. 26-34 Items** (choice/gap). **Muss alle 20 Wörter des Tages mindestens einmal als `topic` abdecken** (nicht nur eine Auswahl!) — typischerweise 1-2 Items pro Wort. **Ab Tag 2** zusätzlich ca. 8 Interleaving-Items, die Vokabeln aus vorherigen Tagen derselben Woche wiederholen (siehe Interleaving unten).
+- **vocabPracticeReview** (seit 2026-08-29): Array von **genau 20 Items** (choice/gap), **exakt eines pro Vokabelwort** des Tages, gleiches Schema wie `vocabPractice`-Items (inkl. `topic` = `word`-String). Wird nicht in der normalen Lektion dieses Tages gezeigt, sondern **ausschließlich** von späteren Tagen für den Schritt "Wortschatz-Wiederholung" gezogen (siehe `js/render/vocabReview.js`): dort wird zur Laufzeit ein zufälliges Viertel der `vocabulary`-Wörter dieses Tages ausgewählt und dafür das passende `vocabPracticeReview`-Item verwendet. **Muss deshalb pro Wort eine andere Formulierung/einen anderen Beispielsatz verwenden als das/die Item(s) in `vocabPractice`** — sonst bekommt man bei der Wiederholung exakt dieselbe Frage ein zweites Mal vorgesetzt.
 - **translation**: **Neuer Block (seit 2026-08-14).** Array von **ca. 20-24 Items** vom Typ `'translate'` (siehe unten) — ganze Sätze Deutsch→Englisch, die **alle 20 Wörter des Tages** mindestens einmal abdecken, plus 2 Interleaving-Sätze mit Vokabeln vorheriger Tage und 2 "Combo"-Sätze, die die Grammatik des Tages mit einem Vokabelwort kombinieren. Wird als eigener Lektionsschritt ("Übersetzung") zwischen `vocabPractice` und `listening` angezeigt (siehe `js/render/lesson.js`).
 - **listening**: `{ title, sentences: [8-9 Sätze], questions: [...] (9x) }`. Wird beim Betreten automatisch vorgelesen (Autoplay).
 - **quiz**: Array von **ca. 29 Items**. Ca. 10 neue Grammatik-Items + ca. 14 neue Vokabel-Items (decken möglichst viele der 20 Tageswörter ab, nicht zwingend alle — `vocabPractice`/`translation` tragen die Vollabdeckungs-Pflicht) + 5 Interleaving-Items (Grammatik/Vokabeln früherer Tage **und** früherer Wochen).

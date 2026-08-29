@@ -26,6 +26,7 @@ function router() {
   if (name === 'day') Render.lesson(root, Number(param) || Store.get().currentDay);
   else if (name === 'vocab') Render.vocab(root);
   else if (name === 'grammar') Render.grammar(root);
+  else if (name === 'motivation') Render.motivation(root);
   else if (name === 'settings') Render.settings(root);
   else Render.dashboard(root);
   window.scrollTo(0, 0);
