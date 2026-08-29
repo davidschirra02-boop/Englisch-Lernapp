@@ -21,6 +21,7 @@ function router() {
   // die Web Speech API läuft unabhängig vom DOM weiter, bis sie explizit
   // gestoppt wird.
   Speech.stop();
+  VideoPopup.close();
   const { name, param } = currentRoute();
   setActiveTab(name === 'day' ? 'dashboard' : name);
   if (name === 'day') Render.lesson(root, Number(param) || Store.get().currentDay);

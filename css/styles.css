@@ -275,6 +275,64 @@ nav.tabs a:not(.active):hover {
   .video-popup { width: 92%; }
 }
 
+/* ---------------- Motivation-Tab ---------------- */
+
+.motivation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.motivation-tile {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-l);
+  background: rgba(var(--panel-rgb), var(--panel-alpha));
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.motivation-tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-pop); }
+
+.motivation-tile-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.motivation-tile-icon {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  font-size: 1.3rem;
+  z-index: 1;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6));
+}
+
+.motivation-tile-play {
+  position: relative;
+  z-index: 1;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  padding-left: 4px;
+}
+.motivation-tile:hover .motivation-tile-play { background: var(--teal); }
+
 @media (max-width: 720px) {
   .grid-2 { grid-template-columns: 1fr; }
 }
@@ -775,7 +833,8 @@ html[data-theme="aurora"] #bg-video-layer { display: none; }
 
 html[data-theme="aurora"] .card,
 html[data-theme="aurora"] nav.tabs,
-html[data-theme="aurora"] .video-popup {
+html[data-theme="aurora"] .video-popup,
+html[data-theme="aurora"] .motivation-tile {
   border: 1px solid rgba(109, 40, 217, 0.15);
 }
 
@@ -827,7 +886,8 @@ html[data-theme="brutalist"] #bg-video-layer { display: none; }
 
 html[data-theme="brutalist"] .card,
 html[data-theme="brutalist"] nav.tabs,
-html[data-theme="brutalist"] .video-popup {
+html[data-theme="brutalist"] .video-popup,
+html[data-theme="brutalist"] .motivation-tile {
   border: 3px solid #000;
   border-radius: 0;
   backdrop-filter: none !important;
@@ -837,6 +897,13 @@ html[data-theme="brutalist"] .video-popup {
 html[data-theme="brutalist"] .video-popup-close {
   border-radius: 0;
   border: 2px solid #000;
+}
+
+html[data-theme="brutalist"] .motivation-tile-play {
+  border-radius: 0;
+  border: 2px solid #000;
+  background: #fff;
+  color: #000;
 }
 
 html[data-theme="brutalist"] nav.tabs a { border-radius: 0; }

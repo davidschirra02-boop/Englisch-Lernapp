@@ -18,8 +18,6 @@ Render.lesson = function (root, day) {
     root.innerHTML = `<div class="empty-state"><div class="big">🤔</div><p>Diesen Tag gibt es nicht.</p><button class="btn ghost" onclick="goto('#/dashboard')">Zurück zum Dashboard</button></div>`;
     return;
   }
-  const priorProgress = Store.get().lessonProgress;
-  const isFreshStart = (!priorProgress || priorProgress.day !== day) && !Store.isDayComplete(day);
   Store.setLastOpenedDay(day);
 
   const dc = getDayContent(day);
@@ -98,6 +96,7 @@ Render.lesson = function (root, day) {
     QuizEngine.run(root.querySelector('#ex-slot'), spaceOutTopics(g.exercises), {
       initialIdx: resume?.idx,
       initialAnswers: resume?.answers,
+      sound: true,
       onProgress: (i, answers) => Store.saveLessonSub(day, 'grammar', { idx: i, answers }),
       onComplete: (score, total, wrong) => { missedItems.push(...wrong); Store.saveMissedItems(day, missedItems); next(); }
     });
@@ -134,6 +133,7 @@ Render.lesson = function (root, day) {
     QuizEngine.run(root.querySelector('#practice-slot'), spaceOutTopics(content.vocabPractice), {
       initialIdx: resume?.idx,
       initialAnswers: resume?.answers,
+      sound: true,
       speakable: true,
       simpleFeedback: true,
       onProgress: (i, answers) => Store.saveLessonSub(day, 'vocabPractice', { idx: i, answers }),
@@ -148,6 +148,7 @@ Render.lesson = function (root, day) {
     QuizEngine.run(root.querySelector('#practice-review-slot'), items, {
       initialIdx: resume?.idx,
       initialAnswers: resume?.answers,
+      sound: true,
       speakable: true,
       simpleFeedback: true,
       onProgress: (i, answers) => Store.saveLessonSub(day, 'vocabPracticeReview', { items, idx: i, answers }),
@@ -161,6 +162,7 @@ Render.lesson = function (root, day) {
     QuizEngine.run(root.querySelector('#translation-slot'), spaceOutTopics(content.translation), {
       initialIdx: resume?.idx,
       initialAnswers: resume?.answers,
+      sound: true,
       onProgress: (i, answers) => Store.saveLessonSub(day, 'translation', { idx: i, answers }),
       onComplete: (score, total, wrong) => { missedItems.push(...wrong); Store.saveMissedItems(day, missedItems); next(); }
     });
@@ -223,6 +225,7 @@ Render.lesson = function (root, day) {
       QuizEngine.run(root.querySelector('#listen-quiz-slot'), spaceOutTopics(l.questions), {
         initialIdx: resumeQuiz?.idx,
         initialAnswers: resumeQuiz?.answers,
+        sound: true,
         onProgress: (i, answers) => Store.saveLessonSub(day, 'listening', { phase: 'questions', quiz: { idx: i, answers } }),
         onComplete: (score, total, wrong) => { missedItems.push(...wrong); Store.saveMissedItems(day, missedItems); next(); }
       });
@@ -268,6 +271,7 @@ Render.lesson = function (root, day) {
     QuizEngine.run(root.querySelector('#quiz-slot'), spaceOutTopics(content.quiz), {
       initialIdx: resume?.quiz?.idx,
       initialAnswers: resume?.quiz?.answers,
+      sound: true,
       onProgress: (i, answers) => Store.saveLessonSub(day, 'quiz', { phase: 'main', quiz: { idx: i, answers } }),
       onComplete: (score, total, wrong) => {
         quizScore = score; quizTotal = total;
@@ -309,6 +313,7 @@ Render.lesson = function (root, day) {
     QuizEngine.run(root.querySelector('#review-slot'), items, {
       initialIdx: savedRound?.idx,
       initialAnswers: savedRound?.answers,
+      sound: true,
       onProgress: (i, answers) => Store.saveLessonSub(day, 'quiz', { phase: 'missedReview', score: quizScore, total: quizTotal, reviewQuiz: { items, idx: i, answers } }),
       onComplete: (score, total, wrong) => {
         missedItems.push(...wrong);
@@ -351,5 +356,5 @@ Render.lesson = function (root, day) {
   }
 
   renderStep();
-  if (isFreshStart) VideoPopup.show(MOTIVATION_VIDEOS.intro.src);
+  VideoPopup.show(MOTIVATION_VIDEOS.intro.src);
 };

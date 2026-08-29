@@ -4,25 +4,28 @@
 
 Render.motivation = function (root) {
   const clips = [
-    { key: 'intro', emoji: '🚀', desc: 'Der Clip, der zu Beginn jeder neuen Lektion aufpoppt.' },
-    { key: 'outro', emoji: '🏁', desc: 'Der Clip, der nach jedem erfolgreich abgeschlossenen Lerntag aufpoppt.' },
-    { key: 'bonus', emoji: '✨', desc: 'Extra-Motivation zum jederzeitigen Anschauen.' }
+    { key: 'intro', emoji: '🚀' },
+    { key: 'outro', emoji: '🏁' },
+    { key: 'bonus', emoji: '✨' }
   ];
 
   root.innerHTML = `
-    <div class="card">
-      <h3>Motivation</h3>
-      <p class="muted">Die Jim-Rohn-Clips, die dich beim Lernen begleiten — hier kannst du sie dir jederzeit noch einmal ansehen.</p>
+    <div class="motivation-grid">
+      ${clips.map(c => `
+        <button type="button" class="motivation-tile" data-clip="${c.key}" aria-label="${MOTIVATION_VIDEOS[c.key].title}">
+          <video class="motivation-tile-video" src="${MOTIVATION_VIDEOS[c.key].src}" muted preload="metadata" playsinline></video>
+          <span class="motivation-tile-icon">${c.emoji}</span>
+          <span class="motivation-tile-play">▶</span>
+        </button>`).join('')}
     </div>
-    ${clips.map(c => `
-      <div class="card chapter-row">
-        <div>
-          <strong>${c.emoji} ${MOTIVATION_VIDEOS[c.key].title}</strong>
-          <div class="muted" style="font-size:0.8rem;">${c.desc}</div>
-        </div>
-        <button class="btn ghost small" data-clip="${c.key}">▶ Abspielen</button>
-      </div>`).join('')}
   `;
+
+  // Zeigt das erste Bild als Vorschau, statt eines leeren schwarzen Videofelds -
+  // manche Browser rendern bei preload="metadata" erst nach einem kleinen
+  // Seek einen sichtbaren Frame.
+  root.querySelectorAll('.motivation-tile-video').forEach(v => {
+    v.addEventListener('loadedmetadata', () => { v.currentTime = 1.5; }, { once: true });
+  });
 
   root.querySelectorAll('[data-clip]').forEach(btn => {
     btn.addEventListener('click', () => VideoPopup.show(MOTIVATION_VIDEOS[btn.dataset.clip].src));

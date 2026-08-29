@@ -117,7 +117,7 @@ Render.grammar = function (root) {
       return;
     }
     root.innerHTML = `<div class="card"><div class="module-label">${title}</div><div id="practice-slot"></div></div>`;
-    QuizEngine.run(root.querySelector('#practice-slot'), pool, { onComplete: () => renderDone(chapter) });
+    QuizEngine.run(root.querySelector('#practice-slot'), pool, { sound: true, onComplete: () => renderDone(chapter) });
   }
 
   function renderDone(chapter) {

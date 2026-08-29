@@ -12,13 +12,24 @@ const MOTIVATION_VIDEOS = {
 };
 
 const VideoPopup = {
+  // Aufräumfunktion des aktuell offenen Popups (falls eins offen ist) - wird
+  // von close() UND von einem neuen show()-Aufruf genutzt, damit der
+  // Tastatur-Listener des vorherigen Popups nie hängen bleibt (sonst
+  // sammeln sich bei mehrfachem Öffnen mehrere document-Listener an).
+  _activeCleanup: null,
+
+  close() {
+    VideoPopup._activeCleanup?.();
+  },
+
   show(src) {
+    VideoPopup.close();
     const overlay = document.createElement('div');
     overlay.className = 'video-popup-overlay';
     overlay.innerHTML = `
       <div class="video-popup">
         <button type="button" class="video-popup-close" aria-label="Schließen">✕</button>
-        <video src="${src}" autoplay controls playsinline></video>
+        <video src="${src}" autoplay controls playsinline preload="auto"></video>
       </div>`;
     document.body.appendChild(overlay);
 
@@ -26,16 +37,41 @@ const VideoPopup = {
 
     function close() {
       video.pause();
-      document.removeEventListener('keydown', onKeydown);
+      document.removeEventListener('keydown', onKeydown, true);
       overlay.remove();
+      VideoPopup._activeCleanup = null;
     }
+    VideoPopup._activeCleanup = close;
+    // Capture-Phase + stopPropagation, damit die nativen Tastatur-Kurzbefehle
+    // des <video controls>-Elements selbst (das auf Pfeiltasten ebenfalls
+    // mit eigenem Vor-/Zurückspulen reagiert und sich sonst mit der Logik
+    // hier unten in die Quere kommt) den Tastendruck gar nicht erst sehen.
     function onKeydown(e) {
-      if (e.key === 'Escape') close();
+      if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); return; }
+      if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        e.stopPropagation();
+        video.paused ? video.play() : video.pause();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        e.stopPropagation();
+        video.currentTime = Math.min(video.duration || Infinity, video.currentTime + 5);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        e.stopPropagation();
+        video.currentTime = Math.max(0, video.currentTime - 5);
+      }
     }
 
     overlay.querySelector('.video-popup-close').addEventListener('click', close);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
     video.addEventListener('ended', close);
-    document.addEventListener('keydown', onKeydown);
+    document.addEventListener('keydown', onKeydown, true);
+
+    // Manche Browser ignorieren das autoplay-Attribut in bestimmten
+    // Situationen stillschweigend - expliziter play()-Aufruf, damit ein
+    // etwaiger Autoplay-Block wenigstens im Log sichtbar wird, statt dass
+    // das Video einfach lautlos stehen bleibt.
+    video.play().catch(err => console.warn('Video-Autoplay blockiert:', err));
   }
 };

@@ -35,6 +35,11 @@ function spaceOutTopics(items) {
   return result;
 }
 
+function playCorrectSound() {
+  new Audio(encodeURIComponent('correct answer') + '/dragon-studio-correct-472358.mp3')
+    .play().catch(() => {});
+}
+
 const QuizEngine = {
   run(container, items, opts = {}) {
     const total = items.length;
@@ -199,6 +204,7 @@ const QuizEngine = {
       bindBack();
 
       function finalize(correct, chosenIndex, chosenText, diag) {
+        if (correct && opts.sound) playCorrectSound();
         state[idx] = { answered: true, correct, chosenIndex, chosenText, diag: diag || null };
         reportProgress();
         container.querySelector('.feedback-slot').innerHTML = feedbackHtml(item, correct, diag, chosenText);
