@@ -103,9 +103,10 @@ const QuizEngine = {
     function buildMistakeBubbles(item, diag, chosenText) {
       const solution = solutionText(item, diag);
       const coach = item.mistakeCoach;
-      const pattern = !coach ? MistakePatterns.detect(chosenText, solution) : null;
-      const fallbackExplain = (diag ? TranslationCheck.describeDiff(diag.ops) : '') || item.explanation || '';
-      const explanation = coach ? coach.denkfehler : (pattern ? pattern.explanation : fallbackExplain);
+      const isAi = diag && diag.source === 'ai';
+      const pattern = (!coach && !isAi) ? MistakePatterns.detect(chosenText, solution) : null;
+      const fallbackExplain = (diag && !isAi ? TranslationCheck.describeDiff(diag.ops) : '') || item.explanation || '';
+      const explanation = coach ? coach.denkfehler : (isAi ? diag.aiFeedback : (pattern ? pattern.explanation : fallbackExplain));
       const ruleBullets = coach ? coach.merkregel : (pattern ? pattern.ruleBullets : null);
       const example = coach ? coach.example : (pattern ? pattern.example : null);
       const title = !coach && pattern ? ` (${pattern.title})` : '';
@@ -129,6 +130,12 @@ const QuizEngine = {
 
     function feedbackHtml(item, correct, diag, chosenText) {
       const speakHtml = (opts.speakable && item.type === 'gap') ? '<button type="button" class="speak-btn" aria-label="Vorlesen" title="Vorlesen">🔊</button>' : '';
+      if (correct && diag && diag.source === 'ai') {
+        if (diag.tier === 'close-typo' && diag.aiFeedback) {
+          return `<div class="feedback good">✓ Richtig! <span class="feedback-note">${diag.aiFeedback}</span></div>`;
+        }
+        return `<div class="feedback good"><div style="display:flex; align-items:center; justify-content:space-between; gap:10px;"><span>✓ Richtig!</span>${speakHtml}</div></div>`;
+      }
       if (correct && diag && diag.tier === 'close-typo') {
         const typo = TranslationCheck.describeDiff(diag.ops.filter(o => o.type === 'sub'));
         return `<div class="feedback good">✓ Richtig! <span class="feedback-note">(kleiner Tippfehler: ${typo})</span></div>`;
@@ -141,7 +148,11 @@ const QuizEngine = {
         return `<div class="feedback bad">${buildMistakeBubbles(item, diag, chosenText)}</div>`;
       }
       const explain = item.explanation ? `<div class="feedback-explain">💡 ${item.explanation}</div>` : '';
-      const diffLine = diag ? `<div class="feedback-explain">${TranslationCheck.describeDiff(diag.ops)}</div>` : '';
+      const diffLine = diag
+        ? (diag.source === 'ai'
+          ? (diag.aiFeedback ? `<div class="feedback-explain">${diag.aiFeedback}</div>` : '')
+          : `<div class="feedback-explain">${TranslationCheck.describeDiff(diag.ops)}</div>`)
+        : '';
       const text = `✗ Nicht ganz. Richtige Antwort: "${correctText(item, diag)}"`;
       return `<div class="feedback bad"><div style="display:flex; align-items:center; justify-content:space-between; gap:10px;"><span>${text}</span>${speakHtml}</div>${diffLine}${explain}</div>`;
     }
@@ -216,10 +227,23 @@ const QuizEngine = {
 
       if (item.type === 'gap' || item.type === 'translate') {
         const input = container.querySelector('.gap-input');
-        const check = () => {
+        const checkBtn = container.querySelector('.check-btn');
+        const backBtn = container.querySelector('.nav-back-btn');
+        let checking = false;
+        const check = async () => {
+          if (checking) return;
+          checking = true;
+          // sofort sperren, bevor der (bei translate ggf. asynchrone) KI-Aufruf
+          // läuft - sonst könnte ein Klick auf "Zurück" währenddessen idx
+          // verändern, bevor die Antwort da ist.
+          input.disabled = true;
+          checkBtn.disabled = true;
+          if (backBtn) backBtn.disabled = true;
+
           let correct, diag;
           if (item.type === 'translate') {
-            diag = TranslationCheck.classify(input.value, item);
+            checkBtn.textContent = 'Wird geprüft …';
+            diag = await AIGrading.classify(input.value, item);
             correct = diag.tier !== 'wrong';
           } else {
             const val = input.value.trim().toLowerCase();
@@ -227,11 +251,9 @@ const QuizEngine = {
             correct = accepted.includes(val);
             if (!correct) diag = TranslationCheck.classify(input.value, item);
           }
-          input.disabled = true;
-          container.querySelector('.check-btn').disabled = true;
           finalize(correct, null, input.value.trim(), diag);
         };
-        container.querySelector('.check-btn').addEventListener('click', check);
+        checkBtn.addEventListener('click', check);
         input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
         const hintSlot = container.querySelector('.hint-slot');
         container.querySelector('.hint-word-btn')?.addEventListener('click', () => {
