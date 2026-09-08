@@ -3,19 +3,23 @@
    der die eigentliche Bewertung an Claude weiterreicht — der API-Key liegt
    dort serverseitig als Secret, nie im Frontend.
 
-   Fällt bei jedem Fehler (Timeout, Netzwerk, kaputte Antwort) automatisch auf
-   TranslationCheck.classify zurück, damit eine Aufgabe nie unbewertet bleibt. */
+   Ein einzelner Aufruf-Versuch wird bei einem Fehler (Timeout, Netzwerk, kaputte
+   Antwort) einmal automatisch wiederholt, bevor auf TranslationCheck.classify
+   zurückgefallen wird — die meisten Aussetzer (kurzer Netzwerkhänger, "kalter
+   Start" des Workers) sind einmalig und beim zweiten Versuch schon behoben, sodass
+   praktisch immer die KI (und nicht die schwächere lokale Heuristik) die Antwort
+   bewertet. Endgültig unerreichbar bleibt sie nur bei einem echten, andauernden
+   Ausfall — dann greift der Fallback, damit eine Aufgabe nie unbewertet bleibt. */
 
 const AIGrading = (function () {
   const WORKER_URL = 'https://wegweiser-translate-grader.davidschirra.workers.dev';
   const CLIENT_HEADER_VALUE = 'wegweiser-app-v1';
   const TIMEOUT_MS = 9000;
+  const RETRY_DELAY_MS = 400;
 
-  async function classify(userText, item) {
-    const targetVariants = Array.isArray(item.answer) ? item.answer : [item.answer];
+  async function attempt(userText, item, targetVariants) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-
     try {
       const res = await fetch(WORKER_URL, {
         method: 'POST',
@@ -41,10 +45,23 @@ const AIGrading = (function () {
         source: 'ai',
         aiFeedback: data.feedback || null
       };
-    } catch {
-      return TranslationCheck.classify(userText, item);
     } finally {
       clearTimeout(timer);
+    }
+  }
+
+  async function classify(userText, item) {
+    const targetVariants = Array.isArray(item.answer) ? item.answer : [item.answer];
+    try {
+      return await attempt(userText, item, targetVariants);
+    } catch (firstErr) {
+      await new Promise(r => setTimeout(r, RETRY_DELAY_MS));
+      try {
+        return await attempt(userText, item, targetVariants);
+      } catch (secondErr) {
+        console.warn('[AIGrading] KI-Bewertung nach 2 Versuchen fehlgeschlagen, falle auf lokale Heuristik zurück:', firstErr, secondErr);
+        return TranslationCheck.classify(userText, item);
+      }
     }
   }
 
