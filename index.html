@@ -11,6 +11,17 @@
 <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+  <div id="auth-gate" class="auth-gate" role="dialog" aria-modal="true" aria-label="Zugang geschützt">
+    <form id="auth-gate-form" class="auth-gate-box">
+      <h1>Wegweiser</h1>
+      <p>Diese Seite ist passwortgeschützt.</p>
+      <input type="password" id="auth-gate-input" placeholder="Passwort" autocomplete="off" />
+      <button type="submit">Freischalten</button>
+      <p id="auth-gate-error" class="auth-gate-error" hidden>Falsches Passwort.</p>
+    </form>
+  </div>
+  <script src="js/authGate.js"></script>
+
   <div id="bg-video-layer" aria-hidden="true">
     <video class="bg-video-src" muted autoplay playsinline></video>
     <video class="bg-video-src" muted autoplay playsinline></video>
