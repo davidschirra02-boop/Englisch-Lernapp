@@ -23,6 +23,11 @@ function router() {
   Speech.stop();
   VideoPopup.close();
   const { name, param } = currentRoute();
+  // Zurücksetzen, sobald die Tagesansicht verlassen wird - siehe
+  // js/render/lesson.js, wo dieses Flag verhindert, dass das Anfangsvideo
+  // bei jedem Reload mitten in der Lektion erneut aufpoppt, aber bei einem
+  // späteren erneuten Öffnen desselben Tages wieder erscheinen soll.
+  if (name !== 'day') sessionStorage.removeItem('elc_intro_shown_day');
   setActiveTab(name === 'day' ? 'dashboard' : name);
   if (name === 'day') Render.lesson(root, Number(param) || Store.get().currentDay);
   else if (name === 'vocab') Render.vocab(root);

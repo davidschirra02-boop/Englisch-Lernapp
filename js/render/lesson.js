@@ -356,5 +356,13 @@ Render.lesson = function (root, day) {
   }
 
   renderStep();
-  VideoPopup.show(MOTIVATION_VIDEOS.intro.src);
+  // Nur beim tatsächlichen Betreten des Tages zeigen, nicht bei jedem Reload
+  // mitten in einer laufenden Lektion - sessionStorage überlebt einen Reload
+  // (anders als eine gewöhnliche JS-Variable), wird aber beim Verlassen der
+  // Tagesansicht in router() (js/app.js) zurückgesetzt, damit ein späteres
+  // erneutes Öffnen desselben Tages das Video wieder zeigt.
+  if (sessionStorage.getItem('elc_intro_shown_day') !== String(day)) {
+    sessionStorage.setItem('elc_intro_shown_day', String(day));
+    VideoPopup.show(MOTIVATION_VIDEOS.intro.src);
+  }
 };
