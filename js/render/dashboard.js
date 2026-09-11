@@ -1,6 +1,9 @@
 /* Dashboard: Fortschrittsring, Streak, heutige Lektion, Wochenübersicht.
-   Die Wochenübersicht ist zwischen allen bereits erreichten Wochen
-   blätterbar (nicht nur die aktuelle Woche). */
+   Die Wochenübersicht ist über alle 13 Wochen blätterbar (nicht nur bis zur
+   aktuellen Fortschritts-Woche) - so lassen sich bereits geschriebene
+   spätere Wochen ansehen, ohne den eigentlichen Fortschritt zu verändern.
+   Einzelne Tage-Kacheln bleiben unabhängig davon gesperrt, bis man sie
+   tatsächlich erreicht hat (siehe "accessible" weiter unten). */
 
 Render.dashboard = function (root) {
   const s = Store.get();
@@ -81,7 +84,7 @@ Render.dashboard = function (root) {
         <h3>Woche ${viewWeek}${weekTitle ? ' — ' + weekTitle : ''}</h3>
         <div style="display:flex; gap:8px;">
           <button type="button" class="btn ghost small" id="prev-week" ${viewWeek <= 1 ? 'disabled' : ''}>← Vorherige</button>
-          <button type="button" class="btn ghost small" id="next-week" ${viewWeek >= currentWeek ? 'disabled' : ''}>Nächste →</button>
+          <button type="button" class="btn ghost small" id="next-week" ${viewWeek >= WEEK_THEMES.length ? 'disabled' : ''}>Nächste →</button>
         </div>
       </div>
       <div class="week-strip">${chips}</div>
