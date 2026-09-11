@@ -14,17 +14,17 @@ Render.dashboard = function (root) {
   const wordsLearned = Object.keys(s.srs).length;
   const daysDone = Object.keys(s.completedDays).length;
   const currentWeek = meta ? meta.week : 1;
-  // Zuletzt geöffneter Tag (unabhängig vom Fortschritt) bestimmt, welche
-  // Woche vorausgewählt und welcher Tag orange markiert ist - bleibt so,
-  // bis ein anderer Tag geöffnet wird. Wird ein Tag durch Abschluss der
-  // Lektion fertig, setzt finishLesson() diesen Wert direkt auf den
-  // nächsten Tag (siehe js/render/lesson.js) - bloßes erneutes Öffnen eines
-  // längst abgeschlossenen Tages (z.B. zum Nachschauen) lässt die Markierung
-  // dagegen bewusst auf genau diesem Tag stehen. Fällt auf den
-  // Fortschritts-Tag zurück, wenn noch nie eine Lektion geöffnet wurde
-  // (z.B. neuer Nutzer).
-  const highlightDay = s.lastOpenedDay && s.lastOpenedDay <= 90 ? s.lastOpenedDay : day;
-  const highlightWeek = getDayMeta(highlightDay)?.week || currentWeek;
+  // Die orange "als naechstes"-Markierung zeigt immer den tatsaechlichen
+  // naechsten Tag im 90-Tage-Ablauf (day/currentDay) - nicht den zuletzt
+  // geoeffneten, da Tage jetzt frei zum Vorschauen anklickbar sind (auch
+  // weit voraus) und "zuletzt geoeffnet" sonst faelschlich als "als
+  // naechstes dran" erscheinen wuerde.
+  // Welche Woche beim Betreten des Dashboards vorausgewaehlt ist, richtet
+  // sich dagegen bewusst weiter nach dem zuletzt geoeffneten Tag (bleibt in
+  // der Woche, die man sich zuletzt angesehen hat), fällt auf die
+  // Fortschritts-Woche zurück, wenn noch nie eine Lektion geöffnet wurde.
+  const nextDay = day;
+  const highlightWeek = getDayMeta(s.lastOpenedDay && s.lastOpenedDay <= 90 ? s.lastOpenedDay : day)?.week || currentWeek;
   let viewWeek = highlightWeek;
 
   root.innerHTML = `
@@ -68,12 +68,14 @@ Render.dashboard = function (root) {
   function renderWeekCard() {
     const weekDays = CURRICULUM.filter(d => d.week === viewWeek);
     const weekTitle = weekDays[0]?.weekTitle || '';
+    // Jeder Tag ist frei anklickbar (kein Sperren "erst vorherige Tage
+    // abschliessen") - Farbe zeigt nur den Status: gruen = erledigt,
+    // orange = als naechstes vorgemerkt, blau = noch nicht bearbeitet.
     const chips = weekDays.map(d => {
       const dn = d.day;
-      const accessible = dn <= day;
-      const cls = dn === highlightDay ? 'today' : (Store.isDayComplete(dn) ? 'done' : '');
+      const cls = Store.isDayComplete(dn) ? 'done' : (dn === nextDay ? 'today' : 'available');
       const topic = dayTopic(dn);
-      return `<button type="button" class="day-chip ${cls} ${accessible ? 'clickable' : ''}" data-day="${dn}" ${accessible ? '' : 'disabled'} ${topic ? `title="${topic}"` : ''}>
+      return `<button type="button" class="day-chip ${cls} clickable" data-day="${dn}" ${topic ? `title="${topic}"` : ''}>
         <span class="day-chip-num">${dn}</span>
         ${topic ? `<span class="day-chip-topic">${topic}</span>` : ''}
       </button>`;

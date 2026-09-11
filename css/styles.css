@@ -32,6 +32,10 @@
   --good-light: #86efac;
   --good-tint: rgba(63, 138, 92, 0.3);
 
+  --blue: #3b82f6;
+  --blue-light: #93c5fd;
+  --blue-tint: rgba(59, 130, 246, 0.3);
+
   --radius-s: 10px;
   --radius-m: 16px;
   --radius-l: 24px;
@@ -458,6 +462,8 @@ nav.tabs a:not(.active):hover {
 .day-chip.done .day-chip-num { background: var(--good); color: #fff; }
 .day-chip.today { border-color: var(--amber); box-shadow: 0 0 0 3px var(--amber-tint); }
 .day-chip.today .day-chip-num { background: var(--amber); color: #fff; }
+.day-chip.available { border-color: var(--blue); }
+.day-chip.available .day-chip-num { background: var(--blue); color: #fff; }
 .day-chip.clickable { cursor: pointer; }
 .day-chip.clickable:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); border-color: var(--teal); }
 
@@ -812,6 +818,10 @@ html[data-theme="aurora"] {
   --good-light: #047857;
   --good-tint: rgba(5, 150, 105, 0.14);
 
+  --blue: #2563eb;
+  --blue-light: #1d4ed8;
+  --blue-tint: rgba(37, 99, 235, 0.14);
+
   --radius-s: 14px;
   --radius-m: 20px;
   --radius-l: 28px;
@@ -869,6 +879,10 @@ html[data-theme="brutalist"] {
   --good: #00c853;
   --good-light: #007a33;
   --good-tint: rgba(0, 200, 83, 0.15);
+
+  --blue: #00aaff;
+  --blue-light: #0077b3;
+  --blue-tint: rgba(0, 170, 255, 0.15);
 
   --radius-s: 0px;
   --radius-m: 0px;
